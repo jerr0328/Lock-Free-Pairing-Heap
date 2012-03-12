@@ -168,14 +168,17 @@
 
 \begin{frame}{Pairing Heaps}
   \begin{itemize}
-    \item Pairing Heaps were introduced by Fredman and Tarjan.
-      \item \texttt{decreaseKey} runs in $2^{\mathcal{O}(\sqrt{\log \log n})}$
+    \item Pairing Heaps were introduced by Fredman and Tarjan\footnote{``The Pairing heap: a new form of self-adjusting heap,'' Fredman, Sedgewick, Sleator, and Tarjan, Algorithmica (1986).} as a simplification of Fibonacci heaps.
+      \begin{itemize}
+        \item Fibonacci heaps have a $\mathcal{O}(1)$ \texttt{decreaseKey} operator, but require complicated rebalancing.
+      \end{itemize}
+    \item \texttt{decreaseKey} runs in $2^{\mathcal{O}(\sqrt{\log \log n})}$
         time
         \begin{itemize}
           \item In practice, constant time. E.g., for a graph with a billion nodes,
             $2^\sqrt{\log \log 10^9} = 3.34$.
         \end{itemize}
-        
+      \item Fredman and Tarjan empirically demonstrated that Pairing heaps have better performance than Fibonacci heaps on reasonably-sized graphs.
   \end{itemize}
 \end{frame}
 
