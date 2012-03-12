@@ -227,7 +227,7 @@
     for Dijkstra's algorithm.
   \item For Dijkstra's algorithm, we pop the minimum off the PQ (\texttt{deleteMin})
     and call \texttt{decreaseKey} on the node's neighbors.
-  \item If \texttt{decreaseKey} produces new heap minima , this will affect
+  \item If \texttt{decreaseKey} produces new heap minima, this will affect
     future calls to \texttt{deleteMin}
   \item For this reason, we assume that calls to \texttt{decreaseKey} and \texttt{deleteMin}
     never intersect.
