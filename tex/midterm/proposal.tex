@@ -140,12 +140,14 @@ concurrent priority queue \cite{shavit00} requires the user implement \texttt{de
 the target from the heap and reinserting it with a decreased value. Both of these operations occur run in
 $\mathcal{O}(\log n)$.
 
-To our knowledge, there have been no attempts to construct highly concurrent Heap data structures
-with lock-free guarantees that have an efficient \texttt{decreaseKey} implementation.
+To our knowledge, there have been no attempts to construct highly concurrent
+lock-free heap data structures
+with lock-free guarantees with an efficient \texttt{decreaseKey} implementation.
 In this paper we introduce a lock-free variant of the Pairing heap
 that allows the \texttt{decreaseKey} and \texttt{removeMin} operations
 to be executed in parallel
-without the use of locks. Our lock-free \texttt{decreaseKey} operation has an asymptotic time complexity
+without the use of locks. Ignoring contention between threads,
+our lock-free \texttt{decreaseKey} operation has an asymptotic time complexity
 equal to Fredman and Tarjan's original \texttt{decreaseKey} implementation.
 
 \section{Related Work}
