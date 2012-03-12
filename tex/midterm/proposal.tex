@@ -86,7 +86,7 @@ weights. It has wide applications in Internet routing
 routing protocol \cite{rfc5340}) and other scheduling
 algorithms that depend on finding optimal paths.
 
-Using a naive data structure (such as a standard binary heap)
+Using a na\"{i}ve data structure (such as a standard binary heap)
 results in Dijkstra's algorithm having runtime of $\mathcal{O}(|V|^2)$, where $|V|$
 is the number of vertices in the graph. Fredman and Tarjan have
 introduced \cite{fredman87} a heap variant, called the Fibonacci heap,
@@ -361,8 +361,8 @@ we were unable to find a description of this operation in the literature.
 \subsection{Lock-Free Skiplists}
 Shavit and Lotan's Skipqueue \cite{shavit00} is a modification
 of Pugh's Skiplist that gives its operations lock-free guarantees.
-We present a high-level technical summary of their work as in
-section \textbf{XYZ} we will
+We present a high-level technical summary of their work and in
+Section \ref{skipqueue:decreasekey} we will
 build a \texttt{decreaseKey} operator for Skiplists using their approach.
 Following with our analogy of Skiplist
 operations being composed of operations on the linked lists formed at each level
@@ -421,28 +421,30 @@ point.) There is no need update any pointers on a removal since subsequent searc
 this for us.
 
 \subsection{A decreaseKey operator for Skipqueues}
+\label{skipqueue:decreasekey}
 Keeping track of the \texttt{next[i]} and \texttt{previous[i]}
 ``windows'' of an element in a Skipqueue leads to a natural implementation
-of a \texttt{decreaseKey} operator. Suppose we have located the target element in the
-Skipqueue and it has a level of $M$. Let $i^*$ denote the index of the largest value
+of a \texttt{decreaseKey} operator where we re-use information from
+the deletion call. Suppose we have located the target element in the
+Skipqueue and it has a level of $j$. Let $i^*$ denote the index of the largest value
 in the \texttt{next} array that is smaller than the new value of the target. We can use
 $\mathtt{next[i}^*\mathtt{]}$ as the starting location for determining a new location
 for the decreased value of our target (since every node after $\mathtt{next[i}^*\mathtt{]}$
 is greater than our new value.) Aside from the head of the list, the insert is performed
-the same as before. If the attempt to insert needs to be restarted, we restart as non-optimized insertion.
+the same as before. If the attempt to insert needs to be restarted, we restart as a non-optimized insertion.
 
-The level of the decreased element is bounded above by $M$. On the first (the optimized) insertion attempt we
-set the level of the decreased element equal to $M$. This avoids introducing bias into the Skipqueue structure: if we sampled
-the new height from the discrete uniform distribution $U(0, M)$ we would force elements to gradually
-loose levels. If the optimized insertion attempt fails, there is no restriction placed on the level of the element.
+The level of the decreased element is bounded above by $j$. On the first (the optimized) insertion attempt we
+set the level of the decreased element equal to $j$. This avoids introducing bias into the Skipqueue structure: if we sampled
+the new height from the discrete uniform distribution $U(0, j)$ we would force elements to gradually
+lose levels. If the optimized insertion attempt fails, there is no restriction placed on the level of the element.
 
 \section{Pairing Heaps}
 Pairing heaps were developed by Fredman et al. \cite{fredman86} as
 a simpler alternative to Fibonacci heaps that, at least empirically,
 do not sacrifice performance.
 Pairing heaps are a popular backing data structure
-for Dijkstra's algorithm due to its efficient implementation
-of the \texttt{decreaseKey} operation. 
+for Dijkstra's algorithm due to its offering of an efficient
+\texttt{decreaseKey} operator without involving complicated tree rebalances.
 
 % http://www.cise.ufl.edu/~sahni/dsaaj/enrich/c13/pairing.htm is good!
 
@@ -487,7 +489,8 @@ Finally, we perform a right-iteration
 \begin{equation*}
   H' = \mathtt{meld}(H'_1, \mathtt{meld}(H'_2, \dots \mathtt{meld}(H'_{m-1}, H'_m) \dots ))
 \end{equation*}
-To make the ordering $H_1, H_2, \dots, H_n$ unambiguous, we say that $i^\mathrm{th}$ child of $H$ (i.e., the root of $H_i$) is the most recently melded node to the root.
+To make the ordering $H_1, H_2, \dots, H_n$ unambiguous, we say that $i^\mathrm{th}$ child of $H$ (i.e., the root of $H_i$) is the $i^\mathrm{th}$
+most recently melded node to the root.
 Note here that \texttt{deleteMin} rebalances the tree structure of the pairing heap. See Fig. \ref{fig:deletemin} for an illustration of calling
 \texttt{deleteMin} on a Pairing heap.
 
@@ -619,7 +622,7 @@ these calls will never interleave, and, further, that only concurrent calls to
 %inserted when the root node of the Pairing heap is updated.
 
 We use a CAS loop to insert a new node (or a newly decreased node)
-at the root (or as a root's child.) A call to \texttt{meld} modifies the list of children of the new heap root, which is the root node of minimum value between two heaps being melded. The newly added node is inserted at the end of the root's child list. This is accomplished atomically through the references that heap nodes hold. This ensures that two overlapping \texttt{meld} operations will not conflict with eachother and creates a distint linearization point for two \texttt{meld} operations. A \texttt{meld} operation has completed when the new child node has been appended to the child list of the heap root. The new node must have updated references for its parent (root) and right child (null). To achieve this, a new node is created inheriting the children of the node to be inserted with new values for parent and sibling. 
+at the root (or as a root's child.) A call to \texttt{meld} modifies the list of children of the new heap root, which is the root node of minimum value between two heaps being melded. The newly added node is inserted at the end of the root's child list. This is accomplished atomically through the references that heap nodes hold. This ensures that two overlapping \texttt{meld} operations will not conflict with eachother and creates a distinct linearization point for two \texttt{meld} operations. A \texttt{meld} operation has completed when the new child node has been appended to the child list of the heap root. The new node must have updated references for its parent (root) and right child (null). To achieve this, a new node is created inheriting the children of the node to be inserted with new values for parent and sibling. 
 
 \texttt{insert} is the simpler of our two lock-free operations. We
 first take a snapshot of the address of the current
