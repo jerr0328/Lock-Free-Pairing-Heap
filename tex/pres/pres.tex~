@@ -1,0 +1,117 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{color, colortbl}
+
+%%% Beamer Theme %%%
+\usetheme{JuanLesPins}
+\usecolortheme{beaver}
+\beamertemplatenavigationsymbolsempty
+\renewcommand\mathfamilydefault{\rmdefault}
+%%%
+
+\setlength{\parindent}{0.0cm}
+
+\date{23 January 2012}
+\author{Charles Newton}
+\title{Ethical Considerations of Spam}
+
+\begin{document}
+\maketitle
+
+\begin{frame}{What is Spam?}
+  \begin{block}{Definition}
+    Spam is unwanted and unsolicited bulk e-mail.
+  \end{block}
+  % Spam is un
+  \begin{itemize}
+  \item The MAAWG (Messaging Anti-Abuse Working Group) estimates that close to $90\%$ of all e-mail
+    is spam.\footnote{Messaging Anti-Abuse Working Group, 2011 E-mail Metrics Report (November 2011): \href{http://bit.ly/wUYvwO}{http://bit.ly/wUYvwO}}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why does spam exist?}
+  \begin{itemize}
+    \item Asymmetric fixed costs. A spammer only needs to maintain a few servers in order
+      to pump out millions of e-mails.
+    \item Marginal costs are also low, so a spammer only needs a few conversions to
+      recoup the cost of sending, say, $100\, 000$ e-mails.
+    \item Spam is a popular strategy for monetizing illegal activity. E.g.:
+      \begin{itemize}
+        \item Turn your botnet into profit by spewing spam.
+        \item Sell databases of compromised websites.
+      \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ethical Evaluations: The Kantian View}
+  \begin{itemize}
+    \item The costs (time, e-mail infrastructure upgrades) of spam are borne almost entirely by
+      recipients.
+    \item Spammers treat their recipients as a means to sell products instead of an end.
+      \begin{itemize}
+        \item To make spam ethical, make sure your recipients are actually interested in your products.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ethical Evaluations: Act Utilitarian View}
+  \begin{itemize}
+    \item Cost-benefit analysis:
+      \item Say you send $100$ million e-mails selling a $30$ dollar item.
+      \item Suppose $80$ percent of purchasers receive $\$50$ benefits, and $20$ percent have
+        buyer's remorse.
+      \item Say unwanted spam causes $\$0.05$ of damages (wasted time) to recipients.
+      \item You make a $5$ dollar profit on each sale.
+      \item What proportion $x \in (0,1)$ of e-mail recipients should purchase your item to make
+        this bulk mailing ethical?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ethical Evaluations: Act Utilitarian View}
+  Find $x$ such that:
+  \begin{block}{Act Utilitarian Calculation}
+    \begin{align*}
+      80\%(10^8)(x)(50) &+ (10^8)(x)(5) > \\
+      20\%(10^8)(x)(30) &+ (10^8)(1-x)(0.05)
+    \end{align*}
+  \end{block}
+  \textbf{Solution}: $x > 0.13\%$ ($1$ out of about $800$ purchase.)
+
+  \begin{itemize}
+    \item Actual spam conversion rates are about 1 sale per 10 million spams.\footnote{Spamalytics: An Empirical Analysis of Spam Marketing Conversion, \textit{Communications of the ACM}, vol 52, no. 9 (Sept. 2009)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ethical Evaluations: Rule Utilitarian View}
+  \begin{itemize}
+    \item Similar to our act utilitarian calculation, but we should also consider more costs:
+      \begin{itemize}
+        \item E-mail costs are driven up because of increased load.
+        \item E-mail is less useful for everyone:  we have to maintain blacklists and develop spam
+          filters.
+      \end{itemize}
+    \item We should also consider expected/average monetary values instead of values specific to our
+      situation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ethical Evaluations: Social Contract Theory}
+  \begin{itemize}
+  \item Multiple arguments to be made here.
+  \item If we consider freedom of expression in our social contract, is spam protected speech?
+    \begin{itemize}
+    \item In the US, spam is regulated speech governed under the CAN-SPAM Act of 2004.\footnote{15 USC Chapter 103: \href{http://uscode.house.gov/download/pls/15C103.txt}{http://uscode.house.gov/download/pls/15C103.txt}}
+    \item Spam filters such as DNS-based Black Lists (DNSBBLs) and Bayesian spam classifiers are widespread enough to be considered a form of voluntary self-regulation.\footnote{Code and Other Laws of Cyberspace, Lawrence Lessig (1999.)}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ethical Evaluations: Social Contract Theory}
+  \begin{itemize}
+  \item Spammers violate fundamental aspects of human communication.
+  \item Spammers disguise the source (\texttt{FROM:} SMTP field), the intent (misleading subjects), and the identity (odd domain names) of their messages.
+  \item This shields spammers from some negative results of their actions.
+  \end{itemize}
+\end{frame}
+\end{document}

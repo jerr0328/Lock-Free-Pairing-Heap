@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/dev/Arch Linux)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: proposal.aux
+The style file: abbrv.bst
+Database file #1: proposal.bib
+You've used 28 entries,
+            2118 wiz_defined-function locations,
+            688 strings with 8116 characters,
+and the built_in function-call counts, 10280 in all, are:
+= -- 1050
+> -- 392
+< -- 12
++ -- 162
+- -- 124
+* -- 693
+:= -- 1620
+add.period$ -- 92
+call.type$ -- 28
+change.case$ -- 144
+chr.to.int$ -- 0
+cite$ -- 28
+duplicate$ -- 405
+empty$ -- 851
+format.name$ -- 124
+if$ -- 2234
+int.to.chr$ -- 0
+int.to.str$ -- 28
+missing$ -- 23
+newline$ -- 145
+num.names$ -- 62
+pop$ -- 142
+preamble$ -- 1
+purify$ -- 115
+quote$ -- 0
+skip$ -- 321
+stack$ -- 0
+substring$ -- 783
+swap$ -- 119
+text.length$ -- 12
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 112
+warning$ -- 0
+while$ -- 104
+width$ -- 30
+write$ -- 324

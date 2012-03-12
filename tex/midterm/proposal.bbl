@@ -1,0 +1,167 @@
+\begin{thebibliography}{10}
+
+\bibitem{anderson99}
+J.~Anderson and M.~Moir.
+\newblock Universal constructions for large objects.
+\newblock {\em Parallel and Distributed Systems, IEEE Transactions on},
+  10(12):1317 --1332, dec 1999.
+
+\bibitem{hid}
+{Center for Cancer Systems Biology}.
+\newblock Human interactor database.
+
+\bibitem{rfc5340}
+R.~Coltun, D.~Ferguson, J.~Moy, and A.~Lindem.
+\newblock {OSPF for IPv6}.
+\newblock RFC 5340 (Proposed Standard), July 2008.
+
+\bibitem{crauser98}
+A.~Crauser, K.~Mehlhorn, U.~Meyer, and P.~Sanders.
+\newblock A parallelization of dijkstra's shortest path algorithm.
+\newblock In L.~Brim, J.~Gruska, and J.~Zlatu\v{s}ka, editors, {\em
+  Mathematical Foundations of Computer Science 1998}, volume 1450 of {\em
+  Lecture Notes in Computer Science}, pages 722--731. Springer Berlin /
+  Heidelberg, 1998.
+\newblock 10.1007/BFb0055823.
+
+\bibitem{dijkstra59}
+E.~W. Dijkstra.
+\newblock A note on two problems in connexion with graphs.
+\newblock {\em Numerische Mathematik}, 1:269--271, 1959.
+\newblock 10.1007/BF01386390.
+
+\bibitem{driscoll88}
+J.~R. Driscoll, H.~N. Gabow, R.~Shrairman, and R.~E. Tarjan.
+\newblock Relaxed heaps: an alternative to fibonacci heaps with applications to
+  parallel computation.
+\newblock {\em Commun. ACM}, 31:1343--1354, November 1988.
+
+\bibitem{elmasry10}
+A.~Elmasry.
+\newblock The violation heap: A relaxed fibonacci-like heap.
+\newblock In M.~Thai and S.~Sahni, editors, {\em Computing and Combinatorics},
+  volume 6196 of {\em Lecture Notes in Computer Science}, pages 479--488.
+  Springer Berlin / Heidelberg, 2010.
+\newblock 10.1007/978-3-642-14031-0\_51.
+
+\bibitem{fredman99}
+M.~L. Fredman.
+\newblock On the efficiency of pairing heaps and related data structures.
+\newblock {\em J. ACM}, 46:473--501, July 1999.
+
+\bibitem{fredman86}
+M.~L. Fredman, R.~Sedgewick, D.~D. Sleator, and R.~E. Tarjan.
+\newblock The pairing heap: a new form of self-adjusting heap.
+\newblock {\em Algorithmica}, 1:111--129, January 1986.
+
+\bibitem{fredman87}
+M.~L. Fredman and R.~E. Tarjan.
+\newblock Fibonacci heaps and their uses in improved network optimization
+  algorithms.
+\newblock {\em J. ACM}, 34:596--615, July 1987.
+
+\bibitem{hendler04}
+D.~Hendler, N.~Shavit, and L.~Yerushalmi.
+\newblock A scalable lock-free stack algorithm.
+\newblock In {\em Proceedings of the sixteenth annual ACM symposium on
+  Parallelism in algorithms and architectures}, SPAA '04, pages 206--215, New
+  York, NY, USA, 2004. ACM.
+
+\bibitem{herlihy93}
+M.~Herlihy.
+\newblock A methodology for implementing highly concurrent data objects.
+\newblock {\em ACM Trans. Program. Lang. Syst.}, 15:745--770, November 1993.
+
+\bibitem{huang91}
+Q.~Huang and W.~Weihl.
+\newblock An evaluation of concurrent priority queue algorithms.
+\newblock In {\em Parallel and Distributed Processing, 1991. Proceedings of the
+  Third IEEE Symposium on}, pages 518 --525, dec 1991.
+
+\bibitem{hunt96}
+G.~Hunt, M.~M. Michael, S.~Parthasarathy, and M.~L. Scott.
+\newblock An efficient algorithm for concurrent priority queue heaps.
+\newblock {\em Inf. Proc. Letters}, 60:151--157, 1996.
+
+\bibitem{israeli93}
+A.~Israeli and L.~Rappoport.
+\newblock Efficient wait-free implementation of a concurrent priority queue.
+\newblock In A.~Schiper, editor, {\em Distributed Algorithms}, volume 725 of
+  {\em Lecture Notes in Computer Science}, pages 1--17. Springer Berlin /
+  Heidelberg, 1993.
+\newblock 10.1007/3-540-57271-6\_23.
+
+\bibitem{jones89}
+D.~W. Jones.
+\newblock Concurrent operations on priority queues.
+\newblock {\em Commun. ACM}, 32:132--137, January 1989.
+
+\bibitem{slndc}
+J.~Leskovec.
+\newblock Stanford large network dataset collection, 2012.
+
+\bibitem{michael96}
+M.~M. Michael and M.~L. Scott.
+\newblock Simple, fast, and practical non-blocking and blocking concurrent
+  queue algorithms.
+\newblock In {\em Proceedings of the fifteenth annual ACM symposium on
+  Principles of distributed computing}, PODC '96, pages 267--275, New York, NY,
+  USA, 1996. ACM.
+
+\bibitem{moir05}
+M.~Moir, D.~Nussbaum, O.~Shalev, and N.~Shavit.
+\newblock Using elimination to implement scalable and lock-free fifo queues.
+\newblock In {\em Proceedings of the seventeenth annual ACM symposium on
+  Parallelism in algorithms and architectures}, SPAA '05, pages 253--262, New
+  York, NY, USA, 2005. ACM.
+
+\bibitem{moret94}
+B.~M.~E. Moret and H.~D. Shapiro.
+\newblock An empirical assessment of algorithms for constructing a minimum
+  spanning tree, 1994.
+
+\bibitem{nageshwara88}
+R.~Nageshwara and V.~Kumar.
+\newblock Concurrent access of priority queues.
+\newblock {\em Computers, IEEE Transactions on}, 37(12):1657 --1665, Dec 1988.
+
+\bibitem{pettie05}
+S.~Pettie.
+\newblock Towards a final analysis of pairing heaps.
+\newblock In {\em Foundations of Computer Science, 2005. FOCS 2005. 46th Annual
+  IEEE Symposium on}, pages 174 -- 183, oct. 2005.
+
+\bibitem{pugh90a}
+W.~Pugh.
+\newblock A skip list cookbook.
+\newblock Technical report, University of Maryland, 1990.
+
+\bibitem{pugh90}
+W.~Pugh.
+\newblock Skip lists: a probabilistic alternative to balanced trees.
+\newblock {\em Commun. ACM}, 33:668--676, June 1990.
+
+\bibitem{rao88}
+V.~N. Rao and V.~Kumar.
+\newblock Concurrent access of priority queues.
+\newblock {\em IEEE Trans. Comput.}, 37:1657--1665, December 1988.
+
+\bibitem{shavit00}
+N.~Shavit and I.~Lotan.
+\newblock Skiplist-based concurrent priority queues.
+\newblock In {\em Parallel and Distributed Processing Symposium, 2000. IPDPS
+  2000. Proceedings. 14th International}, pages 263 --268, 2000.
+
+\bibitem{shavit97}
+N.~Shavit and D.~Touitou.
+\newblock Elimination trees and the construction of pools and stacks.
+\newblock {\em Theory of Computing Systems}, 30:645--670, 1997.
+\newblock 10.1007/s002240000072.
+
+\bibitem{sundell05}
+H.~Sundell and P.~Tsigas.
+\newblock Fast and lock-free concurrent priority queues for multi-thread
+  systems.
+\newblock {\em J. Parallel Distrib. Comput.}, 65:609--627, May 2005.
+
+\end{thebibliography}
