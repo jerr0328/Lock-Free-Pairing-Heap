@@ -1,5 +1,5 @@
 This project is for COP 4520 at UCF (Spring 2012).
-We are implementing a graph search algorim with a lock-free concurrent pairing heap.
+We are implementing a graph search algorithm with a lock-free concurrent pairing heap.
 
 Group members:
 Jeremy Mayeres
