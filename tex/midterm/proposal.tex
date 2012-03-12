@@ -688,12 +688,11 @@ It is worth mentioning the case where a parent is decreased concurrently with it
 delinking of the child may not be necessary, in this case it is performed anyway. The
 interleaved operations linearize as if the largest node was decreased before the smallest. 
 
-\begin{figure}[H]
-  \includegraphics[width=0.5\textwidth]{img/PairHeapConcurrent-crop.pdf}
+\begin{figure}
+  \includegraphics[width=0.45\textwidth]{img/PairHeapConcurrent-crop.pdf}
   \caption{Illustration of the concurrent pair heap structure. Pair heap nodes exist inside atomic references and hold atomic references to other heap nodes.}
   \label{fig:pairheap:structure}
 \end{figure}
-
 
 \subsection{Future Operators}
 We briefly discuss the form of a parallelized \texttt{deleteMin} operator on Pairing heaps.
