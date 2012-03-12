@@ -3,6 +3,7 @@
 \usepackage{algorithm2e}
 \usepackage{amsmath,amssymb}
 \usepackage{color, colortbl}
+\usepackage{qtree}
 
 %%% Beamer Theme %%%
 \usetheme{JuanLesPins}
@@ -201,10 +202,10 @@
     \item To \texttt{meld} two heaps, compare their roots and add the root
       as a child of the smaller root.
     \item \texttt{meld} is the core operator for Pairing heaps.
+    \item Example: Melding two min-heaps together (root 3 and root 5)
   \end{itemize}
   \begin{figure}
 	  \Tree [.3 [.5 \qroof{T_1}.10 [.12 \qroof{T_2}.19 \qroof{T_3}.20 ] \qroof{T_4}.34 ] !{\qframesubtree} [.25 [.19 \qroof{T_5}.20 \qroof{T_6}.21 ] \qroof{T_7}.42 ] ]
-	  \caption{Melding two min-heaps together (one with root 3 and the other with root 5) with the \texttt{meld} operator. The heap rooted at 5 becomes a subheap of the heap rooted at 3.}
 	  \label{fig:meld}
   \end{figure}
 \end{frame}
@@ -239,8 +240,10 @@
 
 \begin{frame}{Pairing Heaps: \texttt{deleteMin} Pairing Operation}
   \begin{itemize}
-  \item The root of the tree has $n$ sub-trees $H_1, H_2, \dots, H_n$, each with their own individual roots. For each tuple in the set $\{(H_1, H_2), (H_3, H_4), \dots, \allowbreak (H_{n-1}, H_n)\}$, we meld the two heaps together to form $\{H'_1, \dots, \allowbreak H'_m\}$.
-   \item Perform a right-iteration (similar to foldr) of \texttt{meld} over these $m=\frac{n}{2}$ (or $m=\frac{n-1}{2} + 1$) heaps to construct a newly rebalanced pairing heap $H'$:
+  \item The root of the tree has $n$ sub-trees $H_1, H_2, \dots, H_n$, each with their own individual roots. 
+  \item For each tuple in the set $\{(H_1, H_2), (H_3, H_4), \dots, \allowbreak (H_{n-1}, H_n)\}$, we meld the two heaps together to form $\{H'_1, \dots, \allowbreak H'_m\}$.	
+   \item Perform a right-iteration (similar to foldr) of \texttt{meld} over these $m=\frac{n}{2}$ (or $m=\frac{n-1}{2} + 1$) heaps to construct a newly rebalanced pairing heap
+   \item $H'$:
 	\begin{equation*}
 	  H' = \mathtt{meld}(H'_1, \mathtt{meld}(H'_2, \dots \mathtt{meld}(H'_{m-1}, H'_m) \dots ))
 	\end{equation*}
