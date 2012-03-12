@@ -622,7 +622,16 @@ these calls will never interleave, and, further, that only concurrent calls to
 %inserted when the root node of the Pairing heap is updated.
 
 We use a CAS loop to insert a new node (or a newly decreased node)
-at the root (or as a root's child.) A call to \texttt{meld} modifies the list of children of the new heap root, which is the root node of minimum value between two heaps being melded. The newly added node is inserted at the end of the root's child list. This is accomplished atomically through the references that heap nodes hold. This ensures that two overlapping \texttt{meld} operations will not conflict with eachother and creates a distinct linearization point for two \texttt{meld} operations. A \texttt{meld} operation has completed when the new child node has been appended to the child list of the heap root. The new node must have updated references for its parent (root) and right child (null). To achieve this, a new node is created inheriting the children of the node to be inserted with new values for parent and sibling. 
+at the root (or as a root's child.) A call to \texttt{meld} modifies the list of children of the new heap root,
+which is the root node of minimum value between two heaps being melded. The newly added node is inserted at
+the end of the root's child list. This is accomplished atomically through the references that heap nodes
+hold. Each list of subheaps is a lock-free list: this ensures that two overlapping \texttt{meld}
+operations will not negatively conflict with each other. We now describe the linearization point
+for two interleaving \texttt{meld} operations. A \texttt{meld} operation has completed when the
+new child node has been appended to the child list of the heap root or the root has been atomically
+placed with a CAS. After this, the new node must have updated references for its parent (root) and
+right child (null). To achieve this, a new node is created inheriting the children of the node to be
+inserted with new values for parent and sibling. 
 
 \texttt{insert} is the simpler of our two lock-free operations. We
 first take a snapshot of the address of the current
