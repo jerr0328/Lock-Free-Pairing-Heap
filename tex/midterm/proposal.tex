@@ -268,13 +268,13 @@ to the back-off point have been dequeued.
 Skiplists were introduced by William Pugh \cite{pugh90} as a way
 to avoid expensive rebalancing in tree structures while
 still retaining desirable properties of balanced
-trees such as $\mathbb{O}(\log n)$ search. The basic
+trees such as $\mathcal{O}(\log n)$ search. The basic
 idea behind Skiplists is to allow the tree structure
 to be controlled by a pseudorandom number generator (PRNG). Thus,
 a Skiplist only gives probabilistic guarantees that it will
 produce a balanced tree structure.
 However, pathologically bad structures that cause the data structure to degrade
-to a search complexity of $\mathbb{O}(n)$ are very unlikely. Also, since Skiplists
+to a search complexity of $\mathcal{O}(n)$ are very unlikely. Also, since Skiplists
 do not rebalance themselves, input keys are typically uniformly mapped into another
 set (e.g., by using a hash function) to avoid pathological inputs.
 
@@ -706,7 +706,7 @@ root of the data structure. This is the main issue we foresee with our lock-free
 is a performance bottle-neck. Skipqueues, on the other hand, can insert elements in, e.g., the middle of the list in a less-contended way.
 
 However, insertions into a Pairing heap run in asymptotically less time than a comparable Skipqueue insertion: a Pairing heap
-insertion runs close to $\mathbb{O}(1)$ time but a Skipqueue insertion runs in $\mathbb{O}(\log n)$ time. This is due
+insertion runs close to $\mathcal{O}(1)$ time but a Skipqueue insertion runs in $\mathcal{O}(\log n)$ time. This is due
 to the differing methods used to balance the heap structure.
 
 
