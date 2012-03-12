@@ -93,7 +93,7 @@ introduced \cite{fredman87} a heap variant, called the Fibonacci heap,
 where the \texttt{decreaseKey} operation takes $\mathcal{O}(1)$ time
 (amortized.) This allows Dijkstra's algorithm to run in $\mathcal{O}(|E| + |V|\log(|V|))$
 time, where $|E|$ is the number of edges in the graph.
-However, in practice, Fibonacci heap have large constants that
+However, in practice, Fibonacci heaps have large constants that
 cause it to be slower than standard heap-backed priority queues
 on many practical graphs.
 
@@ -137,7 +137,7 @@ Current attempts
 to parallelize Dijkstra's algorithm rely on \texttt{decreaseKey} operations that have worse asymptotic performance
 than Pairing heaps provide. For example, to back Dijkstra's algorithm with Shavit and Lotan's
 concurrent priority queue \cite{shavit00} requires the user implement \texttt{decreaseKey} by deleting 
-the target from the heap and reinserting it with a decreased value. Both of these operations occur run in
+the target from the heap and reinserting it with a decreased value. Both of these operations run in
 $\mathcal{O}(\log n)$.
 
 To our knowledge, there have been no attempts to construct highly concurrent
@@ -160,7 +160,7 @@ previously found in the literature.
 
 \subsection{Non-Lock-Free Parallel Heaps}
 
-Nageshwara et al. \cite{nageshwara88} have implemented a priority queue heap with concurrent insert and delete operations. These operations are not lock-free but represent an attempt in the literature to create a concurrent heap model. Their model only scales to $\log(n)$ processors accessing a heap of $n$ nodes. The binary heap implementation presented in their paper modifies the insert operation to work from top to bottom, rather than bottom up. This ensures that inserts can be run without deadlocks with concurrent delete operations, which also run top to bottom. While pairing heaps do not require the same method for inserting and deleting, this style of operation design, where different operations are forced to traverse the tree in the same direction, may be useful in the lock-free pairing heap solution.
+Nageshwara et al. \cite{nageshwara88} have implemented a priority queue with concurrent insert and delete operations using fine-grained locks. Their operations, although not lock-free, represent an attempt in the literature to create a concurrent heap model. Their model only scales to $\log(n)$ processors accessing a heap of $n$ nodes. The binary heap implementation presented in their paper modifies the insert operation to work from top to bottom, rather than bottom up. This ensures that inserts can be run without deadlocks with concurrent delete operations, which also run top to bottom. While pairing heaps do not require the same method for inserting and deleting, this style of operation design, where different operations are forced to traverse the tree in the same direction, may be useful in the lock-free pairing heap solution.
 
 Driscoll et. al \cite{driscoll88} have introduced a variant of Fibonacci heaps, called
 relaxed heaps, that allows for easier parallelization. However, their approach
@@ -197,8 +197,8 @@ structure are modified. For example, consider updating the head of a linked-list
 With Herlihy's technique, the entire list would need to be copied, but the modification
 to the data structure only involves updating the head pointer.
 However, this method handles contention poorly if many operations
-access the same blocks of memory (as is the case with the \texttt{deleteMin}
-operation of a heap.)
+access the same blocks of memory (as is the case with operations defined on
+a Pairing heap.)
 
 \subsection{Concurrent Priority Queues and Heaps}
 Shavit and Lotan have constructed \cite{shavit00}
@@ -219,7 +219,7 @@ this opens a possibility for deadlocks.) However, this increases the
 time complexity
 of an \texttt{insert} operation to $\mathcal{O}(\log n)$.
 The main contribution of Hun et al.'s
-approach is that $\mathcal{O}(1)$ performance on a bottom-up \texttt{insert}
+approach is that bottom-up \texttt{insert} operations
 can be
 preserved without introducing the possibility for deadlocks
 by 1) ordering the acquisition of locks, 2) applying
@@ -232,7 +232,7 @@ that are not widely available in today's hardware.
 
 \subsection{Concurrent Fibonacci and Skew Heaps}
 Jones \cite{jones89} has constructed a concurrent Skew heap that uses fine-grained
-locks (as opposed to locking the entire heap structure) to allow parallel \texttt{insert} and \texttt{deleteMin} operations
+locks (as opposed to locking the entire heap structure) to allow parallel \texttt{insert} and \texttt{deleteMin} operations to execute
 without violating the heap invariant. In a Skew heap, each node has three pointers:
 two children pointers and one sibling pointer that points to the next node at the same
 depth. Jones defines a bubble as the set of all pointers a Skew heap
@@ -248,7 +248,7 @@ linearizable: threads may access the minimum element of the Fibonacci heap out o
 order, (i.e., \texttt{deleteMin} does not necessarily return the minimum element in the heap at
 the point in time it is called), although the element is guaranteed to be reasonably small (``promising'') compared to the other
 elements in the heap. However, this presents problems with Dijkstra's algorithm and other
-graph algorithms that require a strict definition of \texttt{deleteMin}.
+graph algorithms that require a stricter definition of \texttt{deleteMin}.
 
 \subsection{Other Highly Concurrent Attempts}
 Michael and Scott's \cite{michael96} lock-free FIFO queue allows enqueue
@@ -274,9 +274,7 @@ to be controlled by a pseudorandom number generator (PRNG). Thus,
 a Skiplist only gives probabilistic guarantees that it will
 produce a balanced tree structure.
 However, pathologically bad structures that cause the data structure to degrade
-to a search complexity of $\mathcal{O}(n)$ are very unlikely. Also, since Skiplists
-do not rebalance themselves, input keys are typically uniformly mapped into another
-set (e.g., by using a hash function) to avoid pathological inputs.
+to a search complexity of $\mathcal{O}(n)$ are very unlikely.
 
 A Skiplist is a set of linked lists with ordered elements.
 Each linked list is assigned a level $0 \leq i \leq M$ which describes
@@ -405,12 +403,12 @@ If we are unsuccessful at having \texttt{previous[0]} point to our new node, we 
 whole procedure since either a new node was inserted and the ordering of $L(0)$ may be violated
 if we insert or the node at \texttt{previous[0]} was marked for removal.
 Note that the linearization point of an add occurs when the element is inserted
-into $L(0)$. Once \texttt{previous[0]} is updated, we attempt to update
+into $L(0)$. Once \texttt{previous[0]} is updated, we attempt to update the remaining
 \texttt{previous[i]} to \texttt{next[i]} in a CAS loop. To handle concurrent changes
 during this process (e.g., \texttt{previous[i]} being marked), we recompute the \texttt{previous}
 and \texttt{next} arrays whenever an atomic update fails.
 
-Removing an element from a lock-Free Skiplist is analogous to adding an element.
+Removing an element from a lock-free Skiplist is analogous to adding an element.
 First, we search for the target element and compute our \texttt{previous[i]} and \texttt{next[i]}
 arrays. Next, we mark each
 \texttt{next} pointer of the target element in a top-down fashion within a CAS loop. When a CAS fails,
@@ -444,7 +442,7 @@ a simpler alternative to Fibonacci heaps that, at least empirically,
 do not sacrifice performance.
 Pairing heaps are a popular backing data structure
 for Dijkstra's algorithm due to its offering of an efficient
-\texttt{decreaseKey} operator without involving complicated tree rebalances.
+\texttt{decreaseKey} and its avoidance of complicated tree rebalances.
 
 % http://www.cise.ufl.edu/~sahni/dsaaj/enrich/c13/pairing.htm is good!
 
@@ -536,7 +534,7 @@ We now consider some issues pertinent to parallelizing a heap-backed
 implementation of Dijkstra's algorithm. If \\ \texttt{deleteMin} does not
 remove and return the unvisited node in the graph with the smallest distance
 from the source node, Dijkstra's algorithm is not guaranteed to solve the shortest-path problem.
-A na\"{i}ve approach to running Dijkstra's algorithm in parallel would be to let calls
+A na\"{i}ve approach to running Dijkstra's algorithm in parallel would be to allow calls
 to \texttt{deleteMin} and \texttt{decreaseKey} haphazardly interleave. However,
 the minimum of the heap will change on some call to \texttt{decreaseKey} if
 a new value of a node is less than the current value. Thus, some comparison
@@ -566,8 +564,8 @@ In this section we develop lock-free \texttt{insert} and \texttt{decreaseKey}
 operators for Fredman et al.'s pairing heap. Our
 work relies on the observation that
 the specifics of
-Dijkstra's Algorithm allow us to make assumptions about how
-pairing heap operations interleave. 
+Dijkstra's algorithm allow us to make assumptions about how
+Pairing heap operations interleave. 
 We first list some assumptions that we have made about overlapping
 calls to operations on the heap. Then, we give a high-level overview
 of our lock-free approach before delving into the details of our
@@ -644,8 +642,8 @@ to the copied root. \texttt{meld} has the effect of setting the parent field of 
 heap to be the larger heap, and appending the larger heap to the list containing the subheaps
 that the larger heap is a parent of. This list of subheaps is a lock-free list, so there are no
 issues with concurrent modifications. Next, we attempt to CAS the root node of the melded heap
-to the root node of the entire heap. If the CAS call succeeds, we are done. Otherwise, we retry.
-If the CAS fails, we remove
+to the root node of the entire heap. If the CAS call succeeds, we are done. Otherwise,
+if the CAS fails, we remove
 the larger node from the smaller node's list of subheaps before retrying (this avoids accidentally duplicating nodes.)
 
 To perform a lock-free \texttt{decreaseKey} we consider three mutually exclusive cases.
@@ -682,8 +680,7 @@ We immediately decrease the value stored at the target node and remove it from t
 of sub heaps. Siblings of the target node must have updated references to fill the gap caused by removing the target node. 
 We then follow a similar procedure as in \texttt{insert}. We construct a copy of the root
 node, merge the decreased node and the root, and attempt to CAS the new root into place. To prevent duplicated
-nodes, if the CAS fails and the target node would have become the new root, we remove the old root from its
-list of subheaps. The structure of the heap is modified in this case, and there is a time when the target node does not exist in the heap after removal from the child list of the heap and before the target node has been reinserted. This is only an issue if the target node would become the new heap root and a \texttt{deleteMin} call were to delete the current root. In this case, the linearization would be that of the \texttt{deleteMin} occuring first and the \texttt{decreaseKey} occuring second. 
+nodes, if the CAS fails we remove the larger node from the smaller node's list of subheaps. The structure of the heap is modified in this case, and there is a time when the target node does not exist in the heap after removal from the child list of the heap and before the target node has been reinserted. This is only an issue if the target node would become the new heap root and a \texttt{deleteMin} call were to delete the current root. In this case, the linearization would be that of the \texttt{deleteMin} occuring first and the \texttt{decreaseKey} occuring second. 
 It is worth mentioning the case where a parent is decreased concurrently with its child. Although the
 delinking of the child may not be necessary, in this case it is performed anyway. The
 interleaved operations linearize as if the largest node was decreased before the smallest. 
@@ -701,7 +698,7 @@ and then merged together to form a resultant heap. The first step has no content
 and is trivial to parallelize. Our \texttt{meld} operator can be used to merge heaps in parallel.
 
 \section{Experimental Results}
-Efficiency of the lock-free pairing heap will be examined by comparing the relative performance of Dijkstra's algorithm, backed by different heap structures, on large network data sets. Currently, we
+Efficiency of the lock-free Pairing heap will be examined by comparing the relative performance of Dijkstra's algorithm, backed by different heap structures, on large network data sets. Currently, we
 plan to test three variants of Dijkstra's algorithm. The first variant will backed by a normal Skipqueue that performs a \texttt{decreaseKey} by removing the target node and readding it with a decreased key value.
 The second variant will be backed with a Skipqueue that uses our optimized \texttt{decreaseKey} operator. The third variant will be backed with our lock-free pairing heap. We
 will use real world data sets collected from the Stanford Large Network Dataset Collection \cite{slndc} and Harvard's Human Interactome Database \cite{hid}. We will additionally use two
@@ -713,8 +710,8 @@ synthetic graphs: a randomly generated dense graph and a randomly generated spar
 In non-lock-free Pairing heaps, nodes are inserted (a similar procedure is used for \texttt{decreaseKey})
 into the heap by either replacing the root of the heap or inserting itself as a subheap to the root. It is clear to see that
 parallel variants that preserve the general form of insertion operations will place un-due contention at the
-root of the data structure. This is the main issue we foresee with our lock-free pairing heap: always inserting at the root
-is a performance bottle-neck. Skipqueues, on the other hand, can insert elements in, e.g., the middle of the list in a less-contended way.
+root of the data structure. This is the main issue we foresee with our lock-free Pairing heap: always inserting at the root
+is a performance bottleneck. Skipqueues, on the other hand, can insert elements in, e.g., the middle of the list in a less-contended way.
 
 However, insertions into a Pairing heap run in asymptotically less time than a comparable Skipqueue insertion: a Pairing heap
 insertion runs close to $\mathcal{O}(1)$ time but a Skipqueue insertion runs in $\mathcal{O}(\log n)$ time. This is due
