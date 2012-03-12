@@ -180,13 +180,33 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Pairing Heaps}
+  \begin{itemize}
+    \item Pairing Heaps were introduced by Fredman and Tarjan.
+    \item Each node is a sub-heap
+    \item The parent of any node has key smaller than the child node
+    \item Each node has a left pointer to its first child, and a right pointer to its sibling
+    \item Like \texttt{decreaseKey}, other operations run quickly as well
+    	\begin{itemize}
+    	\item \texttt{meld}: $\mathcal{O}(1)$
+    	\item \texttt{findMin}: $\mathcal{O}(1)$
+    	\item \texttt{insert}: $\mathcal{O}(1)$
+    	\end{itemize}
+    \item \texttt{delete} and \texttt{deleteMin} run in $\mathcal{O}(\log n)$ amortized time     
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Pairing Heaps: Melding Two Heaps}
   \begin{itemize}
     \item To \texttt{meld} two heaps, compare their roots and add the root
       as a child of the smaller root.
     \item \texttt{meld} is the core operator for Pairing heaps.
   \end{itemize}
-  \includegraphics[scale=1.0]{img/meld.png}
+  \begin{figure}
+	  \Tree [.3 [.5 \qroof{T_1}.10 [.12 \qroof{T_2}.19 \qroof{T_3}.20 ] \qroof{T_4}.34 ] !{\qframesubtree} [.25 [.19 \qroof{T_5}.20 \qroof{T_6}.21 ] \qroof{T_7}.42 ] ]
+	  \caption{Melding two min-heaps together (one with root 3 and the other with root 5) with the \texttt{meld} operator. The heap rooted at 5 becomes a subheap of the heap rooted at 3.}
+	  \label{fig:meld}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Pairing Heaps: \texttt{insert}}
@@ -196,29 +216,77 @@
       this to the root.
     \item (The root of the heap will change if the new element is lower.)
   \end{itemize}
-  \includegraphics[scale=1.0]{img/meld.png}
+%  \includegraphics[scale=1.0]{img/meld.png}
 \end{frame}
 
-\begin{frame}{Pairing Heaps: \texttt{deleteMin}}
+\begin{frame}{Pairing Heaps: \texttt{decreaseKey}}
   \begin{itemize}
-    \item Pairing heaps have a two-step deleteMin operator.
+    \item Change the value of a node in the pair heap (e.g. updating the minimum distance to a node in Dijkstra's algorithm)
+    \item If new value is still greater than parent node value, change in place
+    \item Alternatively, remove node from heap, \texttt{insert} node with new value into heap
   \end{itemize}
-  \includegraphics[scale=1.0]{img/deleteMin1.png}
 \end{frame}
 
 \begin{frame}{Pairing Heaps: \texttt{deleteMin}}
   \begin{itemize}
-    \item After removing the root, \texttt{meld} each pair of heaps.
-  \end{itemize}
-  \includegraphics[scale=1.0]{img/deleteMin2.png}
-\end{frame}
-
-\begin{frame}{Pairing Heaps: \texttt{deleteMin}}
-  \begin{itemize}
+    \item \texttt{deleteMin} removes the root node of a Pair Heap (e.g. pop off node with shortest distance in Dijkstra's algorithm)
+    \item The root of the heap is first removed
+    \item The heap property must then be restored by finding a new root
+    \item Build pairs of heaps from the children of the root
     \item \texttt{meld} each resultant heap from right-to-left.
   \end{itemize}
-  \includegraphics[scale=1.0]{img/deleteMin3.png}
 \end{frame}
+
+\begin{frame}{Pairing Heaps: \texttt{deleteMin} Pairing Operation}
+  \begin{itemize}
+  \item The root of the tree has $n$ sub-trees $H_1, H_2, \dots, H_n$, each with their own individual roots. For each tuple in the set $\{(H_1, H_2), (H_3, H_4), \dots, \allowbreak (H_{n-1}, H_n)\}$, we meld the two heaps together to form $\{H'_1, \dots, \allowbreak H'_m\}$.
+   \item Perform a right-iteration (similar to foldr) of \texttt{meld} over these $m=\frac{n}{2}$ (or $m=\frac{n-1}{2} + 1$) heaps to construct a newly rebalanced pairing heap $H'$:
+	\begin{equation*}
+	  H' = \mathtt{meld}(H'_1, \mathtt{meld}(H'_2, \dots \mathtt{meld}(H'_{m-1}, H'_m) \dots ))
+	\end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Pairing Heaps: \texttt{deleteMin} Example}
+  \begin{itemize}
+    \item Example of the \texttt{deleteMin} operation
+  \end{itemize}
+  \begin{figure}
+	  \begin{enumerate}
+	   \item[(a)] \Tree [.7 [20 15 8 9 42 ] ] 
+	   \item[(b)] \Tree [20 15 8 9 42 ]
+	   \item[(c)] \Tree [.15 20 ]
+		      \Tree [.8 9 ]
+		      \Tree [.42 ]
+	   \item[(d)] \Tree [.15 20 ]
+		      \Tree [.8 42 9 ]
+	   \item[(e)] \Tree [.8 [.15 20 ] 42 9 ]
+	  \end{enumerate}
+    \caption{Calling \texttt{deleteMin} on a Pairing heap (a). The root is removed (b) and the children are melded in pairs (c), and then the pairs themselves are melded in right-to-left order (d-e). Note that the resulting heap (e) is more balanced than (a).}
+    \label{fig:deletemin}
+  \end{figure}
+\end{frame}
+
+%\begin{frame}{Pairing Heaps: \texttt{deleteMin}}
+%  \begin{itemize}
+%    \item Pairing heaps have a two-step deleteMin operator.
+%  \end{itemize}
+%  \includegraphics[scale=1.0]{img/deleteMin1.png}
+%\end{frame}
+
+%\begin{frame}{Pairing Heaps: \texttt{deleteMin}}
+%  \begin{itemize}
+%    \item After removing the root, \texttt{meld} each pair of heaps.
+%  \end{itemize}
+%  \includegraphics[scale=1.0]{img/deleteMin2.png}
+%\end{frame}
+
+%\begin{frame}{Pairing Heaps: \texttt{deleteMin}}
+%  \begin{itemize}
+%    \item \texttt{meld} each resultant heap from right-to-left.
+%  \end{itemize}
+%  \includegraphics[scale=1.0]{img/deleteMin3.png}
+%\end{frame}
 
 \begin{frame}{Parallelizing Dijkstra's Algorithm}
   \begin{itemize}
@@ -243,7 +311,13 @@
         \item But, what if the new node is inserted as a subheap of the current root?
         \item We create a copy of the root to avoid this issue.
       \end{itemize}
-    \end{itemize}
+    \item Each node reference is updateable through a CAS operation
+    \item In Java: \texttt{AtomicReference}
+    \item Operations requiring linking nodes together use CAS loops
+    \item Operations requiring node removal additionally use time stamps
+    \item Build more complex lock-free operations from simpler ones
+  \end{itemize}
+  \includegraphics[scale=1.0]{img/pairheapLockFree.svg}
 \end{frame}
 
 \begin{frame}{Lock-Free Pairing Heaps: \texttt{insert} an element}
@@ -278,6 +352,13 @@
     \item \textbf{Case 3}: The node is now smaller than its parent, violating the heap invariant. Immediately remove
       the node from the parent's list of subheaps. Next, follow the same procedure as \texttt{insert}.
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Lock-Free \texttt{deleteMin}}
+    \begin{itemize}
+    	\item Requires the removal of root node and restructuring of heap architecture
+    	\item Root reference and timestamp will be used to update the heap
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Empirical Considerations}
