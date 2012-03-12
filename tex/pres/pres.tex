@@ -169,20 +169,23 @@
 \begin{frame}{Pairing Heaps}
   \begin{itemize}
     \item Pairing Heaps were introduced by Fredman and Tarjan\footnote{``The Pairing heap: a new form of self-adjusting heap,'' Fredman, Sedgewick, Sleator, and Tarjan, Algorithmica (1986).} as a simplification of Fibonacci heaps.
-      \begin{itemize}
+     \begin{itemize}
         \item Fibonacci heaps have a $\mathcal{O}(1)$ \texttt{decreaseKey} operator, but require complicated rebalancing.
       \end{itemize}
-    \item \texttt{decreaseKey} runs in $2^{\mathcal{O}(\sqrt{\log \log n})}$
-        time
+    \item \texttt{decreaseKey} runs in $2^{\mathcal{O}(\sqrt{\log \log n})}$ time.
         \begin{itemize}
-          \item In practice, constant time. E.g., for a graph with a billion nodes,
-            $2^\sqrt{\log \log 10^9} = 3.34$.
+          \item In practice, constant time. E.g., for a graph with a billion edges, $2^{\sqrt{\log \log 10^9}} = 3.34$.
         \end{itemize}
-      \item Fredman and Tarjan empirically demonstrated that Pairing heaps have better performance than Fibonacci heaps on reasonably-sized graphs.
+      \item Pairing heaps have better performance than Fibonacci heaps on reasonably-sized graphs.\footnote{``On the Efficiency of Pairing Heaps and Related Data Structures,'' Michael Fredman, Journal of the ACM, 1999.}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Pairing Heaps: Melding Two Heaps}
+  \begin{itemize}
+    \item To \texttt{meld} two heaps, compare their roots and add the root
+      as a child of the smaller root.
+    \item \texttt{meld} is the core operator for Pairing heaps.
+  \end{itemize}
   \includegraphics[scale=1.0]{img/meld.png}
 \end{frame}
 
