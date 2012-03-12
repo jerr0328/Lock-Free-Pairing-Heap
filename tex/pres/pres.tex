@@ -51,11 +51,13 @@
 \end{frame}
 
 \begin{frame}{Skiplists}
+  \vspace{-0.2cm}
   \begin{itemize}
+    \item Created by Bill Pugh.\footnote{Pugh, ``Skiplists: A Probabilistic Alternative to Balanced Trees,'' 1990.}
     \item Skiplists are constructed from a hierarchy of linked lists with the \textit{Skiplist property}:
       the set of elements contained in level $i$ is a subset of all the levels below it.
-    \item Links allow you to do a binary search and ``jump'' around a list.
-    \item The height of an element is randomly sampled from a power-law distribution: the probability of
+    \item Links allow you to do a binary search (``skip'' around.)
+    \item The height of an element is random. The probability of
       a node having a height of $i \geq 0$ is $2^{-i}$.
     \item Time complexity of operations are probabilistically the same as for a binary search tree, but
       $\mathcal{O}(n)$ in the worst case.
@@ -119,6 +121,7 @@
 
 \begin{frame}{Lock-free Skiplists}
   \begin{itemize}
+    \item Created by Herlihy, Lev, and Shavit.\footnote{Herlihy, Lev, Shavit, ``A Lock-Free Concurrent Skiplist with Wait-Free Search,'' 2007.}
     \item Instead of linked lists at each level, we use lock-free linked lists.
     \item We lose the Skiplist property. (Levels aren't necessarily subsets of each other.) In particular,
       this means we need to always verify a node is in the lowest level.
