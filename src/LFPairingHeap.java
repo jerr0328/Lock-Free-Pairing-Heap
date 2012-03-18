@@ -115,6 +115,7 @@ public class LFPairingHeap<T> {
 	}
 
 	public void decreaseKey(LFPairingHeap<T> key, int delta) {
+		// Case 1: Decreasing the root
 		while (key == root.getReference()) {
 			LFPairingHeap<T> expectedRoot;
 			int[] expectedStamp = new int[1];
@@ -125,32 +126,40 @@ public class LFPairingHeap<T> {
 			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1))
 				return;
 		}
-
-		// No changes to the tree structure needed in this case.
-		if (key.parent.ele.getWeight() < key.ele.getWeight() - delta) {
+		
+		// Case 2: Target is still greater than its parent.
+		// (No changes to the tree structure needed in this case.)
+		if (key.parent.ele.getWeight() <= key.ele.getWeight() - delta) {
 			key.ele.setWeight(key.ele.getWeight() - delta);
 			return;
 		}
-
+		
 		// Delink the node from its parent and update its weight.
 		key.parent.subHeaps.remove(key);
 		key.ele.setWeight(key.ele.getWeight() - delta);
 
+		LFPairingHeap<T> expectedRoot;
+		int[] expectedStamp = new int[1];
 		while (true) {
-			LFPairingHeap<T> expectedRoot;
-			int[] expectedStamp = new int[1];
+			// Case 3: Target is greater than the current root.
 			expectedRoot = root.get(expectedStamp);
+			if (expectedRoot.ele.getWeight() <= key.ele.getWeight()) {
+				key.parent = expectedRoot;
+				expectedRoot.subHeaps.push(key);
+				return;
+			}
+			// Case 4: Update the root.
 			LFPairingHeap<T> newRoot = new LFPairingHeap<T>(expectedRoot.ele);
 			newRoot.parent = expectedRoot.parent;
 			newRoot.subHeaps = expectedRoot.subHeaps;
 			newRoot = merge(newRoot, key);
-			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1)) {
-				
+			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1))
 				return;
-			}
 			// Cleanup our failure.
 			else if (newRoot == key)
-				key.subHeaps.removeLastOccurrence(expectedRoot);
+				key.subHeaps.removeFirstOccurrence(expectedRoot);
+			else
+				expectedRoot.subHeaps.removeFirstOccurrence(key);
 		}
 	}
 }
