@@ -89,29 +89,40 @@ public class LFPairingHeap<T> {
 	 */
 	public LFPairingHeap<T> insert(Weighted<T> e) {
 		LFPairingHeap<T> ret = new LFPairingHeap<T>(e);
+		LFPairingHeap<T> expectedRoot;
+		int[] expectedStamp = new int[1];
 		while (true) {
-			LFPairingHeap<T> expectedRoot;
-			int[] expectedStamp = new int[1];
 			expectedRoot = root.get(expectedStamp);
+			// Check if we can just insert this as a child of the root.
+			if (ret.ele.getWeight() >= expectedRoot.ele.getWeight()) {
+				ret.parent = expectedRoot;
+				expectedRoot.subHeaps.push(ret);
+				break;
+			}
+			
+			// Otherwise, make a new root.
 			LFPairingHeap<T> newRoot = new LFPairingHeap<T>(expectedRoot.ele);
 			newRoot.parent = expectedRoot.parent;
 			newRoot.subHeaps = expectedRoot.subHeaps;
 			newRoot = merge(newRoot, ret);
 			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0],
-					expectedStamp[0] + 1)) {
-
+					expectedStamp[0] + 1))
 				break;
-			}
 			else if (newRoot == ret)
 				ret.subHeaps.remove(expectedRoot);
-			
+			else
+				expectedRoot.subHeaps.remove(ret);
 		}
 		return ret;
 		// return merge(new LFPairingHeap<T>(e), this);
 	}
 
-	public NewHeapAndValue deleteMin() {
-		return new NewHeapAndValue(merger(subHeaps), ele);
+	// Not lock-free!
+	public LFPairingHeap<T> deleteMin() {
+		LFPairingHeap<T> ret = this.root.getReference();
+		int stamp = this.root.getStamp();
+		this.root.set(merger(ret.subHeaps), stamp + 1);
+		return ret;
 	}
 
 	public void decreaseKey(LFPairingHeap<T> key, int delta) {
