@@ -1,7 +1,7 @@
 import java.util.*;
 
-public class RandomGraph {
-	public final TreeSet<GraphNode<Integer>> nodes;
+public class RandomGraph implements Graph<Integer> {
+	private final TreeSet<GraphNode<Integer>> nodes;
 	
 	public RandomGraph(int size, double density) {
 		nodes = new TreeSet<GraphNode<Integer>>();
@@ -13,5 +13,9 @@ public class RandomGraph {
 			}
 			nodes.add(newNode);
 		}
+	}
+	
+	public TreeSet<GraphNode<Integer>> getNodes() {
+		return nodes;
 	}
 }

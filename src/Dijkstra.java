@@ -9,7 +9,7 @@ public class Dijkstra<T> {
 	public Dijkstra(Graph<T> graph, GraphNode<T> source) {
 		p = new PriorityQueue<Weighted<GraphNode<T>>>();
 		this.source = source;
-		for (GraphNode<T> node : graph) {
+		for (GraphNode<T> node : graph.getNodes()) {
 			if (node.equals(source)) {
 				p.add(new Weighted<GraphNode<T>>(node, 0));
 				distance.put(node, 0);
