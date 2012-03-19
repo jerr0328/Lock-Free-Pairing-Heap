@@ -25,19 +25,19 @@ public class Node<T> {
 		this.inHeap = true;
 	}
 
-	private Node(ConcurrentLinkedQueue<Node<T>> subHeaps, ArrayList<GraphEdge<T>> edges) {
-		this.subHeaps = subHeaps;
-		this.edges = edges;
+	private Node(Node<T> node) {
+		this.subHeaps = node.subHeaps;
+		this.edges = node.edges;
+		this.edgesArray = node.edgesArray;
+		this.distance = node.distance;
+		this.parent = node.parent;
+		this.value = node.value;
+		this.id = node.id;
+		this.inHeap = node.inHeap;
 	}
 	
 	public Node<T> clone() {
-		Node<T> ret = new Node<T>(this.subHeaps, this.edges);
-		ret.distance = distance;
-		ret.parent = parent;
-		ret.value = value;
-		ret.id = id;
-		ret.inHeap = inHeap;
-		return ret;
+		return new Node<T>(this);
 	}
 	
 	public void addConnection(Node<T> rhs, int weight) {

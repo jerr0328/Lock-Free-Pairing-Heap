@@ -157,10 +157,9 @@ public class LFPairingHeap<T> {
 		
 		// Update the weight.
 		key.distance = newValue;
-		
-		// Case 2: Target is still greater than its parent.
-		// (No changes to the tree structure needed in this case.)
 		if (key.parent != null) {
+			// Case 2: Target is still greater than its parent.
+			// (No changes to the tree structure needed in this case.)
 			if (key.parent.distance <= key.distance)
 				return;
 			
