@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.Thread.State;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
@@ -11,8 +12,8 @@ public class Dijkstra<T> {
 	
 	public static void main(String[] args) throws IOException {
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(5000, 1.0, 0), 2);
-			System.in.read();
+			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(10, 0.5, 0), 2);
+			//System.in.read();
 			long time = System.nanoTime();
 			d.run();
 			System.out.println((System.nanoTime() - time)/100000000.0);
@@ -53,7 +54,9 @@ public class Dijkstra<T> {
 			
 			//AtomicInteger counter = new AtomicInteger(0);
 			AtomicInteger finishedCounter = new AtomicInteger(0);
-			//for (DijkstraWorker worker : workers) {
+			for (DijkstraWorker worker : workers)
+				while (worker.getState() != State.WAITING)
+					Thread.yield();
 			for(int i = 0; i < workers.size(); i++) {
 				DijkstraWorker worker = workers.get(i);
 				worker.modifyWork(i, numWorkers, finishedCounter, min);
@@ -63,7 +66,7 @@ public class Dijkstra<T> {
 			}
 			
 			while(finishedCounter.get() < numWorkers)
-				Thread.yield();			
+				Thread.yield();
 		}
 		
 		for (DijkstraWorker worker : workers)
