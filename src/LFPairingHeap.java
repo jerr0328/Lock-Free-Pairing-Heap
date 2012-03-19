@@ -111,6 +111,7 @@ public class LFPairingHeap<T> {
 		size.getAndDecrement();
 		Node<T> ret = root.getReference();
 		int stamp = root.getStamp();
+		ret.inHeap = false;
 		if (ret.subHeaps.size() == 0)
 			root.set(null, stamp + 1);
 		else {
@@ -139,6 +140,8 @@ public class LFPairingHeap<T> {
 	}
 	
 	public void decreaseKey(Node<T> key, int newValue) {
+		if (!key.inHeap)
+			return;
 		Node<T> expectedRoot;
 		int[] expectedStamp = new int[1];
 		// Case 1: Decreasing the root
