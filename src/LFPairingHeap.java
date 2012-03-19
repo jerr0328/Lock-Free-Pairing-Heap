@@ -185,11 +185,9 @@ public class LFPairingHeap<T> {
 			// Cleanup our failure.
 			else if (newRoot == key) {
 				key.subHeaps.remove(expectedRoot);
-				System.out.println("Fail.");
 			}
 			else {
 				expectedRoot.subHeaps.remove(key);
-				System.out.println("Fail.");
 			}
 		}
 	}

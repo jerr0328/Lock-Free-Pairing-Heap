@@ -15,12 +15,14 @@ public class Node<T> {
 	public ArrayList<GraphEdge<T>> edges;
 	public Object[] edgesArray;
 	public int id;
+	public boolean inHeap;
 
 	public Node(T value, int id, int expectedSize) {
 		this.id = id;
 		subHeaps = new ConcurrentLinkedQueue<Node<T>>();
 		edges = new ArrayList<GraphEdge<T>>();
 		this.value = value;
+		this.inHeap = true;
 	}
 
 	private Node(ConcurrentLinkedQueue<Node<T>> subHeaps, ArrayList<GraphEdge<T>> edges) {
@@ -34,6 +36,7 @@ public class Node<T> {
 		ret.parent = parent;
 		ret.value = value;
 		ret.id = id;
+		ret.inHeap = inHeap;
 		return ret;
 	}
 	

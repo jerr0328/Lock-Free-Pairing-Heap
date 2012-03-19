@@ -12,13 +12,13 @@ public class Dijkstra<T> {
 	
 	public static void main(String[] args) throws IOException {
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(10, 0.5, 0), 2);
+			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(5000, 0.5, 0), 2);
 			//System.in.read();
 			long time = System.nanoTime();
 			d.run();
 			System.out.println((System.nanoTime() - time)/100000000.0);
-			/*for(int i = 0; i < d.distances.size(); i++) {
-				boolean found = false;}
+			for(int i = 0; i < d.distances.size(); i++) {
+				boolean found = false;
 				for(Entry<Node<Integer>, Integer> entry : d.distances.entrySet()) {
 					if (entry.getKey().id == i) {
 						found = true;
@@ -27,7 +27,7 @@ public class Dijkstra<T> {
 				}
 				if (!found)
 					System.out.println("*** " + i + " missing! ***");
-			}*/
+			}
 		}
 	}
 	
