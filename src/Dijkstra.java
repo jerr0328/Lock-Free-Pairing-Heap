@@ -11,9 +11,9 @@ public class Dijkstra<T> {
 	private ConcurrentHashMap<Node<T>, Integer> distances;
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
+		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(5000, 1.0, 0), Integer.parseInt(args[0]));
+			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(250, .10, 0), 2);//Integer.parseInt(args[0]));
 			//System.in.read();
 			//System.out.println("Created graph.");
 			long time = System.nanoTime();
@@ -71,6 +71,7 @@ public class Dijkstra<T> {
 		
 		for (DijkstraWorker worker : workers)
 			worker.kill();
+		startLatch.countDown();
 	}
 	
 	private class DijkstraWorker extends Thread {
@@ -101,9 +102,6 @@ public class Dijkstra<T> {
 		
 		public void kill() {
 			killed = true;
-			synchronized (this) {
-				this.notify();
-			}
 		}
 		
 		public void run() {
