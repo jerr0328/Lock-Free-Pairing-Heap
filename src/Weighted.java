@@ -20,8 +20,21 @@ public class Weighted<T> {
 		return weight;
 	}
 	
-	public boolean compareTo(Weighted<T> o)
+	public int compareTo(Weighted<T> rhs) {
+		return this.weight - rhs.weight;
+	}
+	
+	public boolean equals(Weighted<T> o)
 	{
 		return (o.obj == obj && o.weight == weight);
 	}
+
+	public void setWeight(int i) {
+		this.weight = i;
+	}
+	
+	public Weighted<T> clone() {
+		return new Weighted<T>(this.obj, this.weight);
+	}
+
 }

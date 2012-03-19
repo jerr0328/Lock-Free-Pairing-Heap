@@ -5,7 +5,7 @@ import java.util.*;
  *
  * @author Charles Newton
  */
-public class PairingHeap<T extends Weighted<S>, S> {
+public class PairingHeap2<T extends Weighted<S>, S> {
   private T ele;
   private PairingHeap<T, S> parent;
   private Stack<PairingHeap<T, S>> subHeaps;

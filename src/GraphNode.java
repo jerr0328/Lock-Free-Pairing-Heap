@@ -15,13 +15,13 @@ public class GraphNode<T> implements Comparable<GraphNode<T>> {
 		return adjacencyList;
 	}
 	
-	public void addConnection(GraphNode<T> rhs, int weight) {
-		addConnection(new GraphEdge<T>(rhs, weight));
+	public void addConnection(LFPairingHeap<GraphNode<T>> node, int weight) {
+		addConnection(new GraphEdge<T>(node, weight));
 	}
 	
 	public void addConnection(GraphEdge<T> weightedEdge) {
 		adjacencyList.add(weightedEdge);
-		weightedEdge.rhs.adjacencyList.add(new GraphEdge<T>(this, weightedEdge.weight));
+		weightedEdge.rhs.getElement().get().adjacencyList.add(new GraphEdge<T>(this, weightedEdge.weight));
 	}
 	
 	public boolean equals(GraphNode<T> node) {

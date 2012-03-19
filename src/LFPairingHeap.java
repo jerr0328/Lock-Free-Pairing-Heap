@@ -9,40 +9,16 @@ import java.util.concurrent.atomic.*;
  * @author Charles Newton
  */
 public class LFPairingHeap<T> {
-	private volatile Weighted<T> ele;
-	private ConcurrentLinkedDeque<LFPairingHeap<T>> subHeaps;
-	private AtomicStampedReference<LFPairingHeap<T>> root;
-	private volatile LFPairingHeap<T> parent;
-
-	public class NewHeapAndValue {
-		public Weighted<T> value;
-		public LFPairingHeap<T> heap;
-
-		private NewHeapAndValue(LFPairingHeap<T> heap, Weighted<T> value) {
-			this.heap = heap;
-			this.value = value;
-		}
-	}
-
+	public final AtomicStampedReference<Node<T>> root;
+	private final AtomicInteger size;
+	
 	/**
-	 * Creates a new (empty) pairing heap.
+	 * Creates a new pairing heap.
 	 */
-	public LFPairingHeap() {
-		subHeaps = new ConcurrentLinkedDeque<LFPairingHeap<T>>();
-		ele = null;
-		parent = null;
-	}
-
-	/**
-	 * Creates a trivial heap containing only one element.
-	 */
-	private LFPairingHeap(Weighted<T> ele) {
-		this();
-		this.ele = ele;
-	}
-
-	public boolean isEmpty() {
-		return ele == null;
+	public LFPairingHeap(Node<T> root) {
+		root.parent = null;
+		this.root = new AtomicStampedReference<Node<T>>(root, 0);
+		this.size = new AtomicInteger(1);
 	}
 
 	/**
@@ -50,18 +26,18 @@ public class LFPairingHeap<T> {
 	 * of the smaller. Makes a stateful change to which ever the smaller of lhs
 	 * and rhs are.
 	 * 
-	 * @return the smallest heap (which now contains both heaps.)
+	 * @return the smallest node (which contains the larger as a subheap)
 	 */
-	private LFPairingHeap<T> merge(LFPairingHeap<T> lhs, LFPairingHeap<T> rhs) {
-		// Trivial cases
-		if (lhs.isEmpty())
+	private Node<T> merge(Node<T> lhs, Node<T> rhs) {
+		Node<T> small;
+		Node<T> large;
+		
+		if (lhs == null)
 			return rhs;
-		if (rhs.isEmpty())
+		else if (rhs == null)
 			return lhs;
-
-		LFPairingHeap<T> small;
-		LFPairingHeap<T> large;
-		if (lhs.ele.compareTo(rhs.ele) <= 0) {
+		
+		if (lhs.distance <= rhs.distance) {
 			small = lhs;
 			large = rhs;
 		} else {
@@ -69,108 +45,149 @@ public class LFPairingHeap<T> {
 			large = lhs;
 		}
 
-		small.subHeaps.push(large);
+		small.subHeaps.add(large);
 		large.parent = small;
 
 		return small;
 	}
 
-	private LFPairingHeap<T> merger(ConcurrentLinkedDeque<LFPairingHeap<T>> list) {
-		if (list.size() == 0)
-			return new LFPairingHeap<T>();
+	private Node<T> merger(ConcurrentLinkedQueue<Node<T>> list) {
+		/*if (list.size() == 0)
+			return null;
 		if (list.size() == 1)
-			return list.pop();
+			return list.poll();
 
-		return merge(merge(list.pop(), list.pop()), merger(list));
+		return merge(merge(list.poll(), list.poll()), merger(list));*/
+		Stack<Node<T>> list2 = new Stack<Node<T>>();
+		while (true) {
+			Node<T> one = list.poll();
+			Node<T> two = list.poll();
+			if (one == null)
+				break;
+			if (two == null) {
+				list2.add(one);
+				break;
+			}
+			list2.add(merge(one, two));
+		}
+		Node<T> ret = list2.pop();
+		while (list2.size() > 0)
+			ret = merge(ret, list2.pop());
+
+		return ret;
 	}
 
 	/**
-	 * Inserts e into the heap. Returns the key associated with e.
+	 * Inserts e into the heap.
 	 */
-	public LFPairingHeap<T> insert(Weighted<T> e) {
-		LFPairingHeap<T> ret = new LFPairingHeap<T>(e);
-		LFPairingHeap<T> expectedRoot;
+	public void insert(Node<T> e) {
+		Node<T> expectedRoot;
 		int[] expectedStamp = new int[1];
 		while (true) {
 			expectedRoot = root.get(expectedStamp);
 			// Check if we can just insert this as a child of the root.
-			if (ret.ele.getWeight() >= expectedRoot.ele.getWeight()) {
-				ret.parent = expectedRoot;
-				expectedRoot.subHeaps.push(ret);
+			if (e.distance > expectedRoot.distance) {
+				e.parent = expectedRoot;
+				expectedRoot.subHeaps.add(e);
 				break;
 			}
 			
 			// Otherwise, make a new root.
-			LFPairingHeap<T> newRoot = new LFPairingHeap<T>(expectedRoot.ele);
-			newRoot.parent = expectedRoot.parent;
-			newRoot.subHeaps = expectedRoot.subHeaps;
-			newRoot = merge(newRoot, ret);
+			Node<T> newRoot = expectedRoot.clone();
+			newRoot = merge(newRoot, e);
 			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0],
 					expectedStamp[0] + 1))
 				break;
-			else if (newRoot == ret)
-				ret.subHeaps.remove(expectedRoot);
+			else if (newRoot == e)
+				e.subHeaps.remove(expectedRoot);
 			else
-				expectedRoot.subHeaps.remove(ret);
+				expectedRoot.subHeaps.remove(e);
 		}
-		return ret;
-		// return merge(new LFPairingHeap<T>(e), this);
+		size.getAndIncrement();
 	}
 
 	// Not lock-free!
-	public LFPairingHeap<T> deleteMin() {
-		LFPairingHeap<T> ret = this.root.getReference();
-		int stamp = this.root.getStamp();
-		this.root.set(merger(ret.subHeaps), stamp + 1);
+	public Node<T> deleteMin() {
+		size.getAndDecrement();
+		Node<T> ret = root.getReference();
+		int stamp = root.getStamp();
+		if (ret.subHeaps.size() == 0)
+			root.set(null, stamp + 1);
+		else {
+			root.set(merger(ret.subHeaps), stamp + 1);
+			root.getReference().parent = null;
+		}
 		return ret;
 	}
 
-	public void decreaseKey(LFPairingHeap<T> key, int delta) {
+	public int size() {
+		return size.get();
+	}
+	
+	public boolean search(int id) {
+		return search(id, root.getReference());
+	}
+	
+	private boolean search(int id, Node<T> start) {
+		if (start.id == id)
+			return true;
+		for(Node<T> node : start.subHeaps) {
+			if (search(id, node))
+				return true;
+		}
+		return false;
+	}
+	
+	public void decreaseKey(Node<T> key, int newValue) {
+		Node<T> expectedRoot;
+		int[] expectedStamp = new int[1];
 		// Case 1: Decreasing the root
 		while (key == root.getReference()) {
-			LFPairingHeap<T> expectedRoot;
-			int[] expectedStamp = new int[1];
 			expectedRoot = root.get(expectedStamp);
-			Weighted<T> newWeight = expectedRoot.ele.clone();
-			LFPairingHeap<T> newRoot = new LFPairingHeap<T>(newWeight);
-			newRoot.subHeaps = expectedRoot.subHeaps;
+			if (key != expectedRoot)
+				break;
+			Node<T> newRoot = key.clone();
+			newRoot.distance = newValue;
 			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1))
 				return;
 		}
 		
+		// Update the weight.
+		key.distance = newValue;
+		
 		// Case 2: Target is still greater than its parent.
 		// (No changes to the tree structure needed in this case.)
-		if (key.parent.ele.getWeight() <= key.ele.getWeight() - delta) {
-			key.ele.setWeight(key.ele.getWeight() - delta);
-			return;
+		if (key.parent != null) {
+			if (key.parent.distance <= key.distance)
+				return;
+			
+			// Delink the node from its parent.
+			key.parent.subHeaps.remove(key);
 		}
-		
-		// Delink the node from its parent and update its weight.
-		key.parent.subHeaps.remove(key);
-		key.ele.setWeight(key.ele.getWeight() - delta);
-
-		LFPairingHeap<T> expectedRoot;
-		int[] expectedStamp = new int[1];
 		while (true) {
 			// Case 3: Target is greater than the current root.
 			expectedRoot = root.get(expectedStamp);
-			if (expectedRoot.ele.getWeight() <= key.ele.getWeight()) {
+			if (expectedRoot.distance <= key.distance) {
 				key.parent = expectedRoot;
-				expectedRoot.subHeaps.push(key);
+				expectedRoot.subHeaps.add(key);
 				return;
 			}
+			
 			// Case 4: Update the root.
-			LFPairingHeap<T> newRoot = new LFPairingHeap<T>(expectedRoot.ele);
-			newRoot.parent = expectedRoot.parent;
-			newRoot.subHeaps = expectedRoot.subHeaps;
+			key.parent = null;
+			Node<T> newRoot = expectedRoot.clone();
 			newRoot = merge(newRoot, key);
 			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1))
 				return;
 			// Cleanup our failure.
-			else if (newRoot == key)
-				key.subHeaps.removeFirstOccurrence(expectedRoot);
-			else
-				expectedRoot.subHeaps.removeFirstOccurrence(key);
+			else if (newRoot == key) {
+				key.subHeaps.remove(expectedRoot);
+				System.out.println("Fail.");
+			}
+			else {
+				expectedRoot.subHeaps.remove(key);
+				System.out.println("Fail.");
+			}
 		}
 	}
 }

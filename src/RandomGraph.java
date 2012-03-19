@@ -1,21 +1,38 @@
 import java.util.*;
 
 public class RandomGraph implements Graph<Integer> {
-	private final TreeSet<GraphNode<Integer>> nodes;
+	private LFPairingHeap<Integer> heap;
+	private Node<Integer> source;
 	
-	public RandomGraph(int size, double density) {
-		nodes = new TreeSet<GraphNode<Integer>>();
-		while(nodes.size() < size) {
-			GraphNode<Integer> newNode = new GraphNode<Integer>((int)(Integer.MAX_VALUE*Rnd.dbl()));
-			for(GraphNode<Integer> node : nodes) {
+	public RandomGraph(int size, double density, int seed) {
+		Rnd.r.setSeed(seed);
+		heap = null;
+		ArrayList<Node<Integer>> nodes = new ArrayList<Node<Integer>>();
+		while (nodes.size() < size) {
+			Node<Integer> newNode = new Node<Integer>((int)(Integer.MAX_VALUE*Rnd.dbl()), nodes.size(), (int)(size*density));
+			for(Node<Integer> node : nodes) {
 				if (Rnd.dbl() < density)
-					node.addConnection(node, (int)(100*Rnd.dbl()));
+					newNode.addConnection(node, 1 + (int)(100*Rnd.dbl()));
+			}
+			if (heap == null) {
+				newNode.distance = 0;
+				heap = new LFPairingHeap<Integer>(newNode);
+			}
+			else {
+				newNode.distance = Integer.MAX_VALUE;
+				heap.insert(newNode);
 			}
 			nodes.add(newNode);
 		}
+		for(Node<Integer> node : nodes)
+			node.finalize();
 	}
 	
-	public TreeSet<GraphNode<Integer>> getNodes() {
-		return nodes;
+	public LFPairingHeap<Integer> getNodes() {
+		return heap;
+	}
+	
+	public Node<Integer> getSource() {
+		return source;
 	}
 }

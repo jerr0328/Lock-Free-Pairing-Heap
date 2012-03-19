@@ -1,5 +1,9 @@
-import java.util.*;
-
+/**
+ * A Graph has nodes and a source. Intended for input into Dijkstra's algorithm.
+ *  
+ * @author Charles Newton
+ */
 public interface Graph<T> {
-	public TreeSet<GraphNode<T>> getNodes();
+	public LFPairingHeap<T> getNodes();
+	public Node<T> getSource();
 }
