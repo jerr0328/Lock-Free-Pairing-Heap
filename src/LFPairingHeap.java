@@ -9,15 +9,15 @@ import java.util.concurrent.atomic.*;
  * @author Charles Newton
  */
 public class LFPairingHeap<T> {
-	public final AtomicStampedReference<Node<T>> root;
+	public final AtomicStampedReference<PHNode<T>> root;
 	private final AtomicInteger size;
 	
 	/**
 	 * Creates a new pairing heap.
 	 */
-	public LFPairingHeap(Node<T> root) {
+	public LFPairingHeap(PHNode<T> root) {
 		root.parent = null;
-		this.root = new AtomicStampedReference<Node<T>>(root, 0);
+		this.root = new AtomicStampedReference<PHNode<T>>(root, 0);
 		this.size = new AtomicInteger(1);
 	}
 
@@ -28,9 +28,9 @@ public class LFPairingHeap<T> {
 	 * 
 	 * @return the smallest node (which contains the larger as a subheap)
 	 */
-	private Node<T> merge(Node<T> lhs, Node<T> rhs) {
-		Node<T> small;
-		Node<T> large;
+	private PHNode<T> merge(PHNode<T> lhs, PHNode<T> rhs) {
+		PHNode<T> small;
+		PHNode<T> large;
 		
 		if (lhs == null)
 			return rhs;
@@ -45,79 +45,83 @@ public class LFPairingHeap<T> {
 			large = lhs;
 		}
 
-		small.subHeaps.add(large);
-		large.parent = small;
+		small.subHeaps.add(large.graphNode);
+		large.parent = small.graphNode;
 
 		return small;
 	}
 
-	private Node<T> merger(ConcurrentLinkedQueue<Node<T>> list) {
+	private PHNode<T> merger(ConcurrentLinkedQueue<GraphNode<T>> list) {
 		/*if (list.size() == 0)
 			return null;
 		if (list.size() == 1)
 			return list.poll();
 
 		return merge(merge(list.poll(), list.poll()), merger(list));*/
-		Stack<Node<T>> list2 = new Stack<Node<T>>();
+		Stack<GraphNode<T>> list2 = new Stack<GraphNode<T>>();
 		while (true) {
-			Node<T> one = list.poll();
-			Node<T> two = list.poll();
+			GraphNode<T> one = list.poll();
+			GraphNode<T> two = list.poll();
 			if (one == null)
 				break;
 			if (two == null) {
+				one.phNode.parent = null;
 				list2.add(one);
 				break;
 			}
-			list2.add(merge(one, two));
+			PHNode<T> winner = merge(one.phNode, two.phNode);
+			winner.parent = null;
+			list2.add(winner.graphNode);
 		}
-		Node<T> ret = list2.pop();
-		while (list2.size() > 0)
-			ret = merge(ret, list2.pop());
-
-		return ret;
+		GraphNode<T> ret = list2.pop();
+		while (list2.size() > 0) {
+			ret = merge(ret.phNode, list2.pop().phNode).graphNode;
+		}
+		return ret.phNode;
 	}
 
 	/**
 	 * Inserts e into the heap.
 	 */
-	public void insert(Node<T> e) {
-		Node<T> expectedRoot;
+	public void insert(PHNode<T> e) {
+		PHNode<T> expectedRoot;
 		int[] expectedStamp = new int[1];
 		while (true) {
 			expectedRoot = root.get(expectedStamp);
 			// Check if we can just insert this as a child of the root.
-			if (e.distance > expectedRoot.distance) {
-				e.parent = expectedRoot;
-				expectedRoot.subHeaps.add(e);
+			if (e.distance >= expectedRoot.distance) {
+				e.parent = expectedRoot.graphNode;
+				expectedRoot.subHeaps.add(e.graphNode);
 				break;
 			}
 			
 			// Otherwise, make a new root.
-			Node<T> newRoot = expectedRoot.clone();
+			PHNode<T> newRoot = expectedRoot.clone();
 			newRoot = merge(newRoot, e);
 			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0],
-					expectedStamp[0] + 1))
+					expectedStamp[0] + 1)) {
+				newRoot.graphNode.phNode = newRoot;
 				break;
+			}
 			else if (newRoot == e)
-				e.subHeaps.remove(expectedRoot);
+				e.subHeaps.remove(expectedRoot.graphNode);
 			else
-				expectedRoot.subHeaps.remove(e);
+				expectedRoot.subHeaps.remove(e.graphNode);
 		}
 		size.getAndIncrement();
 	}
 
 	// Not lock-free!
-	public Node<T> deleteMin() {
+	public PHNode<T> deleteMin() {
 		size.getAndDecrement();
-		Node<T> ret = root.getReference();
+		PHNode<T> ret = root.getReference();
 		int stamp = root.getStamp();
-		ret.inHeap = false;
+		ret.graphNode.inHeap = false;
 		if (ret.subHeaps.size() == 0)
 			root.set(null, stamp + 1);
-		else {
+		else
 			root.set(merger(ret.subHeaps), stamp + 1);
-			root.getReference().parent = null;
-		}
+		//System.out.println("DeleteMin: " + ret);
 		return ret;
 	}
 
@@ -125,68 +129,78 @@ public class LFPairingHeap<T> {
 		return size.get();
 	}
 	
-	public boolean search(int id) {
+	public PHNode<T> search(int id) {
 		return search(id, root.getReference());
 	}
 	
-	private boolean search(int id, Node<T> start) {
-		if (start.id == id)
-			return true;
-		for(Node<T> node : start.subHeaps) {
-			if (search(id, node))
-				return true;
+	private PHNode<T> search(int id, PHNode<T> start) {
+		if (start.graphNode.id == id)
+			return start;
+		for(GraphNode<T> node : start.subHeaps) {
+			PHNode<T> res = search(id, node.phNode);
+			if (res != null)
+				return res;
 		}
-		return false;
+		return null;
 	}
 	
-	public void decreaseKey(Node<T> key, int newValue) {
-		if (!key.inHeap)
+	public void decreaseKey(PHNode<T> key, int newValue) {
+		if (!key.graphNode.inHeap || key.distance == newValue)
 			return;
-		Node<T> expectedRoot;
+		PHNode<T> expectedRoot;
 		int[] expectedStamp = new int[1];
 		// Case 1: Decreasing the root
 		while (key == root.getReference()) {
 			expectedRoot = root.get(expectedStamp);
 			if (key != expectedRoot)
 				break;
-			Node<T> newRoot = key.clone();
+			PHNode<T> newRoot = key.clone();
 			newRoot.distance = newValue;
-			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1))
+			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1)) {
+				newRoot.graphNode.phNode = newRoot;
 				return;
+			}
 		}
 		
 		// Update the weight.
 		key.distance = newValue;
-		if (key.parent != null) {
-			// Case 2: Target is still greater than its parent.
-			// (No changes to the tree structure needed in this case.)
-			if (key.parent.distance <= key.distance)
-				return;
+		
+		if (key.parent == null)
+			System.out.println(key + " " + key.hashCode());
+		
+		// Case 2: Target is still greater than its parent.
+		// (No changes to the tree structure needed in this case.)
+		if (key.parent.phNode.distance <= key.distance)
+			return;
 			
-			// Delink the node from its parent.
-			key.parent.subHeaps.remove(key);
-		}
+		// Delink the node from its parent.
+		key.parent.phNode.subHeaps.remove(key.graphNode);
+		
 		while (true) {
 			// Case 3: Target is greater than the current root.
 			expectedRoot = root.get(expectedStamp);
 			if (expectedRoot.distance <= key.distance) {
-				key.parent = expectedRoot;
-				expectedRoot.subHeaps.add(key);
+				key.parent = expectedRoot.graphNode;
+				expectedRoot.subHeaps.add(key.graphNode);
 				return;
 			}
 			
 			// Case 4: Update the root.
 			key.parent = null;
-			Node<T> newRoot = expectedRoot.clone();
-			newRoot = merge(newRoot, key);
-			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1))
+			PHNode<T> newRootClone = expectedRoot.clone();
+			PHNode<T> newRoot = merge(newRootClone, key);
+			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1)) {
+				//System.out.println(expectedRoot + " -> " + newRoot + ": " + expectedRoot.hashCode() + " -> " + newRoot.hashCode());
+				newRoot.graphNode.phNode = newRoot;
+				expectedRoot.graphNode.phNode = newRootClone;
 				return;
+			}
 			// Cleanup our failure.
 			else if (newRoot == key) {
-				key.subHeaps.remove(expectedRoot);
+				key.subHeaps.remove(expectedRoot.graphNode);
 			}
 			else {
-				expectedRoot.subHeaps.remove(key);
+				expectedRoot.subHeaps.remove(key.graphNode);
 			}
 		}
 	}

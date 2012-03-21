@@ -4,6 +4,6 @@
  * @author Charles Newton
  */
 public interface Graph<T> {
-	public LFPairingHeap<T> getNodes();
-	public Node<T> getSource();
+	public Object[] getNodes();
+	public GraphNode<T> getSource();
 }

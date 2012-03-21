@@ -1,36 +1,38 @@
 import java.util.*;
 
 public class GraphNode<T> implements Comparable<GraphNode<T>> {
-	private TreeSet<GraphEdge<T>> adjacencyList;
-	public T contents;
-	private final UUID id;
+	public ArrayList<GraphEdge<T>> edges;
+	public Object[] edgesArray;
+	public final int id;
+	public T value;
+	public volatile int distance;
+	public volatile PHNode<T> phNode;
+	public volatile boolean inHeap;
 	
-	public GraphNode(T contents) {
-		adjacencyList = new TreeSet<GraphEdge<T>>();
-		this.contents = contents;
-		id = UUID.randomUUID();
+	public GraphNode(T value, int id, int expectedSize) {
+		this.id = id;
+		this.value = value;
+		edges = new ArrayList<GraphEdge<T>>(expectedSize);
+		inHeap = true;
+	}
+
+	public void addConnection(GraphNode<T> rhs, int weight) {
+		edges.add(new GraphEdge<T>(rhs, weight));
+		rhs.edges.add(new GraphEdge<T>(this, weight));
 	}
 	
-	public TreeSet<GraphEdge<T>> getAdjacent() {
-		return adjacencyList;
+	public void finalize() {
+		edgesArray = edges.toArray();
+		edges = null;
 	}
 	
-	public void addConnection(LFPairingHeap<GraphNode<T>> node, int weight) {
-		addConnection(new GraphEdge<T>(node, weight));
-	}
-	
-	public void addConnection(GraphEdge<T> weightedEdge) {
-		adjacencyList.add(weightedEdge);
-		weightedEdge.rhs.getElement().get().adjacencyList.add(new GraphEdge<T>(this, weightedEdge.weight));
-	}
-	
-	public boolean equals(GraphNode<T> node) {
-		return this.id.equals(node.id);
+	public String toString() {
+		return "Node(" + id + ")";
 	}
 	
 	public int compareTo(GraphNode<T> rhs) {
-		if (this.equals(rhs))
-			return 0;
-		return -1;
+		if (this.distance == rhs.distance)
+			return -1;
+		return this.distance - rhs.distance;
 	}
 }

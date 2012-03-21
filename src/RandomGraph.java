@@ -2,37 +2,40 @@ import java.util.*;
 
 public class RandomGraph implements Graph<Integer> {
 	private LFPairingHeap<Integer> heap;
-	private Node<Integer> source;
+	private GraphNode<Integer> source;
+	private Object[] nodeList;
+	private final int maxWeight = 100;
 	
 	public RandomGraph(int size, double density, int seed) {
 		Rnd.r.setSeed(seed);
 		heap = null;
-		ArrayList<Node<Integer>> nodes = new ArrayList<Node<Integer>>();
+		ArrayList<GraphNode<Integer>> nodes = new ArrayList<GraphNode<Integer>>();
 		while (nodes.size() < size) {
-			Node<Integer> newNode = new Node<Integer>((int)(Integer.MAX_VALUE*Rnd.dbl()), nodes.size(), (int)(size*density));
-			for(Node<Integer> node : nodes) {
+			GraphNode<Integer> newNode = new GraphNode<Integer>((int)(Integer.MAX_VALUE*Rnd.dbl()), nodes.size(), (int)(size*density));
+			for(GraphNode<Integer> node : nodes) {
 				if (Rnd.dbl() < density)
-					newNode.addConnection(node, 1 + (int)(100*Rnd.dbl()));
+					newNode.addConnection(node, 1 + (int)(maxWeight*Rnd.dbl()));
 			}
-			if (heap == null) {
+			
+			if (nodes.size() == 0) {
 				newNode.distance = 0;
-				heap = new LFPairingHeap<Integer>(newNode);
+				source = newNode;
 			}
-			else {
-				newNode.distance = Integer.MAX_VALUE;
-				heap.insert(newNode);
-			}
+			else
+				newNode.distance = Integer.MAX_VALUE - (maxWeight + 2);
+			
 			nodes.add(newNode);
 		}
-		for(Node<Integer> node : nodes)
+		for(GraphNode<Integer> node : nodes)
 			node.finalize();
+		nodeList = nodes.toArray();
 	}
 	
-	public LFPairingHeap<Integer> getNodes() {
-		return heap;
-	}
-	
-	public Node<Integer> getSource() {
+	public GraphNode<Integer> getSource() {
 		return source;
+	}
+	
+	public Object[] getNodes() {
+		return nodeList;
 	}
 }

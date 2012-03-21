@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.Map.*;
 import java.util.concurrent.*;
 
-public class Dijkstra<T> {
+public class DijkstraSkiplist<T> {
 	private Graph<T> graph;
 	private int numWorkers;
 	private ConcurrentHashMap<GraphNode<T>, Integer> distances;
@@ -11,7 +11,7 @@ public class Dijkstra<T> {
 	public static void main(String[] args) throws IOException {
 		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(300, .10, 0), 1);//Integer.parseInt(args[0]));
+			DijkstraSkiplist<Integer> d = new DijkstraSkiplist<Integer>(new RandomGraph(300, .10, 0), 5);//Integer.parseInt(args[0]));
 			//System.in.read();
 			//System.out.println("Created graph.");
 			long time = System.nanoTime();
@@ -20,12 +20,12 @@ public class Dijkstra<T> {
 			/*for(Entry<GraphNode<Integer>, Integer> entry : d.distances.entrySet())
 				System.out.println(entry.getKey().id + " -> " + entry.getValue());*/
 			//break;
-			for(int i = 0; i < d.distances.size(); i++) {
+			for(int i = 0; i < 300; i++) {
 				boolean found = false;
 				for(Entry<GraphNode<Integer>, Integer> entry : d.distances.entrySet()) {
 					if (entry.getKey().id == i) {
 						found = true;
-						System.out.println(entry.getKey().toString() + " -> " + entry.getValue());
+						//System.out.println(entry.getKey().toString() + " -> " + entry.getValue());
 					}
 				}
 				if (!found)
@@ -35,53 +35,33 @@ public class Dijkstra<T> {
 		}
 	}
 	
-	public Dijkstra(Graph<T> graph, int numWorkers) {
+	public DijkstraSkiplist(Graph<T> graph, int numWorkers) {
 		this.graph = graph;
 		this.numWorkers = numWorkers;
 		this.distances = new ConcurrentHashMap<GraphNode<T>, Integer>();
 	}
 	
 	public void run() throws IOException {
+		ConcurrentSkipListSet<GraphNode<T>> pq = new ConcurrentSkipListSet<GraphNode<T>>();
 		// Create worker threads.
 		ArrayList<DijkstraWorker> workers = new ArrayList<DijkstraWorker>(numWorkers);
 		CountDownLatch startLatch = new CountDownLatch(1);
-		LFPairingHeap<T> heap;
 		
-		// Construct pairing heap
-		PHNode<T> phNode = new PHNode<T>();
-		phNode.graphNode = graph.getSource();
-		phNode.graphNode.phNode = phNode;
-		phNode.distance = 0;
-		phNode.graphNode.distance = -1;
-		
-		heap = new LFPairingHeap<T>(phNode);
-		
-		for (Object nodeO : graph.getNodes()) {
-			GraphNode<T> node = (GraphNode<T>)nodeO;
-			
-			// Don't re-insert the source.
-			if (node.id == graph.getSource().id)
-				continue;
-			
-			phNode = new PHNode<T>();
-			phNode.graphNode = node;
-			phNode.graphNode.phNode = phNode;
-			phNode.distance = node.distance;
-			node.distance = -1;
-			heap.insert(phNode);
-		}
+		for(Object nodeO : graph.getNodes())
+			pq.add((GraphNode<T>)nodeO);
 		
 		while(workers.size() < numWorkers) {
-			DijkstraWorker worker = new DijkstraWorker(startLatch, heap);
+			DijkstraWorker worker = new DijkstraWorker(startLatch, pq);
 			worker.start();
 			workers.add(worker);
 		}
 		
-		while (heap.size() > 0) {
+		GraphNode<T> min;
+		
+		while ((min = pq.pollFirst()) != null) {
 			// Pop the min distance off and record its distance
-			GraphNode<T> min = heap.deleteMin().graphNode;
-			//System.out.println(min + " -> " + min.phNode.distance);
-			distances.put(min, min.phNode.distance);
+			distances.put(min, min.distance);
+			min.inHeap = false;
 			
 			CountDownLatch latch = new CountDownLatch(numWorkers);
 			CountDownLatch nextLatch = new CountDownLatch(1);
@@ -114,9 +94,8 @@ public class Dijkstra<T> {
 		private CountDownLatch latch;
 		private CountDownLatch startLatch;
 		private CountDownLatch tmpLatch;
-		private LFPairingHeap<T> heap;
-		
-		public DijkstraWorker(CountDownLatch nextLatch, LFPairingHeap<T> heap) {
+		private ConcurrentSkipListSet<GraphNode<T>> heap;
+		public DijkstraWorker(CountDownLatch nextLatch, ConcurrentSkipListSet<GraphNode<T>> heap) {
 			this.killed = false;
 			this.startLatch = nextLatch;
 			this.heap = heap;
@@ -148,9 +127,14 @@ public class Dijkstra<T> {
 					if (pos >= edges.length)
 						break;					
 					GraphEdge<T> edge = (GraphEdge<T>)edges[pos];
-					int newDistance = min.phNode.distance + edge.weight;
-					if (newDistance < edge.rhs.phNode.distance)
-						heap.decreaseKey(edge.rhs.phNode, newDistance);
+					if (edge.rhs.inHeap) {
+						int newDistance = min.distance + edge.weight;
+						if (newDistance < edge.rhs.distance) {
+							heap.remove(edge.rhs);
+							edge.rhs.distance = newDistance;
+							heap.add(edge.rhs);
+						}
+					}
 					pos += this.numThreads;
 				}
 				startLatch = tmpLatch;
