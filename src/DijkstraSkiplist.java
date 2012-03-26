@@ -9,9 +9,9 @@ public class DijkstraSkiplist<T> {
 	private ConcurrentHashMap<GraphNode<T>, Integer> distances;
 	
 	public static void main(String[] args) throws IOException {
-		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
+		System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
 		while (true) {
-			DijkstraSkiplist<Integer> d = new DijkstraSkiplist<Integer>(new RandomGraph(300, .10, 0), 5);//Integer.parseInt(args[0]));
+			DijkstraSkiplist<Integer> d = new DijkstraSkiplist<Integer>(new RandomGraph(5000, 0.5, 0), Integer.parseInt(args[0]));
 			//System.in.read();
 			//System.out.println("Created graph.");
 			long time = System.nanoTime();
@@ -19,7 +19,7 @@ public class DijkstraSkiplist<T> {
 			System.out.println((System.nanoTime() - time)/1000000000.0);
 			/*for(Entry<GraphNode<Integer>, Integer> entry : d.distances.entrySet())
 				System.out.println(entry.getKey().id + " -> " + entry.getValue());*/
-			//break;
+			/*break;
 			for(int i = 0; i < 300; i++) {
 				boolean found = false;
 				for(Entry<GraphNode<Integer>, Integer> entry : d.distances.entrySet()) {
@@ -31,7 +31,7 @@ public class DijkstraSkiplist<T> {
 				if (!found)
 					System.out.println("*** " + i + " missing! ***");
 			}
-			break;
+			break;*/
 		}
 	}
 	

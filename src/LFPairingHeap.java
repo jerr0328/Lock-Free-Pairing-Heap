@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.*;
 public class LFPairingHeap<T> {
 	public final AtomicStampedReference<PHNode<T>> root;
 	private final AtomicInteger size;
-	
+
 	/**
 	 * Creates a new pairing heap.
 	 */
@@ -190,18 +190,11 @@ public class LFPairingHeap<T> {
 			PHNode<T> newRootClone = expectedRoot.clone();
 			PHNode<T> newRoot = merge(newRootClone, key);
 			if (root.compareAndSet(expectedRoot, newRoot, expectedStamp[0], expectedStamp[0] + 1)) {
-				//System.out.println(expectedRoot + " -> " + newRoot + ": " + expectedRoot.hashCode() + " -> " + newRoot.hashCode());
-				newRoot.graphNode.phNode = newRoot;
 				expectedRoot.graphNode.phNode = newRootClone;
 				return;
 			}
-			// Cleanup our failure.
-			else if (newRoot == key) {
+			else
 				key.subHeaps.remove(expectedRoot.graphNode);
-			}
-			else {
-				expectedRoot.subHeaps.remove(key.graphNode);
-			}
 		}
 	}
 }

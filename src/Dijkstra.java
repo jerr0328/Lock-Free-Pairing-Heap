@@ -11,16 +11,17 @@ public class Dijkstra<T> {
 	public static void main(String[] args) throws IOException {
 		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(300, .10, 0), 1);//Integer.parseInt(args[0]));
-			//System.in.read();
+			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(1000, 0.5, 0), 1);//Integer.parseInt(args[0]));
+			System.in.read();
 			//System.out.println("Created graph.");
 			long time = System.nanoTime();
 			d.run();
 			System.out.println((System.nanoTime() - time)/1000000000.0);
+			break;
 			/*for(Entry<GraphNode<Integer>, Integer> entry : d.distances.entrySet())
 				System.out.println(entry.getKey().id + " -> " + entry.getValue());*/
 			//break;
-			for(int i = 0; i < d.distances.size(); i++) {
+			/*for(int i = 0; i < d.distances.size(); i++) {
 				boolean found = false;
 				for(Entry<GraphNode<Integer>, Integer> entry : d.distances.entrySet()) {
 					if (entry.getKey().id == i) {
@@ -31,7 +32,7 @@ public class Dijkstra<T> {
 				if (!found)
 					System.out.println("*** " + i + " missing! ***");
 			}
-			break;
+			break;*/
 		}
 	}
 	
