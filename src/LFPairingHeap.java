@@ -14,19 +14,17 @@ public class LFPairingHeap<T> {
 	private final AtomicInteger size;
 	
 	private abstract class WriteDescriptor {
-	  private volatile boolean pending;
+	  private volatile AtomicBoolean pending;
 
 	  private WriteDescriptor() {
-	    pending = true;
+	    pending = new AtomicBoolean(true);
 	  }
 
 	  public abstract void executeThis();
 	  
 	  public void execute() {
-	    if (pending) {
+	    if (pending.get() && pending.compareAndSet(true, false))
 	      executeThis();
-	      pending = false;
-	    }
 	  }
 	}
 	
@@ -62,7 +60,7 @@ public class LFPairingHeap<T> {
 
 	private class EmptyDescriptor extends WriteDescriptor {
 	  public EmptyDescriptor() {
-	    super.pending = false;
+	    super.pending.set(false);
 	  }
 
 	  public void executeThis() {
@@ -165,8 +163,10 @@ public class LFPairingHeap<T> {
 					 expectedStamp[0] + 1)) {
 		    break;
 		  }
-		  else
+		  else {
 		    e.subHeaps.remove(expectedRoot.graphNode);
+		    descriptor.getReference().execute();
+		  }
 		}
 		descriptor.getReference().execute();
 		size.getAndIncrement();
@@ -224,11 +224,12 @@ public class LFPairingHeap<T> {
 	    WriteDescriptor newD = new WriteDescriptorUpdateRoot(newRoot);
 	    
 	    if (descriptor.compareAndSet(d, newD, expectedStamp[0], expectedStamp[0] + 1)) {
-	      d.execute();
+	      descriptor.getReference().execute();
 	      return;
 	    }
 	    else
-	      d.execute();
+	      descriptor.getReference().execute();
+	      
 	  }
 		
 	  // Update the weight.

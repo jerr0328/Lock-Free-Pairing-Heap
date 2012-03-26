@@ -11,7 +11,7 @@ public class Dijkstra<T> {
 	public static void main(String[] args) throws IOException {
 		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(250, 0.05, 0), 1);//Integer.parseInt(args[0]));
+			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(500, 0.15, 0), 1);//Integer.parseInt(args[0]));
 			//System.in.read();
 			//System.out.println("Created graph.");
 			long time = System.nanoTime();
