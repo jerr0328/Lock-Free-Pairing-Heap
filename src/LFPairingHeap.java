@@ -263,11 +263,11 @@ public class LFPairingHeap<T> {
 	    PHNode<T> newRoot = merge(oldRootClone, key);
 	    WriteDescriptor newD = new WriteDescriptorNewRoot(newRoot, expectedRoot, oldRootClone);
 	    if (descriptor.compareAndSet(d, newD, expectedStamp[0], expectedStamp[0] + 1)) {
-	      d.execute();
+	      descriptor.getReference().execute();
 	      return;
 	    }
 	    else {
-	      d.execute();
+	      descriptor.getReference().execute();
 	      key.subHeaps.remove(expectedRoot.graphNode);
 	    }
 	  }
