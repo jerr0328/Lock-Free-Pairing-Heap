@@ -11,8 +11,8 @@ public class Dijkstra<T> {
 	public static void main(String[] args) throws IOException {
 		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(1000, 0.5, 0), 1);//Integer.parseInt(args[0]));
-			System.in.read();
+			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(250, 0.05, 0), 1);//Integer.parseInt(args[0]));
+			//System.in.read();
 			//System.out.println("Created graph.");
 			long time = System.nanoTime();
 			d.run();
@@ -81,7 +81,7 @@ public class Dijkstra<T> {
 		while (heap.size() > 0) {
 			// Pop the min distance off and record its distance
 			GraphNode<T> min = heap.deleteMin().graphNode;
-			//System.out.println(min + " -> " + min.phNode.distance);
+			System.out.println(min + " -> " + min.phNode.distance);
 			distances.put(min, min.phNode.distance);
 			
 			CountDownLatch latch = new CountDownLatch(numWorkers);
