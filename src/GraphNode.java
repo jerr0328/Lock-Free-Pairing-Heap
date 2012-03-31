@@ -1,12 +1,14 @@
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GraphNode<T> implements Comparable<GraphNode<T>> {
 	public ArrayList<GraphEdge<T>> edges;
 	public Object[] edgesArray;
 	public final int id;
 	public T value;
-	public volatile int distance;
-	public volatile PHNode<T> phNode;
+	public volatile int distance; // LFPairingHeap should /not/ change this field!
+	public final AtomicReference<PHNode<T>> phNode;
 	public volatile boolean inHeap;
 	
 	public GraphNode(T value, int id, int expectedSize) {
@@ -14,6 +16,7 @@ public class GraphNode<T> implements Comparable<GraphNode<T>> {
 		this.value = value;
 		edges = new ArrayList<GraphEdge<T>>(expectedSize);
 		inHeap = true;
+		phNode = new AtomicReference<PHNode<T>>();
 	}
 
 	public void addConnection(GraphNode<T> rhs, int weight) {

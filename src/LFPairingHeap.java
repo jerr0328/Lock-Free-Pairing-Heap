@@ -9,58 +9,61 @@ import java.util.concurrent.atomic.*;
  * @author Charles Newton
  */
 public class LFPairingHeap<T> {
-	public volatile PHNode<T> root;
+	//public volatile PHNode<T> root;
 	private final AtomicStampedReference<WriteDescriptor> descriptor;
 	private final AtomicInteger size;
 	
 	private abstract class WriteDescriptor {
-	  private volatile AtomicBoolean pending;
+	  public final PHNode<T> root;
+	  private volatile boolean pending;
 
-	  private WriteDescriptor() {
-	    pending = new AtomicBoolean(true);
+	  private WriteDescriptor(PHNode<T> root) {
+		this.root = root;
+	    pending = true;
 	  }
 
 	  public abstract void executeThis();
 	  
 	  public void execute() {
-	    if (pending.get() && pending.compareAndSet(true, false))
+	    if (pending) {
 	      executeThis();
+	      pending = false;
+	    }
 	  }
 	}
 	
 	private class WriteDescriptorUpdateRoot extends WriteDescriptor {
-	  private final PHNode newRoot;
-	 
-	  public WriteDescriptorUpdateRoot(PHNode newRoot) {
-	    this.newRoot = newRoot;
+	  private final PHNode<T> oldRoot;
+	  
+	  public WriteDescriptorUpdateRoot(PHNode<T> oldRoot, PHNode<T> newRoot) {
+		super(newRoot);
+		this.oldRoot = oldRoot;
 	  }
 
 	  public void executeThis() {
-	    newRoot.graphNode.phNode = newRoot;
-	    root = newRoot;
+	    root.graphNode.phNode.compareAndSet(oldRoot, root);
 	  }
 	}
 
 	private class WriteDescriptorNewRoot extends WriteDescriptor {
-	  private final PHNode newRoot;
-	  private final PHNode oldRoot;
-	  private final PHNode newLocForOldRoot;
+	  private final PHNode<T> newLocForOldRoot;
+	  private final PHNode<T> oldRoot;
 	  
-	  public WriteDescriptorNewRoot(PHNode newRoot, PHNode oldRoot, PHNode newLocForOldRoot) {
-	    this.newRoot = newRoot;
-	    this.oldRoot = oldRoot;
+	  public WriteDescriptorNewRoot(PHNode<T> newRoot, PHNode<T> oldRoot, PHNode<T> newLocForOldRoot) {
+	    super(newRoot);
 	    this.newLocForOldRoot = newLocForOldRoot;
+	    this.oldRoot = oldRoot;
 	  }
 
 	  public void executeThis() {
-	    root = newRoot;
-	    oldRoot.graphNode.phNode = newLocForOldRoot;
+	    newLocForOldRoot.graphNode.phNode.compareAndSet(oldRoot, newLocForOldRoot);
 	  }
 	}
 
 	private class EmptyDescriptor extends WriteDescriptor {
-	  public EmptyDescriptor() {
-	    super.pending.set(false);
+	  public EmptyDescriptor(PHNode<T> root) {
+		super(root);
+	    super.pending = false;
 	  }
 
 	  public void executeThis() {
@@ -73,9 +76,8 @@ public class LFPairingHeap<T> {
 	 */
 	public LFPairingHeap(PHNode<T> root) {
 		root.parent = null;
-		this.root = root;
 		this.size = new AtomicInteger(1);
-		this.descriptor = new AtomicStampedReference(new EmptyDescriptor(), 0);
+		this.descriptor = new AtomicStampedReference<WriteDescriptor>(new EmptyDescriptor(root), 0);
 	}
 
 	/**
@@ -122,19 +124,19 @@ public class LFPairingHeap<T> {
 			if (one == null)
 				break;
 			if (two == null) {
-				one.phNode.parent = null;
+				one.phNode.get().parent = null;
 				list2.add(one);
 				break;
 			}
-			PHNode<T> winner = merge(one.phNode, two.phNode);
+			PHNode<T> winner = merge(one.phNode.get(), two.phNode.get());
 			winner.parent = null;
 			list2.add(winner.graphNode);
 		}
 		GraphNode<T> ret = list2.pop();
 		while (list2.size() > 0) {
-			ret = merge(ret.phNode, list2.pop().phNode).graphNode;
+			ret = merge(ret.phNode.get(), list2.pop().phNode.get()).graphNode;
 		}
-		return ret.phNode;
+		return ret.phNode.get();
 	}
 
 	/**
@@ -146,7 +148,7 @@ public class LFPairingHeap<T> {
 		while (true) {
 		  WriteDescriptor d = descriptor.get(expectedStamp);
 		  d.execute();
-		  expectedRoot = root;
+		  expectedRoot = d.root;
 
 		  // Check if we can just insert this as a child of the root.
 		  if (e.distance >= expectedRoot.distance) {
@@ -174,16 +176,18 @@ public class LFPairingHeap<T> {
 	
 	// Not lock-free!
 	public PHNode<T> deleteMin() {
-		PHNode<T> ret = root;
+		int[] stamp = new int[1];
+		WriteDescriptor d = descriptor.get(stamp);
+		PHNode<T> ret = d.root;
 
 		size.getAndDecrement();
 		ret.graphNode.inHeap = false;
-
+		PHNode<T> newRoot;
 		if (ret.subHeaps.size() == 0)
-		  root = null;
+		  newRoot = null;
 		else
-		  root = merger(ret.subHeaps);
-
+		  newRoot = merger(ret.subHeaps);
+		descriptor.set(new EmptyDescriptor(newRoot), stamp[0] + 1);
 		return ret;
 	}
 
@@ -192,36 +196,38 @@ public class LFPairingHeap<T> {
 	}
 	
 	public PHNode<T> search(int id) {
-	  return search(id, root);
+	  return search(id, descriptor.getReference().root);
 	}
 	
 	private PHNode<T> search(int id, PHNode<T> start) {
 		if (start.graphNode.id == id)
 			return start;
 		for(GraphNode<T> node : start.subHeaps) {
-			PHNode<T> res = search(id, node.phNode);
+			PHNode<T> res = search(id, node.phNode.get());
 			if (res != null)
 				return res;
 		}
 		return null;
 	}
 	
-	public void decreaseKey(PHNode<T> key, int newValue) {
-	  if (!key.graphNode.inHeap || key.distance == newValue)
+	public void decreaseKey(GraphNode<T> key, int newValue) {
+	  if (!key.inHeap || key.phNode.get().distance == newValue)
 	    return;
-
+	  
+	  PHNode<T> keyLoc;
 	  PHNode<T> expectedRoot;
 	  int[] expectedStamp = new int[1];
+	  
 	  // Case 1: Decreasing the root
-	  while (key == root) {
-	    expectedRoot = root;
-	    if (key != expectedRoot)
-	      break;
-	    WriteDescriptor d = descriptor.get(expectedStamp);
+	  while (key.phNode.get() == descriptor.getReference().root) {
+		WriteDescriptor d = descriptor.get(expectedStamp);
 	    d.execute();
-	    PHNode<T> newRoot = key.clone();
+	    keyLoc = key.phNode.get();
+	    if (d.root != keyLoc)
+	    	break;
+	    PHNode<T> newRoot = keyLoc.clone();
 	    newRoot.distance = newValue;
-	    WriteDescriptor newD = new WriteDescriptorUpdateRoot(newRoot);
+	    WriteDescriptor newD = new WriteDescriptorUpdateRoot(d.root, newRoot);
 	    
 	    if (descriptor.compareAndSet(d, newD, expectedStamp[0], expectedStamp[0] + 1)) {
 	      descriptor.getReference().execute();
@@ -231,37 +237,42 @@ public class LFPairingHeap<T> {
 	      descriptor.getReference().execute();
 	      
 	  }
-		
+	  
+	  descriptor.getReference().execute();
+	  keyLoc = key.phNode.get();
+	  
 	  // Update the weight.
-	  key.distance = newValue;
+	  keyLoc.distance = newValue;
 		
-	  if (key.parent == null)
+	  if (keyLoc.parent == null)
 	    System.out.println(key + " " + key.hashCode());
 		
 	  // Case 2: Target is still greater than its parent.
 	  // (No changes to the tree structure needed in this case.)
-	  if (key.parent.phNode.distance <= key.distance)
+	  if (keyLoc.parent.phNode.get().distance <= keyLoc.distance)
 	    return;
 	  
 	  // Delink the node from its parent.
-	  key.parent.phNode.subHeaps.remove(key.graphNode);
+	  keyLoc.parent.phNode.get().subHeaps.remove(key);
 		
 	  while (true) {
 	    WriteDescriptor d = descriptor.get(expectedStamp);
 	    d.execute();
-	    expectedRoot = root;
+	    
+	    keyLoc = key.phNode.get();
+	    expectedRoot = d.root;
 
 	    // Case 3: Target is greater than the current root.
-	    if (expectedRoot.distance <= key.distance) {
-	      key.parent = expectedRoot.graphNode;
-	      expectedRoot.subHeaps.add(key.graphNode);
+	    if (expectedRoot.distance <= keyLoc.distance) {
+	      keyLoc.parent = expectedRoot.graphNode;
+	      expectedRoot.subHeaps.add(key);
 	      return;
 	    }
 	    
 	    // Case 4: Update the root.
-	    key.parent = null;
+	    keyLoc.parent = null;
 	    PHNode<T> oldRootClone = expectedRoot.clone();
-	    PHNode<T> newRoot = merge(oldRootClone, key);
+	    PHNode<T> newRoot = merge(oldRootClone, keyLoc);
 	    WriteDescriptor newD = new WriteDescriptorNewRoot(newRoot, expectedRoot, oldRootClone);
 	    if (descriptor.compareAndSet(d, newD, expectedStamp[0], expectedStamp[0] + 1)) {
 	      descriptor.getReference().execute();
@@ -269,7 +280,7 @@ public class LFPairingHeap<T> {
 	    }
 	    else {
 	      descriptor.getReference().execute();
-	      key.subHeaps.remove(expectedRoot.graphNode);
+	      keyLoc.subHeaps.remove(expectedRoot.graphNode);
 	    }
 	  }
 	}

@@ -11,7 +11,7 @@ public class Dijkstra<T> {
 	public static void main(String[] args) throws IOException {
 		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
 		while (true) {
-			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(500, 0.15, 0), 1);//Integer.parseInt(args[0]));
+			Dijkstra<Integer> d = new Dijkstra<Integer>(new RandomGraph(100000, 0.15, 0), 20);//Integer.parseInt(args[0]));
 			//System.in.read();
 			//System.out.println("Created graph.");
 			long time = System.nanoTime();
@@ -51,7 +51,7 @@ public class Dijkstra<T> {
 		// Construct pairing heap
 		PHNode<T> phNode = new PHNode<T>();
 		phNode.graphNode = graph.getSource();
-		phNode.graphNode.phNode = phNode;
+		phNode.graphNode.phNode.set(phNode);
 		phNode.distance = 0;
 		phNode.graphNode.distance = -1;
 		
@@ -66,7 +66,7 @@ public class Dijkstra<T> {
 			
 			phNode = new PHNode<T>();
 			phNode.graphNode = node;
-			phNode.graphNode.phNode = phNode;
+			phNode.graphNode.phNode.set(phNode);
 			phNode.distance = node.distance;
 			node.distance = -1;
 			heap.insert(phNode);
@@ -81,8 +81,8 @@ public class Dijkstra<T> {
 		while (heap.size() > 0) {
 			// Pop the min distance off and record its distance
 			GraphNode<T> min = heap.deleteMin().graphNode;
-			System.out.println(min + " -> " + min.phNode.distance);
-			distances.put(min, min.phNode.distance);
+			System.out.println(min + " -> " + min.phNode.get().distance);
+			distances.put(min, min.phNode.get().distance);
 			
 			CountDownLatch latch = new CountDownLatch(numWorkers);
 			CountDownLatch nextLatch = new CountDownLatch(1);
@@ -149,9 +149,9 @@ public class Dijkstra<T> {
 					if (pos >= edges.length)
 						break;					
 					GraphEdge<T> edge = (GraphEdge<T>)edges[pos];
-					int newDistance = min.phNode.distance + edge.weight;
-					if (newDistance < edge.rhs.phNode.distance)
-						heap.decreaseKey(edge.rhs.phNode, newDistance);
+					int newDistance = min.phNode.get().distance + edge.weight;
+					if (newDistance < edge.rhs.phNode.get().distance)
+						heap.decreaseKey(edge.rhs, newDistance);
 					pos += this.numThreads;
 				}
 				startLatch = tmpLatch;
