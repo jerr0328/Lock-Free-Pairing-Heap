@@ -567,57 +567,73 @@ the specifics of
 Dijkstra's algorithm allow us to make assumptions about how
 Pairing heap operations interleave. 
 We first list some assumptions that we have made about overlapping
-calls to operations on the heap. Then, we give a high-level overview
-of our lock-free approach before delving into the details of our
-\texttt{insert} and \texttt{decreaseKey} operators.
-%The second is that both \texttt{insert} and
-%\texttt{decreaseKey} can be simplified to create an obvious linearization 
-%point without ruining their asymptotic
-%$\mathcal{O}(1)$ performance (although at a cost of more work per \texttt{decreaseKey} call.)
-%We first list our simplifications and then outline our lock-free approach.
+calls to operations on the heap and give a high-level overview
+of our lock-free approach. In \textbf{section X} we delve into the details of our
+\texttt{insert} and \texttt{decreaseKey} operators, in \textbf{section Y} we show
+our operations are linearizable and discuss the semantics
+of our lock-free pairing heap, and in \textbf{section Z} we prove the correctness
+of our implementation.
 
 In section \ref{sec:dijkstra} we analyzed the specific performance bottle-necks and other
 issues with running Dijkstra's algorithm in parallel. In particular, we noted that the
-linearization guarantees provided by presently available lock-free heaps are insufficient for
+linearization guarantees provided by presently available concurrent heaps are insufficient for
 blindly executing
 concurrent calls to \texttt{deleteMin} and \texttt{decreaseKey}. Hence, we assume
 these calls will never interleave, and, further, that only concurrent calls to 
 \texttt{decreaseKey} overlap.
 
-%(Some language that was either nonsense or unclear, so I'm rewording it.)
-%Another issue to discuss involves the role of the parent pointer in a
-%Pairing heap's nodes.
-%We also make the following simplification to remove \texttt{decreaseKey}
-%Recall that, for Pairing Heaps,
-%\texttt{delete} was implemented by removing the target node from its parent.
-%However,
-%Dijkstra's algorithm does not make use of a call to \texttt{delete} and the
-%only other reference to node's parent is in \texttt{decreaseKey}'s check if
-%the newly decreased value violates the heap invariant. This is
-%only an optimization and if this check is removed
-%\texttt{decreaseKey} will still run in $\mathcal{O}(1)$ time
-%as \texttt{meld} runs in constant time.
-%Note the similarities between this less optimized version of
-%\texttt{decreaseKey} and \texttt{insert}: both simply meld
-%a key to the root of the tree. Additionally, if we assume that
-%edges between nodes are unique (i.e., the set of edges is not
-%a multiset), then each call to \texttt{decreaseKey} operates
-%on a unique key per iteration of Dijkstra's algorithm. This gives
-%the useful property that while in the \texttt{decreaseKey}-loop, only
-%one thread attempts to read or write a given node's parent field.
-%As this does not lead to contention,
-%we take no special care at guarding concurrent reads and writes in this case.
+\subsection{Developmental Roadblocks}
+There are a number of issues that must be overcome when developing
+a lock-free Pairing heap. A design problem pertinent to all lock-free data
+structures is how to efficiently broadcast when one thread has made modifications
+that possibly interfere with concurrent work \cite{herlihy91}. 
+In a pairing heap, there
+are four such coordination problems that arise from the need to
+maintain the root of the heap and also the parent of a node in the heap.
 
-%We use a CAS loop to insert a new node (or a newly decreased node)
-%at the root (or as a root's child.) Before a node is inserted, the current root and its timestamp
-%are recorded. A call to \texttt{meld} makes stateful changes to the heaps in its arguments,
-%so we create a copy of the recorded root (this way if CAS is unsuccessful, we haven't
-%made any changes to the main heap.) After \texttt{meld} runs, we attempt to CAS our new root
-%into place. If CAS fails, we undo the inclusion of the larger node as a child of the smaller node and retry.
-%Otherwise, the new node is accessible in the heap.
-%This yields a clear linearization point for
-%\texttt{decreaseKey} and \texttt{insert}: a node is considered successfully
-%inserted when the root node of the Pairing heap is updated.
+The first roadblock is that Pairing heap operations contend to
+make changes to the root of the heap when a node is produced (either a newly inserted
+node or an existing node that has sufficiently decreased)
+that is lower than all values currently in the heap.
+Nodes could be incorrectly deleted if \texttt{insert} and \texttt{decreaseKey}
+were to override the root of the heap without consideration of other changes.
+For example, if we concurrently \texttt{insert} two new values $a,b$ (where $a < b$) into a
+heap that are both lower than all existing heap values, the intended state of the heap
+has $a$ at the root, $b$ as its child, and the remainder of the heap a child of either $a$
+or $b$. If
+$a$'s insertion linearizes before $b$'s insertion, the call to insert $b$ must detect this
+and instead change its strategy to inserting $b$ as a child of $a$. We have resolved
+this issue by using a \texttt{CAS}-loop that only commits changes to the heap root
+if no other changes have been made.
+
+Another roadblock in designing a concurrent Pairing heap is that calls to
+\texttt{decreaseKey} and \texttt{insert} that produce new roots
+compete to change the parent of the current root. Continuing along the same
+lines as our previous example, suppose that while inserting $a$ and $b$,
+$a$ linearizes first and hence has the old root as its child. If $b$ concurrently
+tries to insert itself as the root, it will fail by the detection protocol established
+in the previous paragraph, but not before changing the root's parent from $a$ to $b$.
+We resolve this problem by duplicating the old root of the heap and updating
+the parent field of the clone. This yields a useful property:
+if the new root fails to be \texttt{CAS}ed into place, no other node has
+access to the cloned root and it can safely be discarded. However, we have
+introduced an additional problem: when the new root has been inserted, references
+to the old root must be atomically updated to the cloned node. In particular, this
+presents difficulties when maintaining references
+to nodes outside of the pairing heap structure. (For example, if an adjacency list
+of Pairing heap nodes is used in a graph, references must be updated.)
+
+We resolve this issue by introducing an additional layer of indirection: all references
+to a Pairing heap node are made through a common reference object (pointer.)
+This object can be updated to reflect the new location of a node. When a 
+
+A further issue is that calls to \texttt{deleteMin} and \texttt{insert}
+also compete to insert nodes as a child of the current root. Say $r$ is the root
+of the heap and we insert elements $a,b > r$. Both $a$ and $b$ will attempt
+to insert themselves as the right-child of $r$. We solve this issue by storing
+child nodes in a lock-free linked list (a Michael-Scott \textbf{CITATION} queue.)
+
+\subsection{Lock-free insert and decreaseKey Operations}
 
 We use a CAS loop to insert a new node (or a newly decreased node)
 at the root (or as a root's child.) A call to \texttt{meld} modifies the list of children of the new heap root,
