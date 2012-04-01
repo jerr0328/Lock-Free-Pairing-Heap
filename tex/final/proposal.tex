@@ -1,5 +1,5 @@
 \documentclass{acm_proc_article-sp}
-\usepackage{algorithm2e}
+\usepackage[linesnumbered]{algorithm2e}
 \usepackage{float}
 \usepackage{qtree}
 
@@ -568,7 +568,11 @@ Dijkstra's algorithm allow us to make assumptions about how
 Pairing heap operations interleave. 
 We first list some assumptions that we have made about overlapping
 calls to operations on the heap and give a high-level overview
-of our lock-free approach. In \textbf{section X} we delve into the details of our
+of our lock-free approach. In section \ref{sec:ph:roadblocks}
+we give a technical overview of the difficulties encountered
+in developing a lock-free Pairing heap and give a high-level
+outline of our solutions to these issues.
+In section \ref{sec:ph:ops} we delve into the details of our
 \texttt{insert} and \texttt{decreaseKey} operators, in \textbf{section Y} we show
 our operations are linearizable and discuss the semantics
 of our lock-free pairing heap, and in \textbf{section Z} we prove the correctness
@@ -583,13 +587,16 @@ these calls will never interleave, and, further, that only concurrent calls to
 \texttt{decreaseKey} overlap.
 
 \subsection{Developmental Roadblocks}
+\label{sec:ph:roadblocks}
+
 There are a number of issues that must be overcome when developing
 a lock-free Pairing heap. A design problem pertinent to all lock-free data
 structures is how to efficiently broadcast when one thread has made modifications
 that possibly interfere with concurrent work \cite{herlihy91}. 
-In a pairing heap, there
-are four such coordination problems that arise from the need to
-maintain the root of the heap and also the parent of a node in the heap.
+For a Pairing heap, we have identified
+four such coordination problems that arise from the need to
+maintain the heap root, the parent of a node in the heap, and
+the children of a heap node.
 
 The first roadblock is that Pairing heap operations contend to
 make changes to the root of the heap when a node is produced (either a newly inserted
@@ -616,90 +623,179 @@ in the previous paragraph, but not before changing the root's parent from $a$ to
 We resolve this problem by duplicating the old root of the heap and updating
 the parent field of the clone. This yields a useful property:
 if the new root fails to be \texttt{CAS}ed into place, no other node has
-access to the cloned root and it can safely be discarded. However, we have
+access to the cloned previous root and it can safely be discarded.
+
+However, we have
 introduced an additional problem: when the new root has been inserted, references
-to the old root must be atomically updated to the cloned node. In particular, this
+to the old root must be atomically updated to the newly cloned node. In particular, this
 presents difficulties when maintaining references
 to nodes outside of the pairing heap structure. (For example, if an adjacency list
 of Pairing heap nodes is used in a graph, references must be updated.)
+We resolve this issue by first introducing an additional layer of indirection: all references
+to a Pairing heap node are made through a common reference object (pointer.) And, secondly,
+we ensure the process of updating the new location occurs atomically by the using
+a Descriptor-based design (see \cite{fraser07} and \cite{dechev10}.) Descriptor objects
+combine the global state of an object and instructions for carrying out an operation.
+In our approach, Descriptors enclose the root node (the global state of the Pairing heap)
+and updating the memory location of the previous root (a pending operation.)
 
-We resolve this issue by introducing an additional layer of indirection: all references
-to a Pairing heap node are made through a common reference object (pointer.)
-This object can be updated to reflect the new location of a node. When a 
-
-A further issue is that calls to \texttt{deleteMin} and \texttt{insert}
+Our final coordination issue is that calls to \texttt{deleteMin} and \texttt{insert}
 also compete to insert nodes as a child of the current root. Say $r$ is the root
 of the heap and we insert elements $a,b > r$. Both $a$ and $b$ will attempt
-to insert themselves as the right-child of $r$. We solve this issue by storing
-child nodes in a lock-free linked list (a Michael-Scott \textbf{CITATION} queue.)
+to insert themselves as the left-most-child of $r$. We solve this issue by storing
+child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
 
 \subsection{Lock-free insert and decreaseKey Operations}
+\label{sec:ph:ops}
 
-We use a CAS loop to insert a new node (or a newly decreased node)
-at the root (or as a root's child.) A call to \texttt{meld} modifies the list of children of the new heap root,
-which is the root node of minimum value between two heaps being melded. The newly added node is inserted at
-the end of the root's child list. This is accomplished atomically through the references that heap nodes
-hold. Each list of subheaps is a lock-free list: this ensures that two overlapping \texttt{meld}
-operations will not negatively conflict with each other. We now describe the linearization point
-for two interleaving \texttt{meld} operations. A \texttt{meld} operation has completed when the
-new child node has been appended to the child list of the heap root or the root has been atomically
-placed with a CAS. After this, the new node must have updated references for its parent (root) and
-right child (null). To achieve this, a new node is created inheriting the children of the node to be
-inserted with new values for parent and sibling. 
+\begin{algorithm}
+  \SetKwFunction{meld}{meld}
+  \SetKwFunction{NewRootDescriptor}{NewRootDescriptor}
+  \SetKwFunction{CAS}{CAS}
+  \KwIn{A Pairing heap $H$ and new node $e$}
+  \KwOut{$e$ will be added to $H$}
+  \Begin{
+    \While{true}{
+      Descriptor $d$ $\leftarrow$ $descriptor$.get()\;
+      $d$.execute()\;
 
-\texttt{insert} is the simpler of our two lock-free operations. We
-first take a snapshot of the address of the current
-root node and its timestamp. This is later used to detect if any
-concurrent operations
-have interfered with the root node. Next, we create a copy of the recorded
-root. The copy and the original root both share the same list of child heaps.
-Next, we create a trivial heap from the element we are inserting and \texttt{meld} this
-to the copied root. \texttt{meld} has the effect of setting the parent field of the smaller
-heap to be the larger heap, and appending the larger heap to the list containing the subheaps
-that the larger heap is a parent of. This list of subheaps is a lock-free list, so there are no
-issues with concurrent modifications. Next, we attempt to CAS the root node of the melded heap
-to the root node of the entire heap. If the CAS call succeeds, we are done. Otherwise,
-if the CAS fails, we remove
-the larger node from the smaller node's list of subheaps before retrying (this avoids accidentally duplicating nodes.)
+      \If{$e$.distance $\geq$ $d$.$root$.distance}{
+        $e$.parent $\leftarrow$ $d$.$root$\;
+        $d$.$root$.subHeaps.add($e$)\;
+        break\;
+      }
+      Node $rootClone$ $\leftarrow$ $d$.$root$.clone()\;
+      $e$ $\leftarrow$ \meld{$rootClone$, $e$}\;
+      Descriptor $dNew$ $\leftarrow$ \NewRootDescriptor{$e$, $d$.$root$, $rootClone$}\;
 
-To perform a lock-free \texttt{decreaseKey} we consider three mutually exclusive cases.
-Some of our decisions here rest on the assumption that no \texttt{decreaseKey} calls to the
-same node interleave. This is true if Dijkstra's algorithm is run on a graph where the set
-of edges $E$ is a set but not a multiset (so, there are no duplicated edges.) The implications
-of this assumption are that calls to \texttt{decreaseKey} can freely change the parent field of the
-target node without worrying about contending changes.
+      \If{\CAS{$descriptor$, $d$, $dNew$}}{
+         $descriptor$.get().execute()\;
+         break\;
+       }
+       \Else{
+         $e$.subHeaps.remove($d$.$root$)\;
+         $descriptor$.get().execute()\;
+       }
+    }
+  }
+\caption{A lock-free \texttt{insert} operator for Pairing heaps.}
+\label{alg:insert}
+\end{algorithm}
 
-For the first case, 
-if the parent node of our target node is smaller than the decreased value, we immediately decrease
-the value of the target node without making any structural changes. This does not interfere with
-any interleaving calls to \texttt{decreaseKey} since this is the only call that would change
-the target node's parent field and we do not need to modify the root node at all.
-For the second case, if the target node is the root node, we record a pointer to the root node and its timestamp, create
-a copy of the recorded root, modify its value, and try to CAS in the new root. 
-We also do not need any structural changes in this case, but
-after every failed CAS we verify that the target node is still the root node. If this is no longer the case,
-we handle the insertion as another case (first, if applicable, otherwise as the third.)
+\begin{algorithm}
+  \SetKwFunction{meld}{meld}
+  \SetKwFunction{NewRootDescriptor}{NewRootDescriptor}
+  \SetKwFunction{UpdateRootDescriptor}{UpdateRootDescriptor}
+  \SetKwFunction{CAS}{CAS}
+  \KwIn{A Pairing heap $H$, a target node $key$, and a new weight $w$}
+  \KwOut{$key$'s value in the heap will be decreased to $w$.}
+  \Begin{
+    \If{!$key$.inHeap || $key$.distance $\leq$ $w$}{
+      return\;
+    }
+    \While{key == $descriptor$.get().root}{
+      Descriptor $d$ $\leftarrow$ $descriptor$.get()\;
+      $d$.execute()\;
+      \If{$d$.root != key}{
+        break\;
+      }
+      $newRoot$ $\leftarrow$ $key$.clone()\;
+      $newRoot$.distance $\leftarrow$ $w$\;
+      Descriptor $dNew$ = \UpdateRootDescriptor{$d$.root, $newRoot$}\;
+      \If{\CAS{$descriptor$, $d$, $dNew$}}{
+        $descriptor$.get().execute()\;
+        return\;
+      }
+      \Else{
+        $descriptor$.get().execute()\;
+      }
+    }
+    
+      
+    $descriptor$.get().execute()\;
+    $key$ $\leftarrow$ $key$.getPointer().getNode()\;
+    $key$.distance = $w$\;
+    \If{$key$.parent.distance $\leq$ $key$.distance}{
+      return\;
+    }
+    
+    $key$.parent.subHeaps.remove($key$)\;
+    
+    \While{true}{
+      Descriptor $d$ $\leftarrow$ $descriptor$.get()\;
+      $d$.execute()\;
+      
+      $key$ $\leftarrow$ $key$.getPointer().getNode()\;
+      \If{$key$.distance $\geq$ $d$.$root$.distance}{
+        $key$.parent $\leftarrow$ $d$.$root$\;
+        $d$.$root$.subHeaps.add($key$)\;
+        return\;
+      }
+      
+      $key$.parent $\leftarrow$ null\;
+      Node $rootClone$ $\leftarrow$ $d$.$root$.clone()\;
+      $key$ $\leftarrow$ \meld{$rootClone$, $key$}\;
+      Descriptor $dNew$ $\leftarrow$ \NewRootDescriptor{$key$, $d$.$root$, $rootClone$}\;
+      
+      \If{\CAS{$descriptor$, $d$, $dNew$}}{
+        $descriptor$.get().execute()\;
+        break\;
+      }
+      \Else{
+        $key$.subHeaps.remove($d$.$root$)\;
+        $descriptor$.get().execute()\;
+      }
+    }
+  }
+  \caption{A lock-free \texttt{decreaseKey} operator for Pairing heaps.}
+  \label{alg:decreaseKey}
+\end{algorithm}
 
-%For the third case we have a node where its decreased value is less than its parent value.
-%Here, the heap invariant is violated and our target node needs to be melded to the root.
-%We immediately decrease the value stored at the root and remove it from the parent's list
-%of sub heaps. We then follow a similar procedure as in \texttt{insert}. We construct a copy of the root
-%node, merge the decreased node and the root, and attempt to CAS the new root into place. To prevent duplicated
-%nodes, if the CAS fails, we remove larger heap from the smaller heap's list of subheaps.
-%It is worth mentioning the case where a parent is decreased concurrently with its child. Although the
-%delinking of the child may not be necessary in this case it is performed anyway The
-%interleaved operations linearize as if the largest node was decreased before the smallest. 
+Our \texttt{insert} and \texttt{decreaseKey} operators implement
+a Descriptor-based design: threads race to place Descriptors that
+describe operations to a Pairing heap. In general, our Descriptors
+are fine-grained and encapsulate changes to only one or two memory addresses.
 
-For the third case we have a node where its decreased value is less than its parent value.
-Here, the heap invariant is violated and our target node needs to be melded to the root.
-We immediately decrease the value stored at the target node and remove it from the parent's list
-of sub heaps. Siblings of the target node must have updated references to fill the gap caused by removing the target node. 
-We then follow a similar procedure as in \texttt{insert}. We construct a copy of the root
-node, merge the decreased node and the root, and attempt to CAS the new root into place. To prevent duplicated
-nodes, if the CAS fails we remove the larger node from the smaller node's list of subheaps. The structure of the heap is modified in this case, and there is a time when the target node does not exist in the heap after removal from the child list of the heap and before the target node has been reinserted. This is only an issue if the target node would become the new heap root and a \texttt{deleteMin} call were to delete the current root. In this case, the linearization would be that of the \texttt{deleteMin} occuring first and the \texttt{decreaseKey} occuring second. 
-It is worth mentioning the case where a parent is decreased concurrently with its child. Although the
-delinking of the child may not be necessary, in this case it is performed anyway. The
-interleaved operations linearize as if the largest node was decreased before the smallest. 
+Our \texttt{insert} operation first processes any pending operations.
+The insertion process is split into two cases. In the first case
+(lines 5-9 in Algorithm \ref{alg:insert}), the value of the
+root is less than or equal to the value of the node to be inserted,
+and the node is insert as the left-most child of the root.
+
+In the second case (lines 10-19), the new node's value is less than the 
+the value of the root, and the root must be updated. To accomplish
+this update, we create a NewRootDescriptor that contains the
+new root, the old root, and the new memory address for the old root.
+We then try to \texttt{CAS} this descriptor into place. If \texttt{CAS}
+fails, we remove the root of the heap from the node we are inserting, process
+the current descriptor (if applicable), and retry.
+
+Our \texttt{decreaseKey} operator is broken into four cases.
+In the first case (lines 5-21 of Algorithm \ref{alg:decreaseKey}),
+we are decreasing the value of the current heap root. We first
+execute any pending operations, copy the current root, decrease
+the copy's value, and create a UpdateRootDescriptor that contains
+the new root and the memory location of the root of the heap. We then try
+to \texttt{CAS} the descriptor into place. If \texttt{CAS} succeeds,
+we are done. Otherwise, we retry after processing the descriptor
+if the target is still the root of the heap, or we move onto
+another case if the root has changed.
+
+In the second case (lines 22-27), the new value of the node is still less than or equal to
+its parent's value. No structural changes to the heap are required in this case:
+we handle this case by simply changing the value of the node. One of our assumptions
+for \texttt{decreaseKey} is that calls to change a particular node do not
+interleave. A key benefit from this assumption is that this second case can proceed
+in a wait-free manner since no memory locations require an update.
+
+Before executing the remaining two cases (lines 28-50), we remove the target node from its parent's
+list of subheaps as both cases involve moving the node to a new location
+in the heap. The final cases are largely identical to the cases of our \texttt{insert} operator
+as we are essentially inserting a new node into the heap. In the third case
+(lines 32-37), the node is larger than the current root and should be inserted
+as a child of the root. In the fourth case (lines 38-49), the new value of the target
+node is less than the value of the root and we insert the target node as the new
+root of the heap.
 
 \begin{figure}
   \includegraphics[width=0.45\textwidth]{img/PairHeapConcurrent-crop.pdf}
@@ -712,6 +808,12 @@ We briefly discuss the form of a parallelized \texttt{deleteMin} operator on Pai
 \texttt{deleteMin} follows what is essentially a Map-Reduce pattern: pairs of heaps are constructed
 and then merged together to form a resultant heap. The first step has no contention between pairs
 and is trivial to parallelize. Our \texttt{meld} operator can be used to merge heaps in parallel.
+
+However, once a \texttt{deleteMin} process has started, the new heap root cannot be determined until
+the call has finished.
+To accomplish \texttt{deleteMin} in a lock-free manner, a Descriptor object could be placed into memory
+that forces calls to other heap operations to first help complete the \texttt{deleteMin} before proceeding
+to their own operations.
 
 \section{Experimental Results}
 Efficiency of the lock-free Pairing heap will be examined by comparing the relative performance of Dijkstra's algorithm, backed by different heap structures, on large network data sets. Currently, we

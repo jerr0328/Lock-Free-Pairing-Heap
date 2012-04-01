@@ -24,6 +24,14 @@ A.~Crauser, K.~Mehlhorn, U.~Meyer, and P.~Sanders.
   Heidelberg, 1998.
 \newblock 10.1007/BFb0055823.
 
+\bibitem{dechev10}
+D.~Dechev, P.~Pirkelbauer, and B.~Stroustrup.
+\newblock Understanding and effectively preventing the aba problem in
+  descriptor-based lock-free designs.
+\newblock In {\em Proceedings of the 2010 13th IEEE International Symposium on
+  Object/Component/Service-Oriented Real-Time Distributed Computing}, ISORC
+  '10, pages 185--192, Washington, DC, USA, 2010. IEEE Computer Society.
+
 \bibitem{dijkstra59}
 E.~W. Dijkstra.
 \newblock A note on two problems in connexion with graphs.
@@ -43,6 +51,11 @@ A.~Elmasry.
   volume 6196 of {\em Lecture Notes in Computer Science}, pages 479--488.
   Springer Berlin / Heidelberg, 2010.
 \newblock 10.1007/978-3-642-14031-0\_51.
+
+\bibitem{fraser07}
+K.~Fraser and T.~Harris.
+\newblock Concurrent programming without locks.
+\newblock {\em ACM Trans. Comput. Syst.}, 25(2), May 2007.
 
 \bibitem{fredman99}
 M.~L. Fredman.
@@ -66,6 +79,11 @@ D.~Hendler, N.~Shavit, and L.~Yerushalmi.
 \newblock In {\em Proceedings of the sixteenth annual ACM symposium on
   Parallelism in algorithms and architectures}, SPAA '04, pages 206--215, New
   York, NY, USA, 2004. ACM.
+
+\bibitem{herlihy91}
+M.~Herlihy.
+\newblock Wait-free synchronization.
+\newblock {\em ACM Trans. Program. Lang. Syst.}, 13(1):124--149, Jan. 1991.
 
 \bibitem{herlihy93}
 M.~Herlihy.

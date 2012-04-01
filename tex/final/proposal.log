@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  12 MAR 2012 18:06
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  1 APR 2012 15:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -507,7 +507,7 @@ Overfull \hbox (2.32994pt too wide) in paragraph at lines 268--278
 S/cmsy/m/n/9 O\OT1/cmr/m/n/9 ([] \OML/cmm/m/it/9 n\OT1/cmr/m/n/9 )$
  []
 
-<img/skiplist-crop.pdf, id=21, 239.89626pt x 93.34875pt>
+<img/skiplist-crop.pdf, id=22, 239.89626pt x 93.34875pt>
 File: img/skiplist-crop.pdf Graphic file (type pdf)
 
 <use img/skiplist-crop.pdf>
@@ -519,7 +519,7 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 292--294
  []
 
 [3 <./img/skiplist-crop.pdf>]
-<img/skiplistSearch-crop.pdf, id=66, 239.89626pt x 93.34875pt>
+<img/skiplistSearch-crop.pdf, id=67, 239.89626pt x 93.34875pt>
 File: img/skiplistSearch-crop.pdf Graphic file (type pdf)
 
 <use img/skiplistSearch-crop.pdf>
@@ -530,7 +530,7 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 342--343
 [][] 
  []
 
-<img/skiplistSearch15-crop.pdf, id=67, 239.89626pt x 93.34875pt>
+<img/skiplistSearch15-crop.pdf, id=68, 239.89626pt x 93.34875pt>
 File: img/skiplistSearch15-crop.pdf Graphic file (type pdf)
 
 <use img/skiplistSearch15-crop.pdf>
@@ -541,7 +541,7 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 348--349
 [][] 
  []
 
-<img/skiplistInsert5-crop.pdf, id=68, 241.90375pt x 93.34875pt>
+<img/skiplistInsert5-crop.pdf, id=69, 241.90375pt x 93.34875pt>
 File: img/skiplistInsert5-crop.pdf Graphic file (type pdf)
 
 <use img/skiplistInsert5-crop.pdf>
@@ -603,64 +603,72 @@ er/m/n/9 , we meld the two heaps to-gether to form $\OMS/cmsy/m/n/9 f\OML/cmm/m
  []
 
 [5]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Overfull \hbox (6.09999pt too wide) in paragraph at lines 581--588
+\T1/aer/m/n/9 in-suf-fi-cient for blindly ex-e-cut-ing con-cur-rent calls to \T
+1/aett/bx/n/9 deleteMin
+ []
 
- [6]
-<img/PairHeapConcurrent-crop.pdf, id=202, 875.27pt x 605.26125pt>
+[6]
+Overfull \hbox (15.28938pt too wide) in paragraph at lines 754--758
+[]\T1/aer/m/n/9 Our \T1/aett/bx/n/9 in-sert \T1/aer/m/n/9 and \T1/aett/bx/n/9 d
+e-creaseKey \T1/aer/m/n/9 op-er-a-tors im-ple-ment a Descriptor-
+ []
+
+[7] <img/PairHeapConcurrent-crop.pdf, id=207, 875.27pt x 605.26125pt>
 File: img/PairHeapConcurrent-crop.pdf Graphic file (type pdf)
 
 <use img/PairHeapConcurrent-crop.pdf>
-Package pdftex.def Info: img/PairHeapConcurrent-crop.pdf used on input line 689
+Package pdftex.def Info: img/PairHeapConcurrent-crop.pdf used on input line 801
 .
 (pdftex.def)             Requested size: 226.79846pt x 156.82854pt.
 
-Overfull \hbox (22.37613pt too wide) in paragraph at lines 709--709
+Overfull \hbox (22.37613pt too wide) in paragraph at lines 827--827
 []\secfnt REAL-WORLD PER-FOR-MANCE OF LOCK-
  []
 
 
-Overfull \hbox (16.4592pt too wide) in paragraph at lines 709--709
+Overfull \hbox (16.4592pt too wide) in paragraph at lines 827--827
 \secfnt FREE PAIR-ING HEAPS AND SKIPQUEUES 
  []
 
 
-Overfull \hbox (5.58852pt too wide) in paragraph at lines 716--719
+Overfull \hbox (5.58852pt too wide) in paragraph at lines 834--837
 \T1/aer/m/n/9 Pair-ing heap in-ser-tion runs close to $\OMS/cmsy/m/n/9 O\OT1/cm
 r/m/n/9 (1)$ \T1/aer/m/n/9 time but a Skipqueue
  []
 
-(./proposal.bbl [7 <./img/PairHeapConcurrent-crop.pdf>]
+(./proposal.bbl [8 <./img/PairHeapConcurrent-crop.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-) [8]
+) [9]
 (./proposal.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 4398 strings out of 493629
- 55748 string characters out of 3148779
- 157950 words of memory out of 3000000
- 7588 multiletter control sequences out of 15000+200000
- 54268 words of font info for 75 fonts, out of 3000000 for 9000
+ 4420 strings out of 493629
+ 55997 string characters out of 3148779
+ 158015 words of memory out of 3000000
+ 7605 multiletter control sequences out of 15000+200000
+ 58935 words of font info for 82 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 41i,21n,28p,878b,439s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,21n,34p,878b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/sh
-are/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmti9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr
-/share/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fo
-nts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/
-utmb8a.pfb>
-Output written on proposal.pdf (8 pages, 256850 bytes).
+ts/type1/public/amsfonts/cm/cmbx6.pfb></usr/share/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmbx9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/s
+hare/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
+/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texmf-di
+st/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/h
+elvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
+Output written on proposal.pdf (9 pages, 276634 bytes).
 PDF statistics:
- 256 PDF objects out of 1000 (max. 8388607)
- 213 compressed objects within 3 object streams
+ 263 PDF objects out of 1000 (max. 8388607)
+ 218 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
