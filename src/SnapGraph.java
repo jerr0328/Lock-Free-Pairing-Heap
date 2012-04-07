@@ -35,9 +35,6 @@ public class SnapGraph implements Graph<Integer> {
 				a = s.nextInt();
 				b = s.nextInt();
 				
-				if(nodes.size() % 10000 == 0)
-					System.out.println(nodes.size() + "\t" + a +"\t" + b);
-				
 				GraphNode<Integer> nodeA, nodeB;
 				
 				if(a > nodes.size() || b > nodes.size())
@@ -46,7 +43,12 @@ public class SnapGraph implements Graph<Integer> {
 					{
 						if(i >= nodes.size())
 							nodes.add(i,null);
+						
+						//debug on increase in nodes size
+						if(nodes.size() % 10000 == 0)
+							System.out.println(nodes.size() + "\t" + a +"\t" + b);
 					}
+					
 				}
 				
 				if(nodes.get(a)==null)
