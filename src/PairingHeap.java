@@ -77,7 +77,7 @@ public class PairingHeap<T> {
 		{			
 			AtomicReference<PairingHeapNode<T>> iter = checks.remove(0);
 			
-			if(iter.get().getValue().compareTo(val))
+			if(iter.get().getValue().compareTo(val) == 0)
 				return iter;
 			
 			if(iter.get().getLeftChild().get() != null)
@@ -85,7 +85,7 @@ public class PairingHeap<T> {
 			
 			for(AtomicReference<PairingHeapNode<T>> iter2 = iter.get().getRightSibling(); iter2.get() != null; iter2 = iter2.get().getRightSibling())
 			{
-				if(iter2.get().getValue().compareTo(val))
+				if(iter2.get().getValue().compareTo(val) == 0)
 					return iter2;
 				
 				if(iter2.get().getLeftChild().get() != null)
