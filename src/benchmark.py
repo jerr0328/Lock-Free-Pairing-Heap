@@ -15,12 +15,12 @@ def benchmarkCommand(command,out=None,err=None):
 	return time.time() - begin
 	
 #Benchmark the PairingHeapMain class with specified minimum and maximum heap sizes (in MB)
-def testPairingHeap(mini=64,maxi=3072):
+def testPairingHeap(mini=64,maxi=5632):
 	
-	command = "java -server PairingHeapMain -Xms"+str(mini)+"m -Xmx"+str(maxi)+"m"
+	command = "java -server -Xms"+str(mini)+"m -Xmx"+str(maxi)+"m PairingHeapMain"
 	print command
 	return benchmarkCommand(command)
 	
 if __name__ == "__main__":
 	
-	print str(testPairingHeap(64,4096))
+	print str(testPairingHeap(64,5632))

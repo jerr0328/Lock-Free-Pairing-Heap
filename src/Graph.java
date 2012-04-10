@@ -6,4 +6,5 @@
 public interface Graph<T> {
 	public Object[] getNodes();
 	public GraphNode<T> getSource();
+
 }

@@ -13,6 +13,7 @@ public class SnapGraph implements Graph<Integer> {
 	private GraphNode<Integer> source;
 	private final int maxWeight = 100;
 	private Object nodeList[];
+	public int connections,size;
 	
 	public SnapGraph(String filename, int expected_nodes, int expected_edges, double density)
 	{
@@ -29,11 +30,14 @@ public class SnapGraph implements Graph<Integer> {
 				header = s.nextLine();
 			//error: skips first line of input
 			
-			int a,b;
+			int a,b = 0;
 			while(s.hasNext())
 			{
 				a = s.nextInt();
 				b = s.nextInt();
+				connections++;
+				if(connections % 10000 == 0)
+					System.out.println(connections + "\t" + a + "\t" + b);
 				
 				GraphNode<Integer> nodeA, nodeB;
 				
@@ -43,10 +47,6 @@ public class SnapGraph implements Graph<Integer> {
 					{
 						if(i >= nodes.size())
 							nodes.add(i,null);
-						
-						//debug on increase in nodes size
-						if(nodes.size() % 10000 == 0)
-							System.out.println(nodes.size() + "\t" + a +"\t" + b);
 					}
 					
 				}
@@ -86,10 +86,16 @@ public class SnapGraph implements Graph<Integer> {
 		source = nodes.get(0);
 		source.distance = 0;
 		
+		//clean up empty nodes
+		while(nodes.contains(null))
+			nodes.remove(null);
+		
 		for(GraphNode<Integer> node : nodes)
-			node.finalize();
+			if(node != null)
+				node.finalize();
 		
 		nodeList = nodes.toArray();
+		size = nodeList.length;
 		
 	}
 
@@ -99,6 +105,15 @@ public class SnapGraph implements Graph<Integer> {
 
 	public GraphNode<Integer> getSource() {
 		return source;
+	}
+	
+	public void reset()
+	{
+		for (Object nodeO : nodeList) {
+			GraphNode<Integer> node = (GraphNode<Integer>)nodeO;
+			node.distance = Integer.MAX_VALUE - (maxWeight + 2);			
+		}
+		source.distance = 0;
 	}
 
 }

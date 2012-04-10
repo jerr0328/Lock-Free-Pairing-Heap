@@ -38,4 +38,13 @@ public class RandomGraph implements Graph<Integer> {
 	public Object[] getNodes() {
 		return nodeList;
 	}
+	
+	public void reset()
+	{
+		for (Object nodeO : nodeList) {
+			GraphNode<Integer> node = (GraphNode<Integer>)nodeO;
+			node.distance = Integer.MAX_VALUE - (maxWeight + 2);			
+		}
+		source.distance = 0;
+	}
 }
