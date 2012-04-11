@@ -573,9 +573,10 @@ we give a technical overview of the difficulties encountered
 in developing a lock-free Pairing heap and give a high-level
 outline of our solutions to these issues.
 In section \ref{sec:ph:ops} we delve into the details of our
-\texttt{insert} and \texttt{decreaseKey} operators, in \textbf{section Y} we show
+\texttt{insert} and \texttt{decreaseKey} operators, in \ref{sec:ph:linear} we show
 our operations are linearizable and discuss the semantics
-of our lock-free pairing heap, and in \textbf{section Z} we prove the correctness
+of our lock-free pairing heap, and in \ref{sec:ph:correct} we sketch and informal proof
+regarding the correctness
 of our implementation.
 
 In section \ref{sec:dijkstra} we analyzed the specific performance bottle-necks and other
@@ -802,6 +803,67 @@ root of the heap.
   \caption{Illustration of the concurrent pair heap structure. Pair heap nodes exist inside atomic references and hold atomic references to other heap nodes.}
   \label{fig:pairheap:structure}
 \end{figure}
+
+\subsection{Linearization Points}
+\label{sec:ph:linear}
+In this section we discuss the semantics of our lock-free Pairing heap and
+its linearization points. An operation is linearizable \cite{herlihy90} if
+it atomically takes effect at some time $t$ between the operation's invocation and its
+response. In our Pairing heap implementation, an operation linearizes when
+its changes to the heap take place.
+
+Suppose we have $n$ operations $\{\sigma_1, \dots, \sigma_n\}$ (these are either
+calls to \texttt{insert} or \texttt{decreaseKey}) concurrently executing. Let
+$t_{desc}^i$ and $t_{op}^i$ denote the time instants at which, respectively, $\sigma_i$
+atomically updates the Pairing heap's global descriptor object and when the memory writes
+encapsulated by $\sigma_i$'s descriptor object are executed. Note that a descriptor placed
+by $\sigma_i$ may be executed by $\sigma_i$, some $\sigma_j$ (where $j \not= i$),
+or completed by many $\sigma_j$'s each performing partial work on the descriptor. Also,
+let $t_s^i$ denote the time where any changes to the list of subheaps of a particular
+node is modified by the operation $\sigma_i$.
+
+We now turn to discussing the linearization points for an \texttt{insert} operation:
+an \texttt{insert} that involves placing the new node as a child of the current root
+linearizes at $t_s^i$
+when it is successfully placed into the list of subheaps (line 7 of Algorithm \ref{alg:insert}.)
+An \texttt{insert} that causes a root to be updated linearizes when its descriptor
+is placed at $t_{desc}^i$ (line 13.) In both of these cases, the structure of the resultant heap
+was determined when the global descriptor was read at line 3.
+
+As previously discussed, the final two cases for our \texttt{decreaseKey} operator
+are semantically identical to the two cases for \texttt{insert}. Hence, the
+linearization points for these two cases also align. By the same reasoning discussed
+in the previous paragraph, a \texttt{decreaseKey} operation falling into
+case three (lines 32-37 of Algorithm \ref{alg:decreaseKey}) linearizes at $t_s^i$ (line 35),
+and an operation falling into case four linearizes at $t_{desc}^i$ (line 42.) The heap's structure
+is determined by the particular descriptor read at line 30.
+
+For the first case of \texttt{decreaseKey} (where we decrease the root of the heap), the operation
+linearizes when we place the descriptor into memory at $t_{desc}^i$ (line 14)
+and the heap structure is determined
+at line 6. For the second case of \texttt{decreaseKey} (where the new value of the node is still
+greater than the parent and no structural changes are needed), the linearization point occurs
+when the value of the node is changed at line 24.
+
+\subsection{Correctness}
+\label{sec:ph:correct}
+In this section we discuss how our concurrent
+operations on Pairing heaps in all cases maintain the heap invariant
+and in most cases intelligibly preserve the serial semantics
+of the \texttt{insert} and \texttt{decreaseKey} operations on Pairing heaps.
+
+For serial Pairing heaps, an \texttt{insert} has two effects on the
+heap structure: either the new
+node becomes the new root of the Pairing heap (and the old root becomes its child)
+or the new node is added as the left-most child of the root of the Pairing heap.
+An \texttt{decreaseKey} has three effects: either the new node becomes (or is already)
+the heap root, is added as the left-most child of the first heap, or the target
+node does not change location at all.
+
+In our concurrent Lock-free \texttt{insert} operator for Pairing heaps, the current root
+of the heap is read at line 3 (Algorithm \ref{alg:insert}) and the structure of the
+heap is determined from this point. If the root specified
+in the descriptor is smaller than the new node, the 
 
 \subsection{Future Operators}
 We briefly discuss the form of a parallelized \texttt{deleteMin} operator on Pairing heaps.

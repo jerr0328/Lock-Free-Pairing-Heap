@@ -90,6 +90,11 @@ M.~Herlihy.
 \newblock A methodology for implementing highly concurrent data objects.
 \newblock {\em ACM Trans. Program. Lang. Syst.}, 15:745--770, November 1993.
 
+\bibitem{herlihy90}
+M.~P. Herlihy and J.~M. Wing.
+\newblock Linearizability: a correctness condition for concurrent objects.
+\newblock {\em ACM Trans. Program. Lang. Syst.}, 12(3):463--492, July 1990.
+
 \bibitem{huang91}
 Q.~Huang and W.~Weihl.
 \newblock An evaluation of concurrent priority queue algorithms.
