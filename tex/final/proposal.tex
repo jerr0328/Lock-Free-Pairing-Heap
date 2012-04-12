@@ -849,7 +849,7 @@ when the value of the node is changed at line 24.
 \label{sec:ph:correct}
 In this section we discuss how our concurrent
 operations on Pairing heaps in all cases maintain the heap invariant
-and in most cases intelligibly preserve the serial semantics
+and preserve the serial semantics
 of the \texttt{insert} and \texttt{decreaseKey} operations on Pairing heaps.
 
 For serial Pairing heaps, an \texttt{insert} has two effects on the
@@ -860,10 +860,63 @@ An \texttt{decreaseKey} has three effects: either the new node becomes (or is al
 the heap root, is added as the left-most child of the first heap, or the target
 node does not change location at all.
 
-In our concurrent Lock-free \texttt{insert} operator for Pairing heaps, the current root
-of the heap is read at line 3 (Algorithm \ref{alg:insert}) and the structure of the
-heap is determined from this point. If the root specified
-in the descriptor is smaller than the new node, the 
+We show that for all interleaving cases of \texttt{insert} / \texttt{decreaseKey},
+the resulting modifications to the Pairing heap are consistent with some
+ordering of the same operations performed sequentially.
+Note that we continue with our assumption that concurrent calls
+to modify the same node in the heap do not occur.
+
+Suppose we are decreasing a root of the heap (lines 5-21 of Algorithm \ref{alg:decreaseKey}.)
+If another thread is decreasing an older root, then the descriptor
+has been modified and the CAS on line 14 will fail for that thread.
+When the descriptor is re-read, the
+current key will no longer be the root and the thread will be forced
+to complete their operation in a new case. If another thread is decreasing its heap
+to a value that is still less than its current parent (lines 23 - 27), then
+this does not involve any structural changes to the heap. The root modification
+can occur unaffected by this decrease. If the parent of the node being
+decreased is the root, since the reference to the parent node is made through
+a wrapper object (instead of a direct reference to the parent), the parent-child
+relationship will be preserved even though the root node is located at a
+new memory address (it is cloned, see line 11.)
+
+The first interesting cases occur when we interleave a root update
+with a \texttt{decreaseKey} call that
+requires making changes near the root. Suppose a root update is interrupted by
+a second thread falling into the third case (the newly decreased node is made
+a child of the root.) However, no changes to the root are made in this case. The cloned
+root and the original root that exist in the root update (line 11) both share a 
+reference to the same list of subheaps. Hence, the addition of the node is
+made immediately visible to both roots and successfully linearizes regardless of
+if the root is changed or not. A peculiar edge case here is when the root
+modification linearizes after the descriptor containing the old root
+has been read (line 14 completes after line 30.) The decreased node will
+be added on as a child of the old root, which is consistent with the Pairing heap state
+obtained when the child node decrease linearizes before the root modification linearizes.
+Otherwise, if the root modification linearizes before the descriptor has been read, the
+newly decreased child node will be added with the new root as its parent.
+
+If the decreased node is less than the current root, there is a race to update
+the current root: either the decreased root will remain the root, or the newly
+decreased node will become the root. The linearization point
+for these cases is the CAS calls on lines 14 and 42, where the descriptor is updated.
+There are a few different cases to consider here. Let $r$ and $r'$ respectively
+denote the old and new values of the root (note $r' < r$) and say $n$ is the 
+new value of the node to be decreased. Since we are in lines 38-49, 
+we additionally have $n < r$. Say that $r' < n < r$.
+
+% For 4/4 overlapping.
+Note that since case 4 (lines 38-49) clones the current root of the heap, if the CAS
+call on line 42 fails, the old root is never modified and no other threads
+have access to this cloned node. This prevents a race condition where one
+thread overrides the parent field modification of another thread. If the
+first 
+
+
+%In our concurrent Lock-free \texttt{insert} operator for Pairing heaps, the current root
+%of the heap is read at line 3 (Algorithm \ref{alg:insert}) and the structure of the
+%heap is determined from this point. If the root specified
+%in the descriptor is smaller than the new node, the 
 
 \subsection{Future Operators}
 We briefly discuss the form of a parallelized \texttt{deleteMin} operator on Pairing heaps.
