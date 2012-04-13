@@ -903,14 +903,94 @@ for these cases is the CAS calls on lines 14 and 42, where the descriptor is upd
 There are a few different cases to consider here. Let $r$ and $r'$ respectively
 denote the old and new values of the root (note $r' < r$) and say $n$ is the 
 new value of the node to be decreased. Since we are in lines 38-49, 
-we additionally have $n < r$. Say that $r' < n < r$.
+we additionally have $n < r$. Say that $r' < n < r$. If the new value of the
+root linearizes before the decreased node linearizes (if line 14 executes
+before line 42), then $n$ will be the left-most child of $r'$. Otherwise,
+if the decreased node linearizes before the root, the CAS on line 14 will
+fail, and the root update will continue on to case 4. Next, suppose
+$n < r' < r$. If the newly decreased node $n$ becomes the root
+before $r'$, then $r'$ will be the left-child of $n$ and the CAS
+on line 14 will fail. Since $n < r'$, $r'$ will insert as a node in case 2.
+Note that executing the descriptor on line 22 ensures that the old root's
+memory address is updated before we decrease its value on line 24. Otherwise,
+if the root's value changes to $r'$ before $n$ becomes the root, then the CAS
+on line 42 will fail and the descriptor to perform the memory address
+update from $r \rightarrow r'$ will be performed at line 31 (if it was
+not executed already by some competing thread.) Since $n < r'$,
+the node decrease will remain in case 4.
 
-% For 4/4 overlapping.
+Next we consider situations where
+operations (other than case 1 operations, which we have
+already considered) interleave with case 2 of \texttt{decreaseKey} (lines 22-27 of Algorithm
+\ref{alg:decreaseKey}.) Note that two competing case 2 operations on the same
+node cannot interleave by our assumption that no two calls to decrease the
+same node interleave. Also, if two case 2 operations interleave on
+non-connected parts of the heap, they clearly cannot interfere with
+each other. The case where we decrease a parent $P$ with value $p$ to $p' < p$
+and a child $C$ of $P$ to $c' < c$ requires no structural changes. The linearization
+point for these interleavings when the value of the node is updated at line 24.
+The child node only proceeds to case 2 if $p \leq c'$ (if $P$'s change has not yet
+linearized) or of $p' \leq c'$ (if $P$'s change has linearized.) However, since $p' < p$
+and $p \leq c'$ we have $p' < p \leq c'$ and $C$'s new value is a valid child of
+both $p'$ and $p$. Hence, we can proceed without making any structural changes to the heap
+for these interleavings.
+
+If a case 2 (lines 22-27) modification interleaves with
+a root modification (cases 3 and 4, lines 30-37 and lines 38-49),
+there are no possible concerns if we are modifying a node that
+is not $P$ (adopting the same notation as before.) Further, if
+$P$ is being modified in cases 3 or 4 while its child $C$ is being
+modified in case 2, then the $C$ is certainly still a valid
+child of $P$ for the same reason, namely that $P$'s value will only decrease.
+
+We now consider interleavings with case three (lines 30-27 of Algorithm
+\ref{alg:decreaseKey}.) We have already covered two interleavings (cases 3 and 1
+and cases 3 and 2.) If two concurrent calls to \texttt{decreaseKey}
+both fall into the third case, both will race to be the left-most child
+of the current root. The linearization point here is inside the \texttt{add}
+method of the Michael-Scott CITATION linked list.
+The Pairing heap state (i.e., the ordering of the children) is consistent with the order
+in which these nodes reach this linearization point. If the fourth case
+executes concurrently with the third case, then there is a question about
+whether the node being decreased in the third case becomes a child of
+the old root or the new root. The descriptor read on line 30 contains
+the current root of the heap, and this determines which of the potential
+roots becomes the parent of the node being decreased. Note that even
+if the root changes between when the descriptor is read and when
+the node becomes a child of the root, the target node becomes a child
+of the node contained in the descriptor. Hence, the modifications
+to the Pairing heap state that result from the interleavings of cases 3
+and 4 are always consistent with the moment in time the descriptor was read.
+
+Lastly, we consider the case where two newly decreased nodes are both
+less than the current value of the root and each contend to be the new
+root (case 4 - lines 22-27 of Algorithm \ref{alg:decreaseKey}). Suppose
+the root has value $r$ and the newly decreased nodes have values $n$ and $m$
+such that $n, m < r$. Without a loss of generality, we assume that $n < m$
+(the proof is the same for $m < n$, but with their respective roles
+reversed) The linearization point for case 4 is when the descriptor
+is placed into memory using CAS (line 42.) Suppose that the node
+with value $m$ places its descriptor first. Then, the node with
+value $n$ will fail to insert its descriptor and retry. Since $n < m$,
+the node with value $n$ will again fall into case 4 and retry inserting
+its descriptor. When this succeeds, $m$ will be its left-most child.
+Alternatively, suppose $n$ inserts its descriptor first. Since $m > n$, 
+$m$ will retry in the third case (lines 30-37). Finally,
+we consider the case where $n == m$. Here, either node being
+the new root is a valid state, and the winner is determined by whichever
+node inserts its descriptor first on line 42. The remaining node will insert
+itself as a child of the winner (i.e., case 3.)
+
+
 Note that since case 4 (lines 38-49) clones the current root of the heap, if the CAS
 call on line 42 fails, the old root is never modified and no other threads
 have access to this cloned node. This prevents a race condition where one
-thread overrides the parent field modification of another thread. If the
-first 
+thread overrides the parent field modification of another thread. Also
+note that our assumption that no two calls to \texttt{decreaseKey} change
+the same node ensures that the dangerous-looking changes to the
+list of subheaps on lines 40 and 47 are safe. In particular, we are
+certain to not, say, unattach a node from a parent previously added by
+another call to \texttt{decreaseKey}.
 
 
 %In our concurrent Lock-free \texttt{insert} operator for Pairing heaps, the current root
