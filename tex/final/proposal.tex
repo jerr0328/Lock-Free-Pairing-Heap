@@ -989,7 +989,7 @@ thread overrides the parent field modification of another thread. Also
 note that our assumption that no two calls to \texttt{decreaseKey} change
 the same node ensures that the dangerous-looking changes to the
 list of subheaps on lines 40 and 47 are safe. In particular, we are
-certain to not, say, unattach a node from a parent previously added by
+certain to not, say, detach a node from a parent previously added by
 another call to \texttt{decreaseKey}.
 
 
