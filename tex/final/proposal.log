@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  13 APR 2012 12:11
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  15 APR 2012 11:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -379,7 +379,11 @@ File: p2e-pdftex.def 2011/04/05 v0.1t Driver-dependant file (RN,HjG,JT)
 \qroofx=\count117
 \qroofy=\count118
 \@qrscratchbox=\box61
-) (./proposal.aux)
+) (./proposal.aux
+
+LaTeX Warning: Label `alg:newroot' multiply defined.
+
+)
 \openout1 = `proposal.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
@@ -394,8 +398,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
-
-(/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
+ (/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count119
 \scratchdimen=\dimen132
@@ -561,11 +564,6 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4 <./img/skiplistSearch-crop.pdf> <./img/skiplistSearch15-crop.pdf> <./img/sk
 iplistInsert5-crop.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 463--464
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 464--465
 
  []
@@ -596,33 +594,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 469--470
  []
 
 
-Overfull \hbox (7.87083pt too wide) in paragraph at lines 481--487
+Underfull \hbox (badness 10000) in paragraph at lines 470--471
+
+ []
+
+
+Overfull \hbox (7.87083pt too wide) in paragraph at lines 482--488
 \OT1/cmr/m/n/9 (\OML/cmm/m/it/9 H[]; H[]\OT1/cmr/m/n/9 )\OMS/cmsy/m/n/9 g$\T1/a
 er/m/n/9 , we meld the two heaps to-gether to form $\OMS/cmsy/m/n/9 f\OML/cmm/m
 /it/9 H[]; [] ;
  []
 
 [5]
-Overfull \hbox (6.09999pt too wide) in paragraph at lines 582--589
+Overfull \hbox (6.09999pt too wide) in paragraph at lines 583--590
 \T1/aer/m/n/9 in-suf-fi-cient for blindly ex-e-cut-ing con-cur-rent calls to \T
 1/aett/bx/n/9 deleteMin
  []
 
-[6]
-Overfull \hbox (15.28938pt too wide) in paragraph at lines 755--759
-[]\T1/aer/m/n/9 Our \T1/aett/bx/n/9 in-sert \T1/aer/m/n/9 and \T1/aett/bx/n/9 d
-e-creaseKey \T1/aer/m/n/9 op-er-a-tors im-ple-ment a Descriptor-
- []
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6]
 [7] <img/PairHeapConcurrent-crop.pdf, id=207, 875.27pt x 605.26125pt>
 File: img/PairHeapConcurrent-crop.pdf Graphic file (type pdf)
 
 <use img/PairHeapConcurrent-crop.pdf>
-Package pdftex.def Info: img/PairHeapConcurrent-crop.pdf used on input line 802
+Package pdftex.def Info: img/PairHeapConcurrent-crop.pdf used on input line 833
 .
 (pdftex.def)             Requested size: 226.79846pt x 156.82854pt.
  [8 <./img/PairHeapConcurrent-crop.pdf>]
-Overfull \hbox (1.9065pt too wide) in paragraph at lines 883--898
+Overfull \hbox (1.9065pt too wide) in paragraph at lines 917--932
 \T1/aer/m/n/9 up-date with a \T1/aett/bx/n/9 de-creaseKey \T1/aer/m/n/9 call th
 at re-quires mak-ing changes
  []
@@ -634,20 +635,17 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [9]
-Overfull \hbox (22.37613pt too wide) in paragraph at lines 1022--1022
+Overfull \hbox (22.37613pt too wide) in paragraph at lines 1059--1059
 []\secfnt REAL-WORLD PER-FOR-MANCE OF LOCK-
  []
 
 
-Overfull \hbox (16.4592pt too wide) in paragraph at lines 1022--1022
+Overfull \hbox (16.4592pt too wide) in paragraph at lines 1059--1059
 \secfnt FREE PAIR-ING HEAPS AND SKIPQUEUES 
  []
 
 
-Underfull \vbox (badness 1337) has occurred while \output is active []
-
-
-Overfull \hbox (5.58852pt too wide) in paragraph at lines 1029--1032
+Overfull \hbox (5.58852pt too wide) in paragraph at lines 1066--1069
 \T1/aer/m/n/9 Pair-ing heap in-ser-tion runs close to $\OMS/cmsy/m/n/9 O\OT1/cm
 r/m/n/9 (1)$ \T1/aer/m/n/9 time but a Skipqueue
  []
@@ -660,12 +658,15 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 4423 strings out of 493629
- 56039 string characters out of 3148779
- 158039 words of memory out of 3000000
- 7608 multiletter control sequences out of 15000+200000
+ 4424 strings out of 493629
+ 56052 string characters out of 3148779
+ 155086 words of memory out of 3000000
+ 7609 multiletter control sequences out of 15000+200000
  58935 words of font info for 82 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  41i,21n,34p,878b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -680,7 +681,7 @@ cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texmf-di
 st/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/h
 elvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
-Output written on proposal.pdf (11 pages, 291281 bytes).
+Output written on proposal.pdf (11 pages, 289918 bytes).
 PDF statistics:
  269 PDF objects out of 1000 (max. 8388607)
  222 compressed objects within 3 object streams

@@ -359,9 +359,10 @@ we were unable to find a description of this operation in the literature.
 \subsection{Lock-Free Skiplists}
 Shavit and Lotan's Skipqueue \cite{shavit00} is a modification
 of Pugh's Skiplist that gives its operations lock-free guarantees.
-We present a high-level technical summary of their work and in
-Section \ref{skipqueue:decreasekey} we will
-build a \texttt{decreaseKey} operator for Skiplists using their approach.
+We present a high-level technical summary of their work.
+% and in
+%Section \ref{skipqueue:decreasekey} we will
+%build a \texttt{decreaseKey} operator for Skiplists using their approach.
 Following with our analogy of Skiplist
 operations being composed of operations on the linked lists formed at each level
 of the Skiplist, we see that lock-free
@@ -418,23 +419,23 @@ pointer has been marked in $L(0)$, we consider the element removed (this is our 
 point.) There is no need update any pointers on a removal since subsequent searches will perform
 this for us.
 
-\subsection{A decreaseKey operator for Skipqueues}
-\label{skipqueue:decreasekey}
-Keeping track of the \texttt{next[i]} and \texttt{previous[i]}
-``windows'' of an element in a Skipqueue leads to a natural implementation
-of a \texttt{decreaseKey} operator where we re-use information from
-the deletion call. Suppose we have located the target element in the
-Skipqueue and it has a level of $j$. Let $i^*$ denote the index of the largest value
-in the \texttt{next} array that is smaller than the new value of the target. We can use
-$\mathtt{next[i}^*\mathtt{]}$ as the starting location for determining a new location
-for the decreased value of our target (since every node after $\mathtt{next[i}^*\mathtt{]}$
-is greater than our new value.) Aside from the head of the list, the insert is performed
-the same as before. If the attempt to insert needs to be restarted, we restart as a non-optimized insertion.
+%\subsection{A decreaseKey operator for Skipqueues}
+%\label{skipqueue:decreasekey}
+%Keeping track of the \texttt{next[i]} and \texttt{previous[i]}
+%``windows'' of an element in a Skipqueue leads to a natural implementation
+%of a \texttt{decreaseKey} operator where we re-use information from
+%the deletion call. Suppose we have located the target element in the
+%Skipqueue and it has a level of $j$. Let $i^*$ denote the index of the largest value
+%in the \texttt{next} array that is smaller than the new value of the target. We can use
+%$\mathtt{next[i}^*\mathtt{]}$ as the starting location for determining a new location
+%for the decreased value of our target (since every node after $\mathtt{next[i}^*\mathtt{]}$
+%is greater than our new value.) Aside from the head of the list, the insert is performed
+%the same as before. If the attempt to insert needs to be restarted, we restart as a non-optimized insertion.
 
-The level of the decreased element is bounded above by $j$. On the first (the optimized) insertion attempt we
-set the level of the decreased element equal to $j$. This avoids introducing bias into the Skipqueue structure: if we sampled
-the new height from the discrete uniform distribution $U(0, j)$ we would force elements to gradually
-lose levels. If the optimized insertion attempt fails, there is no restriction placed on the level of the element.
+%The level of the decreased element is bounded above by $j$. On the first (the optimized) insertion attempt we
+%set the level of the decreased element equal to $j$. This avoids introducing bias into the Skipqueue structure: if we sampled
+%the new height from the discrete uniform distribution $U(0, j)$ we would force elements to gradually
+%lose levels. If the optimized insertion attempt fails, there is no restriction placed on the level of the element.
 
 \section{Pairing Heaps}
 Pairing heaps were developed by Fredman et al. \cite{fredman86} as
@@ -657,6 +658,7 @@ child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
   \KwOut{$e$ will be added to $H$}
   \Begin{
     \While{true}{
+    \tcp{Case $1$}
       Descriptor $d$ $\leftarrow$ $descriptor$.get()\;
       $d$.execute()\;
 
@@ -665,6 +667,8 @@ child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
         $d$.$root$.subHeaps.add($e$)\;
         break\;
       }
+
+      \tcp{Case $2$}
       Node $rootClone$ $\leftarrow$ $d$.$root$.clone()\;
       $e$ $\leftarrow$ \meld{$rootClone$, $e$}\;
       Descriptor $dNew$ $\leftarrow$ \NewRootDescriptor{$e$, $d$.$root$, $rootClone$}\;
@@ -693,7 +697,8 @@ child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
   \Begin{
     \If{!$key$.inHeap || $key$.distance $\leq$ $w$}{
       return\;
-    }
+    } 
+    \tcp{Case $1$}
     \While{key == $descriptor$.get().root}{
       Descriptor $d$ $\leftarrow$ $descriptor$.get()\;
       $d$.execute()\;
@@ -712,7 +717,7 @@ child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
       }
     }
     
-      
+    \tcp{Case $2$}
     $descriptor$.get().execute()\;
     $key$ $\leftarrow$ $key$.getPointer().getNode()\;
     $key$.distance = $w$\;
@@ -723,6 +728,7 @@ child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
     $key$.parent.subHeaps.remove($key$)\;
     
     \While{true}{
+      \tcp{Case $3$}
       Descriptor $d$ $\leftarrow$ $descriptor$.get()\;
       $d$.execute()\;
       
@@ -733,6 +739,7 @@ child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
         return\;
       }
       
+      \tcp{Case $4$}
       $key$.parent $\leftarrow$ null\;
       Node $rootClone$ $\leftarrow$ $d$.$root$.clone()\;
       $key$ $\leftarrow$ \meld{$rootClone$, $key$}\;
@@ -752,7 +759,31 @@ child nodes in a lock-free linked list (a Michael-Scott \cite{michael96} queue.)
   \label{alg:decreaseKey}
 \end{algorithm}
 
-Our \texttt{insert} and \texttt{decreaseKey} operators implement
+\begin{algorithm}
+  \SetKwFunction{NewRootDescriptor}{NewRootDescriptor}
+  \SetKwFunction{UpdateRootDescriptor}{UpdateRootDescriptor}
+  \SetKwFunction{CAS}{CAS}
+  \If{$d$.pending}{
+    \CAS($d$.node, $d$.oldRoot, $d$.newRoot)\;
+    $d$.pending = false\;
+  }
+  \caption{Execution of a \texttt{NewRootDescriptor} $d$.}
+  \label{alg:newroot}
+\end{algorithm}
+
+\begin{algorithm}
+  \SetKwFunction{NewRootDescriptor}{NewRootDescriptor}
+  \SetKwFunction{UpdateRootDescriptor}{UpdateRootDescriptor}
+  \SetKwFunction{CAS}{CAS}
+  \If{$d$.pending}{
+    \CAS($d$.root, $d$.oldRoot, $d$.newRoot)\;
+    $d$.pending = false\;
+  }
+  \caption{Execution of a \texttt{UpdateRootDescriptor} $d$.}
+  \label{alg:newroot}
+\end{algorithm}
+
+Our \texttt{insert} and \texttt{decreaseKey} operators utilize
 a Descriptor-based design: threads race to place Descriptors that
 describe operations to a Pairing heap. In general, our Descriptors
 are fine-grained and encapsulate changes to only one or two memory addresses.
@@ -812,8 +843,8 @@ it atomically takes effect at some time $t$ between the operation's invocation a
 response. In our Pairing heap implementation, an operation linearizes when
 its changes to the heap take place.
 
-Suppose we have $n$ operations $\{\sigma_1, \dots, \sigma_n\}$ (these are either
-calls to \texttt{insert} or \texttt{decreaseKey}) concurrently executing. Let
+Suppose we have $n$ operations $\{\sigma_1, \dots, \sigma_n\}$, each either a
+call to \texttt{insert} or \texttt{decreaseKey}, concurrently executing. Let
 $t_{desc}^i$ and $t_{op}^i$ denote the time instants at which, respectively, $\sigma_i$
 atomically updates the Pairing heap's global descriptor object and when the memory writes
 encapsulated by $\sigma_i$'s descriptor object are executed. Note that a descriptor placed
@@ -856,7 +887,7 @@ For serial Pairing heaps, an \texttt{insert} has two effects on the
 heap structure: either the new
 node becomes the new root of the Pairing heap (and the old root becomes its child)
 or the new node is added as the left-most child of the root of the Pairing heap.
-An \texttt{decreaseKey} has three effects: either the new node becomes (or is already)
+A \texttt{decreaseKey} has three effects: either the new node becomes (or is already)
 the heap root, is added as the left-most child of the first heap, or the target
 node does not change location at all.
 
@@ -864,8 +895,11 @@ We show that for all interleaving cases of \texttt{insert} / \texttt{decreaseKey
 the resulting modifications to the Pairing heap are consistent with some
 ordering of the same operations performed sequentially.
 Note that we continue with our assumption that concurrent calls
-to modify the same node in the heap do not occur.
+to modify the same node in the heap do not occur. Note that both cases
+of \texttt{insert} are equivalent to the final two cases
+of \texttt{decreaseKey}, so we are free to omit discussion of \texttt{insert}.
 
+\textbf{Case 1.} 
 Suppose we are decreasing a root of the heap (lines 5-21 of Algorithm \ref{alg:decreaseKey}.)
 If another thread is decreasing an older root, then the descriptor
 has been modified and the CAS on line 14 will fail for that thread.
@@ -919,6 +953,7 @@ update from $r \rightarrow r'$ will be performed at line 31 (if it was
 not executed already by some competing thread.) Since $n < r'$,
 the node decrease will remain in case 4.
 
+\textbf{Case 2.} 
 Next we consider situations where
 operations (other than case 1 operations, which we have
 already considered) interleave with case 2 of \texttt{decreaseKey} (lines 22-27 of Algorithm
@@ -943,6 +978,7 @@ $P$ is being modified in cases 3 or 4 while its child $C$ is being
 modified in case 2, then the $C$ is certainly still a valid
 child of $P$ for the same reason, namely that $P$'s value will only decrease.
 
+\textbf{Case 3.} 
 We now consider interleavings with case three (lines 30-27 of Algorithm
 \ref{alg:decreaseKey}.) We have already covered two interleavings (cases 3 and 1
 and cases 3 and 2.) If two concurrent calls to \texttt{decreaseKey}
@@ -962,6 +998,7 @@ of the node contained in the descriptor. Hence, the modifications
 to the Pairing heap state that result from the interleavings of cases 3
 and 4 are always consistent with the moment in time the descriptor was read.
 
+\textbf{Case 4.} 
 Lastly, we consider the case where two newly decreased nodes are both
 less than the current value of the root and each contend to be the new
 root (case 4 - lines 22-27 of Algorithm \ref{alg:decreaseKey}). Suppose
@@ -976,7 +1013,7 @@ the node with value $n$ will again fall into case 4 and retry inserting
 its descriptor. When this succeeds, $m$ will be its left-most child.
 Alternatively, suppose $n$ inserts its descriptor first. Since $m > n$, 
 $m$ will retry in the third case (lines 30-37). Finally,
-we consider the case where $n == m$. Here, either node being
+we consider the case where $n = m$. Here, either node being
 the new root is a valid state, and the winner is determined by whichever
 node inserts its descriptor first on line 42. The remaining node will insert
 itself as a child of the winner (i.e., case 3.)
@@ -1020,7 +1057,7 @@ synthetic graphs: a randomly generated dense graph and a randomly generated spar
 %As pairing heaps are designed for efficiency in network applications such as shortest path finding, this is an ideal test case for this datastructure. Efficiency of parallel functionality will be examined for the data structure by determining runtime decrease by adding parallel functionality to the Dijkstra's implementation, through the use of the concurrent pairing heap.
 
 \section{Real-world performance of Lock-Free Pairing Heaps and Skipqueues}
-In non-lock-free Pairing heaps, nodes are inserted (a similar procedure is used for \texttt{decreaseKey})
+In blocking Pairing heaps, nodes are inserted (a similar procedure is used for \texttt{decreaseKey})
 into the heap by either replacing the root of the heap or inserting itself as a subheap to the root. It is clear to see that
 parallel variants that preserve the general form of insertion operations will place un-due contention at the
 root of the data structure. This is the main issue we foresee with our lock-free Pairing heap: always inserting at the root
