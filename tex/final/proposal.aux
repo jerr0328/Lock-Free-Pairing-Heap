@@ -1,4 +1,10 @@
 \relax 
+\citation{bronson10}
+\citation{fraser03}
+\citation{fredman86}
+\citation{hendler10}
+\citation{dijkstra59}
+\citation{fredman86}
 \citation{dijkstra59}
 \citation{rfc5340}
 \citation{fredman87}
@@ -6,27 +12,30 @@
 \citation{pettie05}
 \citation{fredman99}
 \citation{shavit00}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Overview of Progress}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Introduction}{\thepage }}
+\citation{fredman86}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{\thepage }}
 \citation{crauser98}
+\citation{hendler10}
+\citation{kleiman96}
 \citation{nageshwara88}
 \citation{driscoll88}
 \citation{elmasry10}
 \citation{moret94}
 \citation{herlihy93}
 \citation{anderson99}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces Dijkstra's algorithm. The main loop comprises a critical section which presents difficulties when parallelizing.}}{\thepage }}
+\newlabel{alg:dijk}{{1}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{\thepage }}
+\newlabel{sec:related}{{2}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Concurrent Pairing Heaps}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Blocking Parallel Heaps}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Automatically Generated Lock-Free Heaps}{\thepage }}
 \citation{shavit00}
 \citation{pugh90}
 \citation{sundell05}
 \citation{hunt96}
 \citation{rao88}
 \citation{israeli93}
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces Dijkstra's algorithm. The main loop comprises a critical section which presents difficulties when parallelizing.}}{\thepage }}
-\newlabel{alg:dijk}{{1}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Related Work}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Non-Lock-Free Parallel Heaps}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Automatically Generated Lock-Free Heaps}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Concurrent Priority Queues and Heaps}{\thepage }}
 \citation{jones89}
 \citation{huang91}
 \citation{michael96}
@@ -34,40 +43,44 @@
 \citation{shavit97}
 \citation{hendler04}
 \citation{pugh90}
-\citation{pugh90a}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Concurrent Fibonacci and Skew Heaps}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Other Highly Concurrent Attempts}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Skiplists}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Concurrent Priority Queues and Heaps}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Concurrent Fibonacci and Skew Heaps}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Other Highly Concurrent Attempts}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Skiplists}{\thepage }}
+\newlabel{sec:skiplists}{{3}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A Skiplist representation of $\bf  \{1,3,9,11,15\}$. The levels of each node, respectively, are 3, 0, 1, 2, and 0.}}{\thepage }}
 \newlabel{fig:skiplist}{{1}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Core Operations}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Core Operations}{\thepage }}
+\citation{pugh90a}
 \citation{shavit00}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Additional Operations}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Additional Operations}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Skiplist traversal for finding the element 3 in the Skiplist presented in Fig. 1\hbox {}}}{\thepage }}
 \newlabel{fig:skiplist:search3}{{2}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Skiplist traversal for finding the element 15 in the Skiplist presented in Fig. 1\hbox {}}}{\thepage }}
 \newlabel{fig:skiplist:search15}{{3}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Illustration of insertion and removal. 5 has been inserted into the Skiplist. Red indicates pointers contained in $\texttt  {previous}[i]$, and green indicates pointers contained in $\texttt  {next}[i]$. 15 has also been removed from the Skiplist and updated pointers for this operation are in blue.}}{\thepage }}
 \newlabel{fig:skiplist:insert5}{{4}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Lock-Free Skiplists}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Lock-Free Skiplists}{\thepage }}
 \citation{fredman86}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Pairing Heaps}{\thepage }}
+\newlabel{sec:pheap}{{4}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Operations on Pairing Heaps}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Melding two min-heaps together (one with root 3 and the other with root 5) with the \texttt  {meld} operator. The heap rooted at 5 becomes a subheap of the heap rooted at 3.}}{\thepage }}
 \newlabel{fig:meld}{{5}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Pairing Heaps}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Operations on Pairing Heaps}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Calling \texttt  {deleteMin} on a Pairing heap (a). The root is removed (b) and the children are melded in pairs (c), and then the pairs themselves are melded in right-to-left order (d-e). Note that the resulting heap (e) is more balanced than (a).}}{\thepage }}
-\newlabel{fig:deletemin}{{6}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Parallelizing Dijkstra's Algorithm}{\thepage }}
-\newlabel{sec:dijkstra}{{6}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Parallelizing Dijkstra's Algorithm}{\thepage }}
+\newlabel{sec:dijkstra}{{5}{\thepage }}
 \citation{herlihy91}
 \citation{fraser07}
 \citation{dechev10}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Calling \texttt  {deleteMin} on a Pairing heap (a). The root is removed (b) and the children are melded in pairs (c), and then the pairs themselves are melded in right-to-left order (d-e). Note that the resulting heap (e) is more balanced than (a).}}{\thepage }}
+\newlabel{fig:deletemin}{{6}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Lock-Free Pairing Heaps}{\thepage }}
+\newlabel{sec:ph}{{6}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Developmental Roadblocks}{\thepage }}
+\newlabel{sec:ph:roadblocks}{{6.1}{\thepage }}
 \citation{michael96}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Lock-Free Pairing Heaps}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Developmental Roadblocks}{\thepage }}
-\newlabel{sec:ph:roadblocks}{{7.1}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Lock-free insert and decreaseKey Operations}{\thepage }}
-\newlabel{sec:ph:ops}{{7.2}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Lock-free insert and decreaseKey Operations}{\thepage }}
+\newlabel{sec:ph:ops}{{6.2}{\thepage }}
 \@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces A lock-free \texttt  {insert} operator for Pairing heaps.}}{\thepage }}
 \newlabel{alg:insert}{{2}{\thepage }}
 \@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces A lock-free \texttt  {decreaseKey} operator for Pairing heaps.}}{\thepage }}
@@ -77,49 +90,60 @@
 \newlabel{alg:newroot}{{4}{\thepage }}
 \@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Execution of a \texttt  {UpdateRootDescriptor} $d$.}}{\thepage }}
 \newlabel{alg:newroot}{{5}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Linearization Points}{\thepage }}
-\newlabel{sec:ph:linear}{{7.3}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Linearization Points}{\thepage }}
+\newlabel{sec:ph:linear}{{6.3}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Illustration of the concurrent pair heap structure. Pair heap nodes exist inside atomic references and hold atomic references to other heap nodes.}}{\thepage }}
 \newlabel{fig:pairheap:structure}{{7}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Correctness}{\thepage }}
-\newlabel{sec:ph:correct}{{7.4}{\thepage }}
+\citation{michael96}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Correctness}{\thepage }}
+\newlabel{sec:ph:correct}{{6.4}{\thepage }}
 \citation{slndc}
 \citation{hid}
+\citation{hendler04}
 \bibstyle{abbrv}
 \bibdata{proposal}
 \bibcite{anderson99}{1}
-\bibcite{hid}{2}
-\bibcite{rfc5340}{3}
-\bibcite{crauser98}{4}
-\bibcite{dechev10}{5}
-\bibcite{dijkstra59}{6}
-\bibcite{driscoll88}{7}
-\bibcite{elmasry10}{8}
-\bibcite{fraser07}{9}
-\bibcite{fredman99}{10}
-\bibcite{fredman86}{11}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Future Operators}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Experimental Results}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Real-world performance of Lock-Free Pairing Heaps and Skipqueues}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {10}References}{\thepage }}
-\bibcite{fredman87}{12}
-\bibcite{hendler04}{13}
-\bibcite{herlihy91}{14}
-\bibcite{herlihy93}{15}
-\bibcite{herlihy90}{16}
-\bibcite{huang91}{17}
-\bibcite{hunt96}{18}
-\bibcite{israeli93}{19}
-\bibcite{jones89}{20}
-\bibcite{slndc}{21}
-\bibcite{michael96}{22}
-\bibcite{moir05}{23}
-\bibcite{moret94}{24}
-\bibcite{nageshwara88}{25}
-\bibcite{pettie05}{26}
-\bibcite{pugh90a}{27}
-\bibcite{pugh90}{28}
-\bibcite{rao88}{29}
-\bibcite{shavit00}{30}
-\bibcite{shavit97}{31}
-\bibcite{sundell05}{32}
+\bibcite{bronson10}{2}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Experimental Results}{\thepage }}
+\newlabel{sec:exp}{{7}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Real-world performance of Lock-Free Pairing Heaps and Skipqueues}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Future Work}{\thepage }}
+\newlabel{sec:future}{{9}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Additional Operators}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Relieving Contention}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {11}References}{\thepage }}
+\bibcite{hid}{3}
+\bibcite{rfc5340}{4}
+\bibcite{crauser98}{5}
+\bibcite{dechev10}{6}
+\bibcite{dijkstra59}{7}
+\bibcite{driscoll88}{8}
+\bibcite{elmasry10}{9}
+\bibcite{fraser03}{10}
+\bibcite{fraser07}{11}
+\bibcite{fredman99}{12}
+\bibcite{fredman86}{13}
+\bibcite{fredman87}{14}
+\bibcite{hendler10}{15}
+\bibcite{hendler04}{16}
+\bibcite{herlihy91}{17}
+\bibcite{herlihy93}{18}
+\bibcite{herlihy90}{19}
+\bibcite{huang91}{20}
+\bibcite{hunt96}{21}
+\bibcite{israeli93}{22}
+\bibcite{jones89}{23}
+\bibcite{kleiman96}{24}
+\bibcite{slndc}{25}
+\bibcite{michael96}{26}
+\bibcite{moir05}{27}
+\bibcite{moret94}{28}
+\bibcite{nageshwara88}{29}
+\bibcite{pettie05}{30}
+\bibcite{pugh90a}{31}
+\bibcite{pugh90}{32}
+\bibcite{rao88}{33}
+\bibcite{shavit00}{34}
+\bibcite{shavit97}{35}
+\bibcite{sundell05}{36}

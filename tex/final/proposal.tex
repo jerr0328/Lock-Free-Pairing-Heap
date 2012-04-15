@@ -4,7 +4,7 @@
 \usepackage{qtree}
 
 %%% Header
-\title{Facilitating Large-Scale Graph Search Algorithms with Lock-Free Concurrent Pair Heaps}
+\title{Facilitating Large-Scale Graph Search Algorithms with Lock-Free Concurrent Pairing Heaps}
 
 \numberofauthors{3}
 
@@ -40,7 +40,7 @@ also improves when threads can also perform work concurrently (in particular, wh
 severely limit concurrency. Lock-free techniques can improve the concurrency of search structures
 such as heaps. In this paper we introduce \texttt{decreaseKey} and \texttt{insert}
 operators for Pairing heaps that provide lock-free guarantees while still running in constant time.
-We compare our work against a novel \texttt{decreaseKey} operator on Skiplists.
+%We compare our work against a novel \texttt{decreaseKey} operator on Skiplists.
 Techniques for parallelizing Dijkstra's algorithm are additionally discussed.
 
 %This project will cover the design and application of lock-free concurrent pairing heaps. Pairing heaps have comparable efficiency to fibonacci heaps, with an easier implementation. A lock-free model of this data structure will be built in Java or C++. As pairing heaps are efficient for graph algorithns, efficiency of the concurrent lock-free pairing heap will be tested using shortest path calculation from Dijkstra's algorithm on large networks.
@@ -61,23 +61,23 @@ Techniques for parallelizing Dijkstra's algorithm are additionally discussed.
 
 \keywords{Lock-free data structures, Pairing heap, Heap, Skiplist, Skip queue, Lock-free heap, Lock-free Pairing heap} 
 
-\section{Overview of Progress}
-This section gives a short overview of the current
-state of our class project. We have developed two
-lock-free operators on Pairing Heaps: \texttt{decreaseKey}
-and \texttt{insert}. Although the remaining Pairing Heap functions
-do not support concurrency, our lock-free Pairing heap is complete
-enough to support a parallelization of Dijkstra's algorithm
-without compromising the constant-time performance of the 
-\texttt{decreaseKey}
-operation (which allows Dijkstra's algorithm to run
-in $\mathcal{O}(|E| + |V|\log(|V|))$ time.)
-We have additionally created an optimization for Skiplists that,
-in some circumstances, allow calls to \texttt{decreaseKey} to
-execute faster than successive \texttt{delete} and \texttt{insert}
-calls.
-
 \section{Introduction}
+Developing an efficient concurrent
+lock-free self-balancing tree structure based on fine-grained
+synchronization primitives has so far remained an open problem \cite{bronson10} \cite{fraser03}.
+In this paper, we introduce various lock-free operations on
+Pairing heaps \cite{fredman86}, which are self-balancing tree structures that
+efficiently allow elements in the heap to be decreased.
+
+As lock-free implementations of Pairing heaps are known to be difficult \cite{hendler10} and
+hitherto no attempts have been made to develop a linearizable concurrent Pairing heap based on fine-grained
+synchronization alone,
+we focus on only certain use cases. Specifically, our contribution is a
+lock-free concurrent Pairing heap capable of being
+a backing data structure for a parallel version of Dijkstra's algorithm \cite{dijkstra59}.
+This is a reasonable simplification as the main motivation for Pairing heaps is efficiently running
+Dijkstra's algorithm \cite{fredman86}.
+
 Dijkstra's algorithm \cite{dijkstra59} is a search
 algorithm that solves the (single-source) shortest
 path problem for directed graphs with non-negative
@@ -134,23 +134,33 @@ is simpler than Fibonacci heaps and has better performance in practice. Precise 
 Pettie \cite{pettie05} has shown the \texttt{decreaseKey} operation takes between $\Omega(\log \log n)$ and $\mathcal{O}(2^{2\sqrt{\log\log n}})$ (amortized) time based on previous work by Fredman \cite{fredman99}.
 
 Current attempts
-to parallelize Dijkstra's algorithm rely on \texttt{decreaseKey} operations that have worse asymptotic performance
-than Pairing heaps provide. For example, to back Dijkstra's algorithm with Shavit and Lotan's
+to parallelize Dijkstra's algorithm with lock-free data structures
+rely on \texttt{decreaseKey} operations that have an asymptotic performance
+worse than Pairing heaps. For example, to back Dijkstra's algorithm with Shavit and Lotan's
 concurrent priority queue \cite{shavit00} requires the user implement \texttt{decreaseKey} by deleting 
 the target from the heap and reinserting it with a decreased value. Both of these operations run in
 $\mathcal{O}(\log n)$.
 
-To our knowledge, there have been no attempts to construct highly concurrent
-lock-free heap data structures
-with lock-free guarantees with an efficient \texttt{decreaseKey} implementation.
-In this paper we introduce a lock-free variant of the Pairing heap
-that allows the \texttt{decreaseKey} and \texttt{removeMin} operations
+The main contributions of this paper are as follows.
+We introduce a lock-free variant of the Pairing heap
+that allows the \texttt{decreaseKey} and \texttt{insert} operations
 to be executed in parallel
-without the use of locks. Ignoring contention between threads,
-our lock-free \texttt{decreaseKey} operation has an asymptotic time complexity
-equal to Fredman and Tarjan's original \texttt{decreaseKey} implementation.
+without the use of locks.
+Our lock-free \texttt{decreaseKey} operation has an asymptotic time complexity
+equal to Fredman and Tarjan's \cite{fredman86} original \texttt{decreaseKey} implementation,
+modulo contention between threads.
+
+In section \ref{sec:related} we discuss work in the literature
+related to concurrent constructions of heaps and priority queues.
+We give a review of Skiplists, both blocking and concurrent implementations, in section \ref{sec:skiplists}
+and review blocking operations on Pairing heaps in section \ref{sec:pheap}. A discussion of parallelization
+strategies for Dijkstra's algorithm is given in section \ref{sec:dijkstra}. We
+describe our lock-free Pairing heap implementation in section \ref{sec:ph} and review
+its performance on real-world graph search problems in section \ref{sec:exp}.
+We give potential directions for later work on this problem in section \ref{sec:future}.
 
 \section{Related Work}
+\label{sec:related}
 Currently, the most common way to implement Dijkstra's algorithm in
 a parallel manner is to partition the graph and apply
 Dijkstra's algorithm on
@@ -158,9 +168,21 @@ each subgraph \cite{crauser98}. In this section we outline
 some of the novel approaches to constructing concurrent priority queues
 previously found in the literature.
 
-\subsection{Non-Lock-Free Parallel Heaps}
+\subsection{Concurrent Pairing Heaps}
+Hendler, Shavit, et al. \cite{hendler10}
+have applied their flat combining technique to construct
+a parallel Pairing heap. In their approach, each thread $0 \leq i < n$
+places a description of its operation in the $i^\mathrm{th}$ index of an array. Threads
+race to acquire a global lock. The winning thread completes all $n$ operations, combines
+the operations (e.g., several calls to decrease the value of the same node can be combined
+into one decrease call), performs the operations serially, and writes the result of the $i^\mathrm{th}$
+operation to the array. The losing threads wait to be notified that their operation has completed and return
+the result given by the winning thread. This approach, although concurrent, utilizes locks and, as a by-product,
+is vulnerable to undesirable side effects such as lock convoying and priority inversion \cite{kleiman96}.
 
-Nageshwara et al. \cite{nageshwara88} have implemented a priority queue with concurrent insert and delete operations using fine-grained locks. Their operations, although not lock-free, represent an attempt in the literature to create a concurrent heap model. Their model only scales to $\log(n)$ processors accessing a heap of $n$ nodes. The binary heap implementation presented in their paper modifies the insert operation to work from top to bottom, rather than bottom up. This ensures that inserts can be run without deadlocks with concurrent delete operations, which also run top to bottom. While pairing heaps do not require the same method for inserting and deleting, this style of operation design, where different operations are forced to traverse the tree in the same direction, may be useful in the lock-free pairing heap solution.
+\subsection{Blocking Parallel Heaps}
+
+Nageshwara et al. \cite{nageshwara88} have implemented a priority queue with concurrent insert and delete operations using fine-grained locks. Their operations, although not lock-free, represent an attempt in the literature to create a concurrent heap model. Their model only scales to $\log(n)$ processors accessing a heap of $n$ nodes. The binary heap implementation presented in their paper modifies the insert operation to work from top to bottom, rather than bottom up. This ensures that inserts can be run without deadlocks with concurrent delete operations, which also run top to bottom.
 
 Driscoll et. al \cite{driscoll88} have introduced a variant of Fibonacci heaps, called
 relaxed heaps, that allows for easier parallelization. However, their approach
@@ -265,6 +287,8 @@ eliminate against a backed-off dequeue operation once all the elements prior
 to the back-off point have been dequeued.
 
 \section{Skiplists}
+\label{sec:skiplists}
+
 Skiplists were introduced by William Pugh \cite{pugh90} as a way
 to avoid expensive rebalancing in tree structures while
 still retaining desirable properties of balanced
@@ -438,6 +462,8 @@ this for us.
 %lose levels. If the optimized insertion attempt fails, there is no restriction placed on the level of the element.
 
 \section{Pairing Heaps}
+\label{sec:pheap}
+
 Pairing heaps were developed by Fredman et al. \cite{fredman86} as
 a simpler alternative to Fibonacci heaps that, at least empirically,
 do not sacrifice performance.
@@ -561,6 +587,8 @@ Solutions 2 and 3 are both practical. We opt for solution 3 since it is simpler,
 for future work we may consider solution 2.
 
 \section{Lock-Free Pairing Heaps}
+\label{sec:ph}
+
 In this section we develop lock-free \texttt{insert} and \texttt{decreaseKey}
 operators for Fredman et al.'s pairing heap. Our
 work relies on the observation that
@@ -984,7 +1012,7 @@ We now consider interleavings with case three (lines 30-27 of Algorithm
 and cases 3 and 2.) If two concurrent calls to \texttt{decreaseKey}
 both fall into the third case, both will race to be the left-most child
 of the current root. The linearization point here is inside the \texttt{add}
-method of the Michael-Scott CITATION linked list.
+method of the Michael-Scott \cite{michael96} linked-list based queue.
 The Pairing heap state (i.e., the ordering of the children) is consistent with the order
 in which these nodes reach this linearization point. If the fourth case
 executes concurrently with the third case, then there is a question about
@@ -1035,19 +1063,9 @@ another call to \texttt{decreaseKey}.
 %heap is determined from this point. If the root specified
 %in the descriptor is smaller than the new node, the 
 
-\subsection{Future Operators}
-We briefly discuss the form of a parallelized \texttt{deleteMin} operator on Pairing heaps.
-\texttt{deleteMin} follows what is essentially a Map-Reduce pattern: pairs of heaps are constructed
-and then merged together to form a resultant heap. The first step has no contention between pairs
-and is trivial to parallelize. Our \texttt{meld} operator can be used to merge heaps in parallel.
-
-However, once a \texttt{deleteMin} process has started, the new heap root cannot be determined until
-the call has finished.
-To accomplish \texttt{deleteMin} in a lock-free manner, a Descriptor object could be placed into memory
-that forces calls to other heap operations to first help complete the \texttt{deleteMin} before proceeding
-to their own operations.
-
 \section{Experimental Results}
+\label{sec:exp}
+
 Efficiency of the lock-free Pairing heap will be examined by comparing the relative performance of Dijkstra's algorithm, backed by different heap structures, on large network data sets. Currently, we
 plan to test three variants of Dijkstra's algorithm. The first variant will backed by a normal Skipqueue that performs a \texttt{decreaseKey} by removing the target node and readding it with a decreased key value.
 The second variant will be backed with a Skipqueue that uses our optimized \texttt{decreaseKey} operator. The third variant will be backed with our lock-free pairing heap. We
@@ -1066,6 +1084,36 @@ is a performance bottleneck. Skipqueues, on the other hand, can insert elements 
 However, insertions into a Pairing heap run in asymptotically less time than a comparable Skipqueue insertion: a Pairing heap
 insertion runs close to $\mathcal{O}(1)$ time but a Skipqueue insertion runs in $\mathcal{O}(\log n)$ time. This is due
 to the differing methods used to balance the heap structure.
+
+\section{Future Work}
+\label{sec:future}
+In this section we
+outline potential future directions for further research in developing efficient lock-free pairing heaps.
+
+\subsection{Additional Operators}
+We briefly discuss the form of a parallelized \texttt{deleteMin} operator on Pairing heaps.
+\texttt{deleteMin} follows what is essentially a Map-Reduce pattern: pairs of heaps are constructed
+and then merged together to form a resultant heap. The first step has no contention between pairs
+and is trivial to parallelize. Our \texttt{meld} operator can be used to merge heaps in parallel.
+
+However, once a \texttt{deleteMin} process has started, the new heap root cannot be determined until
+the call has finished.
+To accomplish \texttt{deleteMin} in a lock-free manner, a Descriptor object could be placed into memory
+that forces calls to other heap operations to first help complete the \texttt{deleteMin} before proceeding
+to their own operations.
+
+\subsection{Relieving Contention}
+Our current implementations of \texttt{insert} and \texttt{decreaseKey} place
+heavy contention on two memory addresses: the location containing the root of the heap
+and the left child of the current root. The first contention arises from threads competing to
+change the root of the heap, and the second from threads placing nodes under the root.
+To prevent these contentious situations, an elimination strategy (similar to \cite{hendler04})
+could be employed. As for two different node values $a,b$ either $a \leq b$ or $b < a$, two
+contending nodes could be combined using the \texttt{meld} operator described in section \ref{sec:pheap}.
+The greater of the two nodes would be added as a child of the lesser, and only the lesser would need
+to contend for insertion near (or at) the root.
+
+\section{Conclusion}
 
 
 %\section{Lock-free Pairing Heaps}

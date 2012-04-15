@@ -6,6 +6,11 @@ J.~Anderson and M.~Moir.
 \newblock {\em Parallel and Distributed Systems, IEEE Transactions on},
   10(12):1317 --1332, dec 1999.
 
+\bibitem{bronson10}
+N.~G. Bronson, J.~Casper, H.~Chafi, and K.~Olukotun.
+\newblock A practical concurrent binary search tree.
+\newblock {\em SIGPLAN Not.}, 45(5):257--268, Jan. 2010.
+
 \bibitem{hid}
 {Center for Cancer Systems Biology}.
 \newblock Human interactor database.
@@ -52,6 +57,12 @@ A.~Elmasry.
   Springer Berlin / Heidelberg, 2010.
 \newblock 10.1007/978-3-642-14031-0\_51.
 
+\bibitem{fraser03}
+K.~Fraser.
+\newblock {\em Practical lock freedom}.
+\newblock PhD thesis, Cambridge University Computer Laboratory, 2003.
+\newblock Also available as Technical Report UCAM-CL-TR-579.
+
 \bibitem{fraser07}
 K.~Fraser and T.~Harris.
 \newblock Concurrent programming without locks.
@@ -72,6 +83,13 @@ M.~L. Fredman and R.~E. Tarjan.
 \newblock Fibonacci heaps and their uses in improved network optimization
   algorithms.
 \newblock {\em J. ACM}, 34:596--615, July 1987.
+
+\bibitem{hendler10}
+D.~Hendler, I.~Incze, N.~Shavit, and M.~Tzafrir.
+\newblock Flat combining and the synchronization-parallelism tradeoff.
+\newblock In {\em Proceedings of the 22nd ACM symposium on Parallelism in
+  algorithms and architectures}, SPAA '10, pages 355--364, New York, NY, USA,
+  2010. ACM.
 
 \bibitem{hendler04}
 D.~Hendler, N.~Shavit, and L.~Yerushalmi.
@@ -118,6 +136,11 @@ A.~Israeli and L.~Rappoport.
 D.~W. Jones.
 \newblock Concurrent operations on priority queues.
 \newblock {\em Commun. ACM}, 32:132--137, January 1989.
+
+\bibitem{kleiman96}
+S.~Kleiman, D.~Shah, and B.~Smaalders.
+\newblock {\em Programming with threads}.
+\newblock Sun Soft Press, 1996.
 
 \bibitem{slndc}
 J.~Leskovec.
