@@ -7,6 +7,7 @@ public class Dijkstra<T> {
 	private Graph<T> graph;
 	private int numWorkers;
 	private ConcurrentHashMap<GraphNode<T>, Integer> distances;
+	private boolean debug;
 	
 	public static void main(String[] args) throws IOException {
 		//System.out.println("Running with " + Integer.parseInt(args[0]) + " threads.");
@@ -36,10 +37,19 @@ public class Dijkstra<T> {
 		}
 	}
 	
-	public Dijkstra(Graph<T> graph, int numWorkers) {
+	public Dijkstra(Graph<T> graph, int numWorkers, boolean d) {
 		this.graph = graph;
 		this.numWorkers = numWorkers;
 		this.distances = new ConcurrentHashMap<GraphNode<T>, Integer>();
+		debug = d;
+	}
+	
+	public Dijkstra(Graph<T> graph, int numWorkers)
+	{
+		this.graph = graph;
+		this.numWorkers = numWorkers;
+		this.distances = new ConcurrentHashMap<GraphNode<T>, Integer>();
+		debug = true;
 	}
 	
 	public void run() throws IOException {
@@ -81,7 +91,8 @@ public class Dijkstra<T> {
 		while (heap.size() > 0) {
 			// Pop the min distance off and record its distance
 			GraphNode<T> min = heap.deleteMin().graphNode;
-			System.out.println(min + " -> " + min.phNode.get().distance);
+			if(debug)
+				System.out.println(min + " -> " + min.phNode.get().distance);
 			distances.put(min, min.phNode.get().distance);
 			
 			CountDownLatch latch = new CountDownLatch(numWorkers);
