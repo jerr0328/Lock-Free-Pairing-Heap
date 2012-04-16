@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  1 APR 2012 15:11
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  15 APR 2012 17:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -379,7 +379,11 @@ File: p2e-pdftex.def 2011/04/05 v0.1t Driver-dependant file (RN,HjG,JT)
 \qroofx=\count117
 \qroofy=\count118
 \@qrscratchbox=\box61
-) (./proposal.aux)
+) (./proposal.aux
+
+LaTeX Warning: Label `alg:newroot' multiply defined.
+
+)
 \openout1 = `proposal.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
@@ -394,8 +398,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
-
-(/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
+ (/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count119
 \scratchdimen=\dimen132
@@ -487,22 +490,31 @@ OMS/cmsy/m/n/9 O\OT1/cmr/m/n/9 (\OMS/cmsy/m/n/9 j\OML/cmm/m/it/9 V\OMS/cmsy/m/n
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+Overfull \hbox (1.0587pt too wide) in paragraph at lines 136--143
+\T1/aer/m/n/9 heaps. For ex-am-ple, to back Di-jk-stra's al-go-rithm with Shavi
+t
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-Overfull \hbox (6.61253pt too wide) in paragraph at lines 163--164
+Overfull \hbox (6.61253pt too wide) in paragraph at lines 185--186
 \T1/aer/m/n/9 with con-cur-rent in-sert and delete op-er-a-tions us-ing fine-gr
 ained
  []
 
 
-Overfull \hbox (4.98991pt too wide) in paragraph at lines 169--169
+Overfull \hbox (4.98991pt too wide) in paragraph at lines 191--191
 []\secfnt Automatically Gen-er-ated Lock-Free Heaps 
  []
 
 [2]
-Overfull \hbox (2.32994pt too wide) in paragraph at lines 268--278
+Overfull \hbox (2.32994pt too wide) in paragraph at lines 292--302
 \T1/aer/m/n/9 tain-ing de-sir-able prop-er-ties of bal-anced trees such as $\OM
 S/cmsy/m/n/9 O\OT1/cmr/m/n/9 ([] \OML/cmm/m/it/9 n\OT1/cmr/m/n/9 )$
  []
@@ -511,10 +523,10 @@ S/cmsy/m/n/9 O\OT1/cmr/m/n/9 ([] \OML/cmm/m/it/9 n\OT1/cmr/m/n/9 )$
 File: img/skiplist-crop.pdf Graphic file (type pdf)
 
 <use img/skiplist-crop.pdf>
-Package pdftex.def Info: img/skiplist-crop.pdf used on input line 292.
+Package pdftex.def Info: img/skiplist-crop.pdf used on input line 316.
 (pdftex.def)             Requested size: 252.0pt x 98.06036pt.
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 292--294
+Overfull \hbox (12.0pt too wide) in paragraph at lines 316--318
 [][] 
  []
 
@@ -523,10 +535,10 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 292--294
 File: img/skiplistSearch-crop.pdf Graphic file (type pdf)
 
 <use img/skiplistSearch-crop.pdf>
-Package pdftex.def Info: img/skiplistSearch-crop.pdf used on input line 342.
+Package pdftex.def Info: img/skiplistSearch-crop.pdf used on input line 366.
 (pdftex.def)             Requested size: 252.0pt x 98.06036pt.
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 342--343
+Overfull \hbox (12.0pt too wide) in paragraph at lines 366--367
 [][] 
  []
 
@@ -534,10 +546,10 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 342--343
 File: img/skiplistSearch15-crop.pdf Graphic file (type pdf)
 
 <use img/skiplistSearch15-crop.pdf>
-Package pdftex.def Info: img/skiplistSearch15-crop.pdf used on input line 348.
+Package pdftex.def Info: img/skiplistSearch15-crop.pdf used on input line 372.
 (pdftex.def)             Requested size: 252.0pt x 98.06036pt.
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 348--349
+Overfull \hbox (12.0pt too wide) in paragraph at lines 372--373
 [][] 
  []
 
@@ -545,115 +557,132 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 348--349
 File: img/skiplistInsert5-crop.pdf Graphic file (type pdf)
 
 <use img/skiplistInsert5-crop.pdf>
-Package pdftex.def Info: img/skiplistInsert5-crop.pdf used on input line 354.
+Package pdftex.def Info: img/skiplistInsert5-crop.pdf used on input line 378.
 (pdftex.def)             Requested size: 252.0pt x 97.24847pt.
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 354--355
+Overfull \hbox (12.0pt too wide) in paragraph at lines 378--379
 [][] 
  []
 
 
 LaTeX Font Warning: Font shape `T1/aett/bx/n' undefined
-(Font)              using `T1/aett/m/n' instead on input line 355.
+(Font)              using `T1/aett/m/n' instead on input line 379.
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 2103) has occurred while \output is active []
+
+
+Underfull \vbox (badness 2698) has occurred while \output is active []
 
  [4 <./img/skiplistSearch-crop.pdf> <./img/skiplistSearch15-crop.pdf> <./img/sk
 iplistInsert5-crop.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 463--464
+Underfull \hbox (badness 10000) in paragraph at lines 490--491
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 464--465
+Underfull \hbox (badness 10000) in paragraph at lines 491--492
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 465--466
+Underfull \hbox (badness 10000) in paragraph at lines 492--493
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 466--467
+Underfull \hbox (badness 10000) in paragraph at lines 493--494
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 467--468
+Underfull \hbox (badness 10000) in paragraph at lines 494--495
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 468--469
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 469--470
+Underfull \hbox (badness 10000) in paragraph at lines 496--497
 
  []
 
 
-Overfull \hbox (7.87083pt too wide) in paragraph at lines 481--487
+Overfull \hbox (7.87083pt too wide) in paragraph at lines 508--514
 \OT1/cmr/m/n/9 (\OML/cmm/m/it/9 H[]; H[]\OT1/cmr/m/n/9 )\OMS/cmsy/m/n/9 g$\T1/a
 er/m/n/9 , we meld the two heaps to-gether to form $\OMS/cmsy/m/n/9 f\OML/cmm/m
 /it/9 H[]; [] ;
  []
 
 [5]
-Overfull \hbox (6.09999pt too wide) in paragraph at lines 581--588
+Overfull \hbox (6.09999pt too wide) in paragraph at lines 611--618
 \T1/aer/m/n/9 in-suf-fi-cient for blindly ex-e-cut-ing con-cur-rent calls to \T
 1/aett/bx/n/9 deleteMin
  []
 
-[6]
-Overfull \hbox (15.28938pt too wide) in paragraph at lines 754--758
-[]\T1/aer/m/n/9 Our \T1/aett/bx/n/9 in-sert \T1/aer/m/n/9 and \T1/aett/bx/n/9 d
-e-creaseKey \T1/aer/m/n/9 op-er-a-tors im-ple-ment a Descriptor-
- []
-
-[7] <img/PairHeapConcurrent-crop.pdf, id=207, 875.27pt x 605.26125pt>
+[6] [7] <img/PairHeapConcurrent-crop.pdf, id=207, 875.27pt x 605.26125pt>
 File: img/PairHeapConcurrent-crop.pdf Graphic file (type pdf)
 
 <use img/PairHeapConcurrent-crop.pdf>
-Package pdftex.def Info: img/PairHeapConcurrent-crop.pdf used on input line 801
+Package pdftex.def Info: img/PairHeapConcurrent-crop.pdf used on input line 861
 .
 (pdftex.def)             Requested size: 226.79846pt x 156.82854pt.
 
-Overfull \hbox (22.37613pt too wide) in paragraph at lines 827--827
+Underfull \vbox (badness 8132) has occurred while \output is active []
+
+ [8 <./img/PairHeapConcurrent-crop.pdf>]
+Overfull \hbox (1.9065pt too wide) in paragraph at lines 945--960
+\T1/aer/m/n/9 up-date with a \T1/aett/bx/n/9 de-creaseKey \T1/aer/m/n/9 call th
+at re-quires mak-ing changes
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9]
+Overfull \hbox (22.37613pt too wide) in paragraph at lines 1077--1077
 []\secfnt REAL-WORLD PER-FOR-MANCE OF LOCK-
  []
 
 
-Overfull \hbox (16.4592pt too wide) in paragraph at lines 827--827
+Overfull \hbox (16.4592pt too wide) in paragraph at lines 1077--1077
 \secfnt FREE PAIR-ING HEAPS AND SKIPQUEUES 
  []
 
 
-Overfull \hbox (5.58852pt too wide) in paragraph at lines 834--837
+Overfull \hbox (5.58852pt too wide) in paragraph at lines 1084--1087
 \T1/aer/m/n/9 Pair-ing heap in-ser-tion runs close to $\OMS/cmsy/m/n/9 O\OT1/cm
 r/m/n/9 (1)$ \T1/aer/m/n/9 time but a Skipqueue
  []
 
-(./proposal.bbl [8 <./img/PairHeapConcurrent-crop.pdf>]
+(./proposal.bbl [10]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-) [9]
-(./proposal.aux)
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11])
+[12
+
+] (./proposal.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 4420 strings out of 493629
- 55997 string characters out of 3148779
- 158015 words of memory out of 3000000
- 7605 multiletter control sequences out of 15000+200000
+ 4433 strings out of 493629
+ 56140 string characters out of 3148779
+ 158143 words of memory out of 3000000
+ 7618 multiletter control sequences out of 15000+200000
  58935 words of font info for 82 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 41i,21n,34p,878b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,21n,34p,631b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmbx6.pfb></usr/share/texmf-dist/fonts/type1/public
 /amsfonts/cm/cmbx9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
@@ -665,10 +694,10 @@ cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texmf-di
 st/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/h
 elvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
-Output written on proposal.pdf (9 pages, 276634 bytes).
+Output written on proposal.pdf (12 pages, 292937 bytes).
 PDF statistics:
- 263 PDF objects out of 1000 (max. 8388607)
- 218 compressed objects within 3 object streams
+ 272 PDF objects out of 1000 (max. 8388607)
+ 224 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

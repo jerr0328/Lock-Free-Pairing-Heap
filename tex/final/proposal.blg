@@ -3,46 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: proposal.aux
 The style file: abbrv.bst
 Database file #1: proposal.bib
-Warning--I didn't find a database entry for "sec:ph:ops"
-You've used 31 entries,
+You've used 36 entries,
             2118 wiz_defined-function locations,
-            704 strings with 8553 characters,
-and the built_in function-call counts, 11329 in all, are:
-= -- 1162
-> -- 430
-< -- 13
-+ -- 177
-- -- 136
-* -- 767
-:= -- 1787
-add.period$ -- 102
-call.type$ -- 31
-change.case$ -- 159
+            730 strings with 9269 characters,
+and the built_in function-call counts, 13081 in all, are:
+= -- 1341
+> -- 514
+< -- 14
++ -- 211
+- -- 164
+* -- 894
+:= -- 2079
+add.period$ -- 119
+call.type$ -- 36
+change.case$ -- 186
 chr.to.int$ -- 0
-cite$ -- 31
-duplicate$ -- 449
-empty$ -- 935
-format.name$ -- 136
-if$ -- 2461
+cite$ -- 36
+duplicate$ -- 515
+empty$ -- 1064
+format.name$ -- 164
+if$ -- 2826
 int.to.chr$ -- 0
-int.to.str$ -- 31
-missing$ -- 26
-newline$ -- 160
-num.names$ -- 68
-pop$ -- 153
+int.to.str$ -- 36
+missing$ -- 31
+newline$ -- 186
+num.names$ -- 78
+pop$ -- 180
 preamble$ -- 1
-purify$ -- 127
+purify$ -- 151
 quote$ -- 0
-skip$ -- 356
+skip$ -- 402
 stack$ -- 0
-substring$ -- 855
-swap$ -- 131
-text.length$ -- 13
+substring$ -- 963
+swap$ -- 145
+text.length$ -- 14
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 124
+type$ -- 142
 warning$ -- 0
-while$ -- 115
-width$ -- 33
-write$ -- 360
-(There was 1 warning)
+while$ -- 132
+width$ -- 38
+write$ -- 419
