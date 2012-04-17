@@ -11,7 +11,7 @@ public class Benchmark {
 		if(args.length < 3)
 		{
 			System.out.println("USAGE: Benchmark <SnapGraph File> <Runs> <List of Threads>");
-			System.out.println("EXAMPLE: Benchmarck ../graphs/soc-Epinions1.txt 5 1,2,4");
+			System.out.println("EXAMPLE: Benchmark ../graphs/soc-Epinions1.txt 5 1,2,4");
 			System.exit(1);
 		}
 		
