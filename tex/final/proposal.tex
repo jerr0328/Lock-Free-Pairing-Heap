@@ -1065,12 +1065,88 @@ another call to \texttt{decreaseKey}.
 
 \section{Experimental Results}
 \label{sec:exp}
+In this section we compare the performance of lock-free Pairing heaps against
+Shavit and Lotan's Skipqueues \cite{shavit00}, a priority queue based
+on a lock-free implementation of Pugh's \cite{pugh90a} Skiplist.
+We ran a concurrent version of Dijkstra's algorithm (outlined in 
+\ref{sec:dijkstra}) that used Skipqueues and our lock-free Pairing heaps
+and compared the search completion time.
 
-Efficiency of the lock-free Pairing heap will be examined by comparing the relative performance of Dijkstra's algorithm, backed by different heap structures, on large network data sets. Currently, we
-plan to test three variants of Dijkstra's algorithm. The first variant will backed by a normal Skipqueue that performs a \texttt{decreaseKey} by removing the target node and readding it with a decreased key value.
-The second variant will be backed with a Skipqueue that uses our optimized \texttt{decreaseKey} operator. The third variant will be backed with our lock-free pairing heap. We
-will use real world data sets collected from the Stanford Large Network Dataset Collection \cite{slndc} and Harvard's Human Interactome Database \cite{hid}. We will additionally use two
-synthetic graphs: a randomly generated dense graph and a randomly generated sparse graph.
+The graphs experimented against were obtained from 
+the Stanford Large Network Dataset Collection \cite{slndc}.
+We considered two datasets: a graph of the citations made
+between patents granted by the United States Patent and Trademark
+Office (USPTO) \cite{leskovec05}
+and a co-purchasing network graph from Amazon \cite{leskovec07}.
+
+To produce these results, we selected a node whose degree
+was equal to the mean degree of a vertex over the whole graph,
+rounded up, if needed. This ensured we did not select a node
+that biased our Pairing heap results due to its non-negligible 
+start-up costs (see Section \ref{sec:exp:disc}.) For each graph,
+we searched on a varying number of threads ($1,2,4$), and
+we report the average results obtained over $10$ trials. 
+Due to a lack of hardware availability, each graph was run
+on a different machine. The USPTO graph was searched on a \textbf{X}
+and the Amazon graph was searched on a \textbf{Y}.
+
+\begin{figure}[H]
+  \caption{Completion time of Dijkstra's algorithm on the USPTO database \cite{leskovec05}.}
+\end{figure}
+
+\begin{figure}[H]
+  \caption{Completion time of Dijkstra's algorithm on the Amazon co-purchasing database \cite{leskovec07}.}
+\end{figure}
+
+\subsection{Results}
+
+\subsection{Discussion}
+\label{sec:exp:disc}
+Our lock-free Pairing heap generally performed very poorly
+when compared with a Skiplist-backed heap. We now turn
+to discussing why this is the case and how this
+can direct future improvements on our initial
+algorithm design.
+
+Consider the initial state of a Pairing heap constructed
+to back a search for the shortest distances from vertex $v$
+to all other vertices in the graph. The values in the heap
+will initially (see Algorithm \ref{alg:dijk}) be $\mathrm{dist}(v) = 0$
+and $\mathrm{dist}(u) = \infty$ for all other nodes $u \in \{u_1, u_2, \dots, u_n\}$.
+This implies that
+$v$ is the root of the heap and all other nodes $u$ are its children.
+As each $u$ has an equal distance ($\infty$), there
+is no real structure to the heap (see Figure \ref{fig:ph:start}.)
+
+When we process the neighbors of $v$, we remove $v$ from the heap
+as it is the minimum element. We replace it with some other unvisited
+element (say $u_1$, see Figure \ref{fig:ph:start2}.) When we decrease
+the distances of the neighbors of $v$, we delink them from their parents.
+In our current implementation, each node stores its subheaps
+in a Michael-Scott \cite{michael96} queue. Unfortunately, 
+this data structure has a linear search time. If $|v|$ denotes
+the degree of $v$, we have a total complexity of $\mathcal{O}(|v|^2)$, which
+is not ideal. In a Pairing heap, this work is amortized over the life
+of the data structure: early calls to \texttt{decreaseKey} occur in, at minimum, $\mathcal{O}(|v|)$
+time, but later calls happen in near constant time.
+
+\begin{figure}
+  \Tree [.$v=0$ $u_1=\infty$ $u_2=\infty$ $\dots$ $u_n=\infty$ ]
+  \caption{Start-up state of a Pairing heap backing Dijkstra's algorithm. The source node $v$ has a distance of $0$ and all other nodes $\{u_1,u_2,\dots,u_n\}$ are unvisited have currently have a of $\infty$.}
+  \label{fig:ph:start}
+\end{figure}
+
+\begin{figure}
+  \Tree [.$u_1=\infty$ $u_2=\infty$ $u_3=\infty$ $\dots$ $u_n=\infty$ ]
+  \caption{State of a Pairing heap after running $\mathtt{deleteMin}()$ on the heap in Fig. \ref{fig:ph:start}.}
+  \label{fig:ph:start2}
+\end{figure}
+
+%Efficiency of the lock-free Pairing heap will be examined by comparing the relative performance of Dijkstra's algorithm, backed by different heap structures, on large network data sets. Currently, we
+%plan to test three variants of Dijkstra's algorithm. The first variant will backed by a normal Skipqueue that performs a \texttt{decreaseKey} by removing the target node and readding it with a decreased key value.
+%The second variant will be backed with a Skipqueue that uses our optimized \texttt{decreaseKey} operator. The third variant will be backed with our lock-free pairing heap. We
+%will use real world data sets collected from the Stanford Large Network Dataset Collection \cite{slndc} and Harvard's Human Interactome Database \cite{hid}. We will additionally use two
+%synthetic graphs: a randomly generated dense graph and a randomly generated sparse graph.
 
 %As pairing heaps are designed for efficiency in network applications such as shortest path finding, this is an ideal test case for this datastructure. Efficiency of parallel functionality will be examined for the data structure by determining runtime decrease by adding parallel functionality to the Dijkstra's implementation, through the use of the concurrent pairing heap.
 
@@ -1091,7 +1167,7 @@ In this section we
 outline potential future directions for further research in developing efficient lock-free pairing heaps.
 
 \subsection{Additional Operators}
-We briefly discuss the form of a parallelized \texttt{deleteMin} operator on Pairing heaps.
+We briefly outline a sketch of a parallelized \texttt{deleteMin} operator on Pairing heaps.
 \texttt{deleteMin} follows what is essentially a Map-Reduce pattern: pairs of heaps are constructed
 and then merged together to form a resultant heap. The first step has no contention between pairs
 and is trivial to parallelize. Our \texttt{meld} operator can be used to merge heaps in parallel.
@@ -1112,6 +1188,12 @@ could be employed. As for two different node values $a,b$ either $a \leq b$ or $
 contending nodes could be combined using the \texttt{meld} operator described in section \ref{sec:pheap}.
 The greater of the two nodes would be added as a child of the lesser, and only the lesser would need
 to contend for insertion near (or at) the root.
+
+\subsection{Avoiding Large Start-up Costs}
+A problem discussed in Section \ref{sec:exp:disc} is that
+the initial state of the Pairing heap lends itself to
+a $\mathcal{O}(|v'|)$ start-up time, where $|v'|$
+denotes the number of edges connected to the source node.
 
 \section{Conclusion}
 

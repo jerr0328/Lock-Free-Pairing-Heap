@@ -11,10 +11,6 @@ N.~G. Bronson, J.~Casper, H.~Chafi, and K.~Olukotun.
 \newblock A practical concurrent binary search tree.
 \newblock {\em SIGPLAN Not.}, 45(5):257--268, Jan. 2010.
 
-\bibitem{hid}
-{Center for Cancer Systems Biology}.
-\newblock Human interactor database.
-
 \bibitem{rfc5340}
 R.~Coltun, D.~Ferguson, J.~Moy, and A.~Lindem.
 \newblock {OSPF for IPv6}.
@@ -145,6 +141,19 @@ S.~Kleiman, D.~Shah, and B.~Smaalders.
 \bibitem{slndc}
 J.~Leskovec.
 \newblock Stanford large network dataset collection, 2012.
+
+\bibitem{leskovec07}
+J.~Leskovec, L.~A. Adamic, and B.~A. Huberman.
+\newblock The dynamics of viral marketing.
+\newblock {\em ACM Trans. Web}, 1(1), May 2007.
+
+\bibitem{leskovec05}
+J.~Leskovec, J.~Kleinberg, and C.~Faloutsos.
+\newblock Graphs over time: densification laws, shrinking diameters and
+  possible explanations.
+\newblock In {\em Proceedings of the eleventh ACM SIGKDD international
+  conference on Knowledge discovery in data mining}, KDD '05, pages 177--187,
+  New York, NY, USA, 2005. ACM.
 
 \bibitem{michael96}
 M.~M. Michael and M.~L. Scott.

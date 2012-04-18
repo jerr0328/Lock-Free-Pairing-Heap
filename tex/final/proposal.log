@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  15 APR 2012 17:04
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  18 APR 2012 16:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -643,31 +643,26 @@ at re-quires mak-ing changes
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [9]
-Overfull \hbox (22.37613pt too wide) in paragraph at lines 1077--1077
+Overfull \hbox (22.37613pt too wide) in paragraph at lines 1153--1153
 []\secfnt REAL-WORLD PER-FOR-MANCE OF LOCK-
  []
 
 
-Overfull \hbox (16.4592pt too wide) in paragraph at lines 1077--1077
+Overfull \hbox (16.4592pt too wide) in paragraph at lines 1153--1153
 \secfnt FREE PAIR-ING HEAPS AND SKIPQUEUES 
  []
 
-
-Overfull \hbox (5.58852pt too wide) in paragraph at lines 1084--1087
+[10]
+Overfull \hbox (5.58852pt too wide) in paragraph at lines 1160--1163
 \T1/aer/m/n/9 Pair-ing heap in-ser-tion runs close to $\OMS/cmsy/m/n/9 O\OT1/cm
 r/m/n/9 (1)$ \T1/aer/m/n/9 time but a Skipqueue
  []
 
-(./proposal.bbl [10]
+(./proposal.bbl [11]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [11])
-[12
-
-] (./proposal.aux)
+) [12]
+(./proposal.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -676,10 +671,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4433 strings out of 493629
- 56140 string characters out of 3148779
- 158143 words of memory out of 3000000
- 7618 multiletter control sequences out of 15000+200000
+ 4437 strings out of 493629
+ 56202 string characters out of 3148779
+ 158175 words of memory out of 3000000
+ 7622 multiletter control sequences out of 15000+200000
  58935 words of font info for 82 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  41i,21n,34p,631b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -694,7 +689,7 @@ cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texmf-di
 st/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/h
 elvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
-Output written on proposal.pdf (12 pages, 292937 bytes).
+Output written on proposal.pdf (12 pages, 299699 bytes).
 PDF statistics:
  272 PDF objects out of 1000 (max. 8388607)
  224 compressed objects within 3 object streams
