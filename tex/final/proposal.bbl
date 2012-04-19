@@ -1,5 +1,12 @@
 \begin{thebibliography}{10}
 
+\bibitem{altman10}
+E.~Altman, M.~Arnold, R.~Bordawekar, R.~M. Delmonico, N.~Mitchell, and P.~F.
+  Sweeney.
+\newblock Observations on tuning a java enterprise application for performance
+  and scalability.
+\newblock {\em IBM J. Res. Dev.}, 54(5):494--505, Sept. 2010.
+
 \bibitem{anderson99}
 J.~Anderson and M.~Moir.
 \newblock Universal constructions for large objects.
@@ -186,6 +193,16 @@ B.~M.~E. Moret and H.~D. Shapiro.
 R.~Nageshwara and V.~Kumar.
 \newblock Concurrent access of priority queues.
 \newblock {\em Computers, IEEE Transactions on}, 37(12):1657 --1665, Dec 1988.
+
+\bibitem{ogata10}
+K.~Ogata, D.~Mikurube, K.~Kawachiya, S.~Trent, and T.~Onodera.
+\newblock A study of java's non-java memory.
+\newblock {\em SIGPLAN Not.}, 45(10):191--204, Oct. 2010.
+
+\bibitem{peierls05}
+T.~Peierls, B.~Goetz, J.~Bloch, J.~Bowbeer, D.~Lea, and D.~Holmes.
+\newblock {\em Java Concurrency in Practice}.
+\newblock Addison-Wesley Professional, 2005.
 
 \bibitem{pettie05}
 S.~Pettie.

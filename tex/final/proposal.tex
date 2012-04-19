@@ -1199,7 +1199,7 @@ A problem discussed in Section \ref{sec:exp:disc} is that
 the initial state of the Pairing heap lends itself to
 a $\mathcal{O}(|v'|)$ start-up time, where $|v'|$
 denotes the number of edges connected to the source node.
-There are two main ways to resolve this issue. First,
+There are two clear ways to resolve this issue. First,
 we could artificially introduce structure onto the initial heap state (see
 Figure \ref{fig:ph:start3})
 to reduce the search space for a particular node.
@@ -1214,7 +1214,15 @@ search fingers \cite{hanson92} into our linked list.
   \label{fig:ph:start3}
 \end{figure}
 
-\subsection{Profiling}
+\subsection{Reliable Benchmarking}
+At the moment, our implementation of a lock-free Pairing heap is
+written in Java 1.7. The Java virtual machine (JVM) performs
+various tasks in the background \cite{peierls05} such as freeing unused memory, runtime code optimization \cite{ogata10},
+and heap management \cite{altman10}. These tasks are unpredictable and may have
+introduced additional bias and variance in our experimental results.
+A solution to these problems is to reimplement our prototype Pairing heap in a
+language such as C++ that gives explicit control over memory management and
+performs all code optimizations at compile time.
 
 \section{Conclusion}
 
