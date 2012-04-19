@@ -1241,9 +1241,14 @@ To remedy this, we should apply coping techniques for accounting for the ABA pro
 in descriptor-based designs \cite{dechev11} \cite{dechev10}.
 
 \section{Conclusion}
-We presented an implementation of a lock-free concurrent Pairing heap that allows
+We presented an implementation of a lock-free concurrent Pairing priority heap that allows
 multiple threads to interleave insertions and heap modifications. The concurrent Pairing
 heap is functional enough to back a parallelized version of Dijkstra's algorithm.
+Although the lock-free Pairing heap is currently not competitive with state-of-the-art
+concurrent priority heap structures such as Skipqueues, we have outlined future
+directions for improvement. We additionally have made progress in developing
+methods for constructing highly concurrent self-balancing tree structures with
+lock-free progress guarantees.
 
 %\section{Lock-free Pairing Heaps}
 %This section outlines our current thoughts about

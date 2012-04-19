@@ -34,13 +34,13 @@ A.~Crauser, K.~Mehlhorn, U.~Meyer, and P.~Sanders.
 
 \bibitem{dechev11}
 D.~Dechev.
-\newblock The aba problem in multicore data structures with collaborating
+\newblock The {{ABA}} problem in multicore data structures with collaborating
   operations.
 \newblock In {\em CollaborateCom}, pages 158--167, 2011.
 
 \bibitem{dechev10}
 D.~Dechev, P.~Pirkelbauer, and B.~Stroustrup.
-\newblock Understanding and effectively preventing the aba problem in
+\newblock Understanding and effectively preventing the {{ABA}} problem in
   descriptor-based lock-free designs.
 \newblock In {\em Proceedings of the 2010 13th IEEE International Symposium on
   Object/Component/Service-Oriented Real-Time Distributed Computing}, ISORC
