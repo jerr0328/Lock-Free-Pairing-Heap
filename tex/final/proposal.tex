@@ -1088,24 +1088,23 @@ we searched on a varying number of threads ($1,2,4,8$), and
 we report the average results obtained over $20$ and $8$ trials, respectively. 
 Two machines were used for testing, one with an eight core i7 processor and another with an eight core Intel Xeon CPU           X5355 (2.66GHz). 
 
-Results of the amazon and patent trials can be seen in Figure \ref{fig:ph:amazon} and Figure \ref{fig:ph:patent}.
-
-The i7 machine outperformed the Xeon machine on all trials. 
-There is a slight overall decrease in average runtime for the amazon dataset with the utilization of more threads. A similar decrease in average runtime can be seen in the US patent trials. 
-If the longest runtime for $4$ threads in the i7 amazon trials is ommited, there is an increase in average runtime between $4$ and $8$ threads. The Xeon machine for the amazon data had an increased runtime for $4$ threads over $2$ threads and also $8$ threads over $4$ threads. For the use of $8$ threads, the runtime exceeded that of $1$ thread. Although average runtime decreases with the addition of threads in both trials, observed runtimes have high variance. Many runs with higher thread counts had higher runtimes than runs with less threads.
-
-
 \begin{figure}[H]
   \includegraphics[width=0.45\textwidth]{img/amazon.png}
   \caption{Completion time of Dijkstra's algorithm on the Amazon co-purchasing database \cite{leskovec07}.}
-  \label{fig:ph:patent}
+  \label{fig:ph:amazon}
 \end{figure}
 
 \begin{figure}[H]
   \includegraphics[width=0.45\textwidth]{img/US_patents.png}
   \caption{Completion time of Dijkstra's algorithm on the USPTO database \cite{leskovec05}.}
-  \label{fig:ph:amazon}
+  \label{fig:ph:patent}
 \end{figure}
+
+Results of the amazon and patent trials can be seen in Figure \ref{fig:ph:amazon} and Figure \ref{fig:ph:patent}.
+
+The i7 machine outperformed the Xeon machine on all trials. 
+There is a slight overall decrease in average runtime for the amazon dataset with the utilization of more threads. A similar decrease in average runtime can be seen in the US patent trials. 
+If the longest runtime for $4$ threads in the i7 amazon trials is ommited, there is an increase in average runtime between $4$ and $8$ threads. The Xeon machine for the amazon data had an increased runtime for $4$ threads over $2$ threads and also $8$ threads over $4$ threads. For the use of $8$ threads, the runtime exceeded that of $1$ thread. Although average runtime decreases with the addition of threads in both trials, observed runtimes have high variance. Many runs with higher thread counts had higher runtimes than runs with less threads.
 
 
 \section{Discussion}
