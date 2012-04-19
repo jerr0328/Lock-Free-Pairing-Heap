@@ -1136,7 +1136,8 @@ this data structure has a linear search time. If $|v|$ denotes
 the degree of $v$, we have a total complexity of $\mathcal{O}(|v|^2)$, which
 is not ideal. In a Pairing heap, this work is amortized over the life
 of the data structure: early calls to \texttt{decreaseKey} occur in, at minimum, $\mathcal{O}(|v|)$
-time, but later calls happen in near constant time.
+time, but later calls happen in near constant time. However, if $|v|$ is quite large, then
+an unreasonable amount of time is spent performing the first \texttt{decreaseKey}.
 
 \begin{figure}
   \Tree [.$v=0$ $u_1=\infty$ $u_2=\infty$ $\dots$ $u_n=\infty$ ]
@@ -1158,16 +1159,20 @@ time, but later calls happen in near constant time.
 
 %As pairing heaps are designed for efficiency in network applications such as shortest path finding, this is an ideal test case for this datastructure. Efficiency of parallel functionality will be examined for the data structure by determining runtime decrease by adding parallel functionality to the Dijkstra's implementation, through the use of the concurrent pairing heap.
 
-\section{Real-world performance of Lock-Free Pairing Heaps and Skipqueues}
+%\section{Real-world performance of Lock-Free Pairing Heaps and Skipqueues}
+We also observed a decrease in performance when the number of threads
+working on \texttt{decreaseKey} operations were increased.
 In blocking Pairing heaps, nodes are inserted (a similar procedure is used for \texttt{decreaseKey})
-into the heap by either replacing the root of the heap or inserting itself as a subheap to the root. It is clear to see that
-parallel variants that preserve the general form of insertion operations will place un-due contention at the
-root of the data structure. This is the main issue we foresee with our lock-free Pairing heap: always inserting at the root
-is a performance bottleneck. Skipqueues, on the other hand, can insert elements in, e.g., the middle of the list in a less-contended way.
+into the heap by either replacing the root of the heap or inserting itself as a subheap to the root.
+A parallel variant Pairing heap variant that preserves the general form of insertion operations will place un-due contention near the root of the data structure.
+Always inserting at the root appears to be a significant bottleneck.
+Skipqueues, on the other hand, can insert elements in,
+e.g., the middle of the list in a less-contended way
+and are thus more parallel.
 
-However, insertions into a Pairing heap run in asymptotically less time than a comparable Skipqueue insertion: a Pairing heap
-insertion runs close to $\mathcal{O}(1)$ time but a Skipqueue insertion runs in $\mathcal{O}(\log n)$ time. This is due
-to the differing methods used to balance the heap structure.
+%However, insertions into a Pairing heap run in asymptotically less time than a comparable Skipqueue insertion: a Pairing heap
+%insertion runs close to $\mathcal{O}(1)$ time but a Skipqueue insertion runs in $\mathcal{O}(\log n)$ time. This is due
+%to the differing methods used to balance the heap structure.
 
 \section{Future Work}
 \label{sec:future}
@@ -1202,6 +1207,22 @@ A problem discussed in Section \ref{sec:exp:disc} is that
 the initial state of the Pairing heap lends itself to
 a $\mathcal{O}(|v'|)$ start-up time, where $|v'|$
 denotes the number of edges connected to the source node.
+There are two main ways to resolve this issue. First,
+we could artificially introduce structure onto the initial heap state (see
+Figure \ref{fig:ph:start3})
+to reduce the search space for a particular node.
+A second solution would be to replace the data structure that represents
+the list of subheaps. For example, we could replace this with a Skiplist
+(which offers $\mathcal{O}(\log n)$ search) or use a hash table to insert
+search fingers \cite{hanson92} into our linked list.
+
+\begin{figure}
+  \Tree [.$v=0$ [.$u_1=\infty$ $u_2=\infty$ [.$u_3=\infty$ ] ] [.$u_4=\infty$ $u_5=\infty$ ] $\dots$ $u_n=\infty$ ] ]
+  \caption{A more structured heap (see Figure \ref{fig:ph:start}.) Note that the heap invariant is not violated by a parent and child having equal weights.}
+  \label{fig:ph:start3}
+\end{figure}
+
+\subsection{Profiling}
 
 \section{Conclusion}
 

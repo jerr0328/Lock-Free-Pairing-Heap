@@ -80,6 +80,13 @@ M.~L. Fredman and R.~E. Tarjan.
   algorithms.
 \newblock {\em J. ACM}, 34:596--615, July 1987.
 
+\bibitem{hanson92}
+E.~N. Hanson and T.~Johnson.
+\newblock The interval skip list: A data structure for finding all intervals
+  that overlap a point.
+\newblock In {\em In Proc. of the 2nd Workshop on Algorithms and Data
+  Structures}, pages 153--164. Springer, 1992.
+
 \bibitem{hendler10}
 D.~Hendler, I.~Incze, N.~Shavit, and M.~Tzafrir.
 \newblock Flat combining and the synchronization-parallelism tradeoff.
