@@ -1224,8 +1224,18 @@ A solution to these problems is to reimplement our prototype Pairing heap in a
 language such as C++ that gives explicit control over memory management and
 performs all code optimizations at compile time.
 
-\section{Conclusion}
+\subsection{ABA Problem}
+\hyphenation{Atomic-Stamped-Reference}
+We have not considered the ABA problem in all of our design. Although the descriptor
+object is guarded by Doug Lea's Java implementation a timestamped atomic reference (\texttt{AtomicStampedReference})
+\cite{herlihy08}, the ABA problem is not handled when the descriptor object is executed.
+To remedy this, we should apply coping techniques for accounting for the ABA problem
+in descriptor-based designs \cite{dechev11} \cite{dechev10}.
 
+\section{Conclusion}
+We presented an implementation of a lock-free concurrent Pairing heap that allows
+multiple threads to interleave insertions and heap modifications. The concurrent Pairing
+heap is functional enough to back a parallelized version of Dijkstra's algorithm.
 
 %\section{Lock-free Pairing Heaps}
 %This section outlines our current thoughts about

@@ -32,6 +32,12 @@ A.~Crauser, K.~Mehlhorn, U.~Meyer, and P.~Sanders.
   Heidelberg, 1998.
 \newblock 10.1007/BFb0055823.
 
+\bibitem{dechev11}
+D.~Dechev.
+\newblock The aba problem in multicore data structures with collaborating
+  operations.
+\newblock In {\em CollaborateCom}, pages 158--167, 2011.
+
 \bibitem{dechev10}
 D.~Dechev, P.~Pirkelbauer, and B.~Stroustrup.
 \newblock Understanding and effectively preventing the aba problem in
@@ -117,6 +123,11 @@ M.~Herlihy.
 M.~Herlihy.
 \newblock A methodology for implementing highly concurrent data objects.
 \newblock {\em ACM Trans. Program. Lang. Syst.}, 15:745--770, November 1993.
+
+\bibitem{herlihy08}
+M.~Herlihy and N.~Shavit.
+\newblock {\em The Art of Multiprocessor Programming}.
+\newblock Morgan Kaufmann Publishers Inc., San Francisco, CA, USA, 2008.
 
 \bibitem{herlihy90}
 M.~P. Herlihy and J.~M. Wing.
