@@ -38,6 +38,7 @@
 \citation{israeli93}
 \citation{jones89}
 \citation{huang91}
+\citation{pearce10}
 \citation{michael96}
 \citation{moir05}
 \citation{shavit97}
@@ -45,7 +46,8 @@
 \citation{pugh90}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Concurrent Priority Queues and Heaps}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Concurrent Fibonacci and Skew Heaps}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Other Highly Concurrent Attempts}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Parallel Implementations of Dijkstra's Algorithm}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Other Highly Concurrent Attempts}{\thepage }}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Skiplists}{\thepage }}
 \newlabel{sec:skiplists}{{3}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A Skiplist representation of $\bf  \{1,3,9,11,15\}$. The levels of each node, respectively, are 3, 0, 1, 2, and 0.}}{\thepage }}
@@ -67,36 +69,36 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Operations on Pairing Heaps}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Melding two min-heaps together (one with root 3 and the other with root 5) with the \texttt  {meld} operator. The heap rooted at 5 becomes a subheap of the heap rooted at 3.}}{\thepage }}
 \newlabel{fig:meld}{{5}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Parallelizing Dijkstra's Algorithm}{\thepage }}
-\newlabel{sec:dijkstra}{{5}{\thepage }}
 \citation{herlihy91}
-\citation{fraser07}
-\citation{dechev10}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Calling \texttt  {deleteMin} on a Pairing heap (a). The root is removed (b) and the children are melded in pairs (c), and then the pairs themselves are melded in right-to-left order (d-e). Note that the resulting heap (e) is more balanced than (a).}}{\thepage }}
 \newlabel{fig:deletemin}{{6}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Parallelizing Dijkstra's Algorithm}{\thepage }}
+\newlabel{sec:dijkstra}{{5}{\thepage }}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Lock-Free Pairing Heaps}{\thepage }}
 \newlabel{sec:ph}{{6}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Developmental Roadblocks}{\thepage }}
 \newlabel{sec:ph:roadblocks}{{6.1}{\thepage }}
+\citation{fraser07}
+\citation{dechev10}
 \citation{michael96}
+\citation{herlihy90}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Lock-free insert and decreaseKey Operations}{\thepage }}
 \newlabel{sec:ph:ops}{{6.2}{\thepage }}
 \@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces A lock-free \texttt  {insert} operator for Pairing heaps.}}{\thepage }}
 \newlabel{alg:insert}{{2}{\thepage }}
 \@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces A lock-free \texttt  {decreaseKey} operator for Pairing heaps.}}{\thepage }}
 \newlabel{alg:decreaseKey}{{3}{\thepage }}
-\citation{herlihy90}
 \@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces Execution of a \texttt  {NewRootDescriptor} $d$.}}{\thepage }}
 \newlabel{alg:newroot}{{4}{\thepage }}
 \@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Execution of a \texttt  {UpdateRootDescriptor} $d$.}}{\thepage }}
 \newlabel{alg:newroot}{{5}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Linearization Points}{\thepage }}
-\newlabel{sec:ph:linear}{{6.3}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Illustration of the concurrent pair heap structure. Pair heap nodes exist inside atomic references and hold atomic references to other heap nodes.}}{\thepage }}
 \newlabel{fig:pairheap:structure}{{7}{\thepage }}
-\citation{michael96}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Linearization Points}{\thepage }}
+\newlabel{sec:ph:linear}{{6.3}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Correctness}{\thepage }}
 \newlabel{sec:ph:correct}{{6.4}{\thepage }}
+\citation{michael96}
 \citation{shavit00}
 \citation{pugh90a}
 \citation{slndc}
@@ -109,28 +111,24 @@
 \citation{leskovec05}
 \citation{leskovec09}
 \citation{leskovec09}
-\citation{michael96}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Experimental Results}{\thepage }}
 \newlabel{sec:exp}{{7}{\thepage }}
-\newlabel{fig:graphsizes}{{7}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Sizes of graphs tested.}}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{\thepage }}
-\newlabel{sec:exp:disc}{{8}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Completion time of Dijkstra's algorithm on the Amazon co-purchasing network \cite  {leskovec07}. Error bars represent standard deviation over 10 trials.}}{\thepage }}
 \newlabel{fig:ph:amazon}{{9}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Completion time of Dijkstra's algorithm on the USPTO database \cite  {leskovec05}. Error bars represent standard deviation over 10 trials.}}{\thepage }}
 \newlabel{fig:ph:patent}{{10}{\thepage }}
-\citation{hendler04}
+\citation{michael96}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Completion time of Dijkstra's algorithm on the Berkeley / Stanford link dataset \cite  {leskovec09}. Error bars represent standard deviation over 10 trials.}}{\thepage }}
 \newlabel{fig:ph:patent}{{11}{\thepage }}
+\newlabel{fig:graphsizes}{{7}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Sizes of graphs tested.}}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{\thepage }}
+\newlabel{sec:exp:disc}{{8}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Start-up state of a Pairing heap backing Dijkstra's algorithm. The source node $v$ has a distance of $0$ and all other nodes $\{u_1,u_2,\dots  ,u_n\}$ are unvisited have currently have a value of $\infty $.}}{\thepage }}
 \newlabel{fig:ph:start}{{12}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces State of a Pairing heap after running $\mathtt  {deleteMin}()$ on the heap in Fig. 12\hbox {}.}}{\thepage }}
 \newlabel{fig:ph:start2}{{13}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Future Work}{\thepage }}
-\newlabel{sec:future}{{9}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Additional Operators}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Relieving Contention}{\thepage }}
+\citation{hendler04}
 \citation{hanson92}
 \citation{peierls05}
 \citation{ogata10}
@@ -145,6 +143,17 @@
 \bibcite{bronson10}{3}
 \bibcite{rfc5340}{4}
 \bibcite{crauser98}{5}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Future Work}{\thepage }}
+\newlabel{sec:future}{{9}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Additional Operators}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Relieving Contention}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Avoiding Large Start-up Costs}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}Reliable Benchmarking}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces A more structured heap (see Figure 12\hbox {}.) Note that the heap invariant is not violated by a parent and child having equal weights.}}{\thepage }}
+\newlabel{fig:ph:start3}{{14}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}ABA Problem}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {11}References}{\thepage }}
 \bibcite{dechev11}{6}
 \bibcite{dechev10}{7}
 \bibcite{dijkstra59}{8}
@@ -156,13 +165,6 @@
 \bibcite{fredman86}{14}
 \bibcite{fredman87}{15}
 \bibcite{hanson92}{16}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces A more structured heap (see Figure 12\hbox {}.) Note that the heap invariant is not violated by a parent and child having equal weights.}}{\thepage }}
-\newlabel{fig:ph:start3}{{14}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Avoiding Large Start-up Costs}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}Reliable Benchmarking}{\thepage }}
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}ABA Problem}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {11}References}{\thepage }}
 \bibcite{hendler10}{17}
 \bibcite{hendler04}{18}
 \bibcite{herlihy91}{19}
@@ -183,11 +185,12 @@
 \bibcite{moret94}{34}
 \bibcite{nageshwara88}{35}
 \bibcite{ogata10}{36}
-\bibcite{peierls05}{37}
-\bibcite{pettie05}{38}
-\bibcite{pugh90a}{39}
-\bibcite{pugh90}{40}
-\bibcite{rao88}{41}
-\bibcite{shavit00}{42}
-\bibcite{shavit97}{43}
-\bibcite{sundell05}{44}
+\bibcite{pearce10}{37}
+\bibcite{peierls05}{38}
+\bibcite{pettie05}{39}
+\bibcite{pugh90a}{40}
+\bibcite{pugh90}{41}
+\bibcite{rao88}{42}
+\bibcite{shavit00}{43}
+\bibcite{shavit97}{44}
+\bibcite{sundell05}{45}

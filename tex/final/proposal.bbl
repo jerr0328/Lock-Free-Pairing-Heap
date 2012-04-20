@@ -216,6 +216,14 @@ K.~Ogata, D.~Mikurube, K.~Kawachiya, S.~Trent, and T.~Onodera.
 \newblock A study of java's non-java memory.
 \newblock {\em SIGPLAN Not.}, 45(10):191--204, Oct. 2010.
 
+\bibitem{pearce10}
+R.~Pearce, M.~Gokhale, and N.~M. Amato.
+\newblock Multithreaded asynchronous graph traversal for in-memory and
+  semi-external memory.
+\newblock In {\em Proceedings of the 2010 ACM/IEEE International Conference for
+  High Performance Computing, Networking, Storage and Analysis}, SC '10, pages
+  1--11, Washington, DC, USA, 2010. IEEE Computer Society.
+
 \bibitem{peierls05}
 T.~Peierls, B.~Goetz, J.~Bloch, J.~Bowbeer, D.~Lea, and D.~Holmes.
 \newblock {\em Java Concurrency in Practice}.

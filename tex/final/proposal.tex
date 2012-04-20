@@ -272,6 +272,17 @@ the point in time it is called), although the element is guaranteed to be reason
 elements in the heap. However, this presents problems with Dijkstra's algorithm and other
 graph algorithms that require a stricter definition of \texttt{deleteMin}.
 
+\subsection{Parallel Implementations of Dijkstra's Algorithm}
+In \cite{pearce10}, Pearce et al. describe parallel
+implementations of many graph algorithms, including
+ a single-source shortest path (SSSP)
+algorithm similar to Dijkstra's algorithm. Their
+approach to the SSSP is novel in that they eschew the need
+to synchronize the current node in the graph
+that has the least known distance to the target
+by, in some cases, making multiple visits to a node.
+
+
 \subsection{Other Highly Concurrent Attempts}
 Michael and Scott's \cite{michael96} lock-free FIFO queue allows enqueue
 and dequeue operations to proceed concurrently on a
