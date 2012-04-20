@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  19 APR 2012 21:48
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  19 APR 2012 22:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -648,8 +648,9 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Overfull \hbox (12.4634pt too wide) in paragraph at lines 1095--1104
-\T1/aer/m/n/9 bench-marks were ob-tained us-ing a In-tel Xeon X5355 (2.66GHz),
+Overfull \hbox (17.59326pt too wide) in paragraph at lines 1095--1104
+\T1/aer/m/n/9 bench-marks were ob-tained us-ing an In-tel Xeon X5355 (2.66GHz),
+
  []
 
 Package epstopdf Info: Source file: <img/amazon.eps>
@@ -747,7 +748,7 @@ cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texmf-di
 st/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/h
 elvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
-Output written on proposal.pdf (15 pages, 324449 bytes).
+Output written on proposal.pdf (15 pages, 324450 bytes).
 PDF statistics:
  305 PDF objects out of 1000 (max. 8388607)
  246 compressed objects within 3 object streams
