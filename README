@@ -10,6 +10,6 @@ Github repository: https://github.com/Jerr0328/Lock-Free-Pairing-Heap/
 
 File list:
 
-src -> A disorganized collection of the code we've written.
+src -> A collection of the code we've written.
 tex/pres -> A copy of the presentation we gave on 12 March.
-tex/midterm -> A copy of our midterm report.
+tex/final -> A copy of our final report, in LaTeX.
