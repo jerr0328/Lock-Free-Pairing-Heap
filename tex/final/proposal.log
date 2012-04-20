@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  19 APR 2012 22:01
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  19 APR 2012 22:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -653,6 +653,10 @@ Overfull \hbox (17.59326pt too wide) in paragraph at lines 1095--1104
 
  []
 
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10]
 Package epstopdf Info: Source file: <img/amazon.eps>
 (epstopdf)                    date: 2012-04-19 20:01:27
 (epstopdf)                    size: 11155 bytes
@@ -663,7 +667,8 @@ Package epstopdf Info: Source file: <img/amazon.eps>
 o.pdf img/amazon.eps>
 (epstopdf)             \includegraphics on input line 1118.
 Package epstopdf Info: Output file is already uptodate.
-<img/amazon-eps-converted-to.pdf, id=219, 820.06375pt x 436.63126pt>
+
+<img/amazon-eps-converted-to.pdf, id=222, 820.06375pt x 436.63126pt>
 File: img/amazon-eps-converted-to.pdf Graphic file (type pdf)
 
 <use img/amazon-eps-converted-to.pdf>
@@ -681,7 +686,7 @@ o.pdf img/patent.eps>
 (epstopdf)             \includegraphics on input line 1124.
 Package epstopdf Info: Output file is already uptodate.
 
-<img/patent-eps-converted-to.pdf, id=220, 820.06375pt x 436.63126pt>
+<img/patent-eps-converted-to.pdf, id=223, 820.06375pt x 436.63126pt>
 File: img/patent-eps-converted-to.pdf Graphic file (type pdf)
 
 <use img/patent-eps-converted-to.pdf>
@@ -699,20 +704,20 @@ Package epstopdf Info: Source file: <img/links.eps>
 (epstopdf)             \includegraphics on input line 1130.
 Package epstopdf Info: Output file is already uptodate.
 
-<img/links-eps-converted-to.pdf, id=221, 820.06375pt x 436.63126pt>
+<img/links-eps-converted-to.pdf, id=224, 820.06375pt x 436.63126pt>
 File: img/links-eps-converted-to.pdf Graphic file (type pdf)
 
 <use img/links-eps-converted-to.pdf>
 Package pdftex.def Info: img/links-eps-converted-to.pdf used on input line 1130
 .
 (pdftex.def)             Requested size: 504.0pt x 268.35674pt.
- [10] [11 <./img/amazon-eps-converted-to.pdf> <./img/patent-eps-converted-to.pd
-f>] [12 <./img/links-eps-converted-to.pdf>]
+ [11] [12 <./img/amazon-eps-converted-to.pdf> <./img/patent-eps-converted-to.pd
+f>]
 Overfull \hbox (3.47673pt too wide) in paragraph at lines 1257--1258
 [] []\T1/aer/m/n/9 ] 
  []
 
-(./proposal.bbl [13]
+(./proposal.bbl [13 <./img/links-eps-converted-to.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -748,7 +753,7 @@ cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texmf-di
 st/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/h
 elvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
-Output written on proposal.pdf (15 pages, 324450 bytes).
+Output written on proposal.pdf (15 pages, 324417 bytes).
 PDF statistics:
  305 PDF objects out of 1000 (max. 8388607)
  246 compressed objects within 3 object streams
