@@ -1,14 +1,20 @@
-Currently, we have implemented Skiplists, pairing-heaps and lock-free pairing heaps.
+Description of source files:
 
-(These files are a little disorganized right now, sorry!)
 
-LFPairingHeap.java -> One start at a lock-free pairing heap
-PairingHeap.java -> Another start at a lock-free pairing heap
+LFPairingHeap.java -> Our implementation of a lock-free pairing heap.
+
+Benchmark.java -> Benchmarking harness for the pairing heap.
+benchmark.py -> Internal tool for testing JVM settings.
+BenchmarkSkipList.java -> Benchmarking harness of the skip list.
+Dijkstra.java -> Dijkstra's algorithm implemented on lock-free pairing heaps (using a variable number of threads)
+DijkstraSerial.java -> Dijkstra's algorithm implemented on Pairing heaps, but in a serial fashion.
+DijkstraSkiplist.java -> Dijkstra's algorithm implemented on Skiplists.
+Graph.java -> Adjacency list representation of a graph.
+PHNode.java -> Representation of a pairing heap node.
+GraphNode.java -> Representation of a graph node
+GraphEdge.java -> Representation of a weighted graph edge.
+RandomGraph.java -> Random graph generator.
+SnapGraph.java -> Helper class for loading a graph from SNAP.
+SnapGraphTest.java -> Tester for the snap class.
 PairingHeapNode.java -> A node in a pairing heap
-Weighted.java -> A class that encapsulates an assignable weight (e.g., the distance of a node from the source in Dijkstra's algorithm.)
-PairingHeap2.java -> A serial pairing heap coded in a functional way
-PairingHeapMain.java -> Dummy main()
-PairingHeapTest.java -> Unit tests for the pairing heap
 Rnd.java -> Random number generator
-Skiplist.java -> Implementation of a lock-free skiplist.
-SkiplistTest.java -> Unit tests for the skiplist
