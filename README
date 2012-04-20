@@ -10,6 +10,7 @@ Github repository: https://github.com/Jerr0328/Lock-Free-Pairing-Heap/
 
 File list:
 
+graphs -> Some sample SNAP graphs.
 src -> A collection of the code we've written.
 tex/pres -> A copy of the presentation we gave on 12 March.
 tex/final -> A copy of our final report, in LaTeX.
