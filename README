@@ -1,5 +1,6 @@
 This project is for COP 4520 at UCF (Spring 2012).
-We are implementing a graph search algorithm with a lock-free concurrent pairing heap.
+We are developing a lock-free concurrent Pairing heap that can be
+used to implement a parallel version of Dijkstra's algorithm.
 
 Group members:
 Jeremy Mayeres
