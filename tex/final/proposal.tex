@@ -1074,37 +1074,64 @@ and compared the search completion time.
 
 The graphs experimented against were obtained from 
 the Stanford Large Network Dataset Collection \cite{slndc}.
-We considered two datasets: a graph of the citations made
+We considered three datasets: a graph of the citations made
 between patents granted by the United States Patent and Trademark
-Office (USPTO) \cite{leskovec05}
-and a co-purchasing network graph from Amazon \cite{leskovec07}.
+Office (USPTO) \cite{leskovec05}, a co-purchasing network graph from Amazon \cite{leskovec07},
+and a graph representing links between UC Berkeley and Stanford's respective websites \cite{leskovec09}.
+See Figure \ref{fig:graphsizes} for the number of vertices and
+edges contained in these large graph datasets.
 
 To produce these results, we selected a node whose degree
 was equal to the mean degree of a vertex over the whole graph,
 rounded up, if needed. This ensured we did not select a node
 that biased our Pairing heap results due to its non-negligible 
-start-up costs (see Section \ref{sec:exp:disc}.) For the amazon and patent graphs,
-we searched on a varying number of threads ($1,2,4,8$), and
-we report the average results obtained over $20$ and $8$ trials, respectively. 
-Two machines were used for testing, one with an eight core i7 processor and another with an eight core Intel Xeon CPU           X5355 (2.66GHz). 
+start-up costs (see Section \ref{sec:exp:disc}.) 
+We searched on a varying number of threads ($1,2,4,8$), and
+we report the average results obtained over $10$ trials, respectively. 
+These benchmarks were obtained using a Intel Xeon X5355 (2.66GHz),
+which has four physical cores and eight logical cores (via hyperthreading.)
+
+\begin{figure}
+  \begin{tabular}{|l|c|c|}
+    \hline
+    \textbf{Database Name} & \textbf{\# Vertices} & \textbf{\# Edges} \\ \hline
+    Amazon Co-Purchase & 262\,111 & 1\,234\,877 \\ \hline
+    Patent & 3\,774\,768 & 16\,518\,948 \\ \hline
+    BerkStanLinks & 685\,230 & 7\,600\,595 \\ \hline
+  \end{tabular}
+  \label{fig:graphsizes}
+  \caption{Sizes of graphs tested.}
+\end{figure}
 
 \begin{figure*}
-  \includegraphics[width=1.0\textwidth]{img/amazon.png}
-  \caption{Completion time of Dijkstra's algorithm on the Amazon co-purchasing database \cite{leskovec07}.}
+  \includegraphics[width=1.0\textwidth]{img/amazon.eps}
+  \caption{Completion time of Dijkstra's algorithm on the Amazon co-purchasing network \cite{leskovec07}. Error bars represent standard deviation over 10 trials.}
   \label{fig:ph:amazon}
 \end{figure*}
 
 \begin{figure*}
-  \includegraphics[width=1.0\textwidth]{img/US_patents.png}
-  \caption{Completion time of Dijkstra's algorithm on the USPTO database \cite{leskovec05}.}
+  \includegraphics[width=1.0\textwidth]{img/patent.eps}
+  \caption{Completion time of Dijkstra's algorithm on the USPTO database \cite{leskovec05}. Error bars represent standard deviation over 10 trials.}
   \label{fig:ph:patent}
 \end{figure*}
 
-Results of the amazon and patent trials can be seen in Figure \ref{fig:ph:amazon} and Figure \ref{fig:ph:patent}.
+\begin{figure*}
+  \includegraphics[width=1.0\textwidth]{img/links.eps}
+  \caption{Completion time of Dijkstra's algorithm on the Berkeley / Stanford link dataset  \cite{leskovec09}. Error bars represent standard deviation over 10 trials.}
+  \label{fig:ph:patent}
+\end{figure*}
 
-The i7 machine outperformed the Xeon machine on all trials. 
-There is a slight overall decrease in average runtime for the amazon dataset with the utilization of more threads. A similar decrease in average runtime can be seen in the US patent trials. 
-If the longest runtime for $4$ threads in the i7 amazon trials is ommited, there is an increase in average runtime between $4$ and $8$ threads. The Xeon machine for the amazon data had an increased runtime for $4$ threads over $2$ threads and also $8$ threads over $4$ threads. For the use of $8$ threads, the runtime exceeded that of $1$ thread. Although average runtime decreases with the addition of threads in both trials, observed runtimes have high variance. Many runs with higher thread counts had higher runtimes than runs with less threads.
+Results of the two competing strategies for searching the Amazon and patent datasets can be seen in Figure \ref{fig:ph:amazon} and Figure \ref{fig:ph:patent}.
+In general, the priority queue based on Skiplists out-performed the lock-free pairing heap.
+Significant anti-parallel effects were observed on the lock-free Pairing heap:
+aside from increasing the number of threads from $1$ to $2$ on the Amazon dataset, 
+increasing the number of threads operating on the lock-free Pairing heap increased
+the graph search time. In constrast, Skiplists scaled well across many threads
+and had significantly less variance in their search times.
+
+%The i7 machine outperformed the Xeon machine on all trials. 
+%There is a slight overall decrease in average runtime for the amazon dataset with the utilization of more threads. A similar decrease in average runtime can be seen in the US patent trials. 
+%If the longest runtime for $4$ threads in the i7 amazon trials is ommited, there is an increase in average runtime between $4$ and $8$ threads. The Xeon machine for the amazon data had an increased runtime for $4$ threads over $2$ threads and also $8$ threads over $4$ threads. For the use of $8$ threads, the runtime exceeded that of $1$ thread. Although average runtime decreases with the addition of threads in both trials, observed runtimes have high variance. Many runs with higher thread counts had higher runtimes than runs with less threads.
 
 
 \section{Discussion}

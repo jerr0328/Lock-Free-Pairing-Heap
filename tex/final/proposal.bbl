@@ -180,6 +180,12 @@ J.~Leskovec, J.~Kleinberg, and C.~Faloutsos.
   conference on Knowledge discovery in data mining}, KDD '05, pages 177--187,
   New York, NY, USA, 2005. ACM.
 
+\bibitem{leskovec09}
+J.~Leskovec, K.~J. Lang, A.~Dasgupta, and M.~W. Mahoney.
+\newblock Community structure in large networks: Natural cluster sizes and the
+  absence of large well-defined clusters.
+\newblock {\em Internet Mathematics}, 6(1):29--123, 2009.
+
 \bibitem{michael96}
 M.~M. Michael and M.~L. Scott.
 \newblock Simple, fast, and practical non-blocking and blocking concurrent

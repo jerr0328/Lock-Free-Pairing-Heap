@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  19 APR 2012 20:05
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2012.2.1)  19 APR 2012 21:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -383,6 +383,9 @@ File: p2e-pdftex.def 2011/04/05 v0.1t Driver-dependant file (RN,HjG,JT)
 
 LaTeX Warning: Label `alg:newroot' multiply defined.
 
+
+LaTeX Warning: Label `fig:ph:patent' multiply defined.
+
 )
 \openout1 = `proposal.aux'.
 
@@ -643,33 +646,77 @@ at re-quires mak-ing changes
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [9]
-<img/amazon.png, id=219, 958.3002pt x 442.2924pt>
-File: img/amazon.png Graphic file (type png)
- <use img/amazon.png>
-Package pdftex.def Info: img/amazon.png used on input line 1092.
-(pdftex.def)             Requested size: 504.0pt x 232.61867pt.
+Overfull \hbox (12.4634pt too wide) in paragraph at lines 1084--1093
+\T1/aer/m/n/9 bench-marks were ob-tained us-ing a In-tel Xeon X5355 (2.66GHz),
+ []
 
-<img/US_patents.png, id=221, 932.283pt x 442.2924pt>
-File: img/US_patents.png Graphic file (type png)
- <use img/US_patents.png>
-Package pdftex.def Info: img/US_patents.png used on input line 1098.
-(pdftex.def)             Requested size: 504.0pt x 239.11104pt.
+Package epstopdf Info: Source file: <img/amazon.eps>
+(epstopdf)                    date: 2012-04-19 20:01:27
+(epstopdf)                    size: 11155 bytes
+(epstopdf)             Output file: <img/amazon-eps-converted-to.pdf>
+(epstopdf)                    date: 2012-04-19 21:01:27
+(epstopdf)                    size: 8727 bytes
+(epstopdf)             Command: <repstopdf --outfile=img/amazon-eps-converted-t
+o.pdf img/amazon.eps>
+(epstopdf)             \includegraphics on input line 1107.
+Package epstopdf Info: Output file is already uptodate.
+<img/amazon-eps-converted-to.pdf, id=219, 820.06375pt x 436.63126pt>
+File: img/amazon-eps-converted-to.pdf Graphic file (type pdf)
 
-[10] [11 <./img/amazon.png> <./img/US_patents.png>]
-Overfull \hbox (3.47673pt too wide) in paragraph at lines 1219--1220
+<use img/amazon-eps-converted-to.pdf>
+Package pdftex.def Info: img/amazon-eps-converted-to.pdf used on input line 110
+7.
+(pdftex.def)             Requested size: 504.0pt x 268.35674pt.
+Package epstopdf Info: Source file: <img/patent.eps>
+(epstopdf)                    date: 2012-04-19 20:04:01
+(epstopdf)                    size: 10957 bytes
+(epstopdf)             Output file: <img/patent-eps-converted-to.pdf>
+(epstopdf)                    date: 2012-04-19 21:01:27
+(epstopdf)                    size: 8614 bytes
+(epstopdf)             Command: <repstopdf --outfile=img/patent-eps-converted-t
+o.pdf img/patent.eps>
+(epstopdf)             \includegraphics on input line 1113.
+Package epstopdf Info: Output file is already uptodate.
+
+<img/patent-eps-converted-to.pdf, id=220, 820.06375pt x 436.63126pt>
+File: img/patent-eps-converted-to.pdf Graphic file (type pdf)
+
+<use img/patent-eps-converted-to.pdf>
+Package pdftex.def Info: img/patent-eps-converted-to.pdf used on input line 111
+3.
+(pdftex.def)             Requested size: 504.0pt x 268.35674pt.
+Package epstopdf Info: Source file: <img/links.eps>
+(epstopdf)                    date: 2012-04-19 20:28:05
+(epstopdf)                    size: 11043 bytes
+(epstopdf)             Output file: <img/links-eps-converted-to.pdf>
+(epstopdf)                    date: 2012-04-19 21:26:33
+(epstopdf)                    size: 8884 bytes
+(epstopdf)             Command: <repstopdf --outfile=img/links-eps-converted-to
+.pdf img/links.eps>
+(epstopdf)             \includegraphics on input line 1119.
+Package epstopdf Info: Output file is already uptodate.
+
+<img/links-eps-converted-to.pdf, id=221, 820.06375pt x 436.63126pt>
+File: img/links-eps-converted-to.pdf Graphic file (type pdf)
+
+<use img/links-eps-converted-to.pdf>
+Package pdftex.def Info: img/links-eps-converted-to.pdf used on input line 1119
+.
+(pdftex.def)             Requested size: 504.0pt x 268.35674pt.
+ [10] [11 <./img/amazon-eps-converted-to.pdf> <./img/patent-eps-converted-to.pd
+f>] [12 <./img/links-eps-converted-to.pdf>]
+Overfull \hbox (3.47673pt too wide) in paragraph at lines 1246--1247
 [] []\T1/aer/m/n/9 ] 
  []
 
-(./proposal.bbl [12]
+(./proposal.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
+ [13]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [13])
-[14
-
-] (./proposal.aux)
+) [14]
+(./proposal.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -678,10 +725,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4458 strings out of 493629
- 56525 string characters out of 3148779
- 158222 words of memory out of 3000000
- 7639 multiletter control sequences out of 15000+200000
+ 4465 strings out of 493629
+ 56817 string characters out of 3148779
+ 158235 words of memory out of 3000000
+ 7645 multiletter control sequences out of 15000+200000
  58935 words of font info for 82 fonts, out of 3000000 for 9000
  832 hyphenation exceptions out of 8191
  41i,21n,34p,631b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -696,10 +743,10 @@ cmsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texmf-di
 st/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/h
 elvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
-Output written on proposal.pdf (14 pages, 348590 bytes).
+Output written on proposal.pdf (14 pages, 322985 bytes).
 PDF statistics:
- 284 PDF objects out of 1000 (max. 8388607)
- 230 compressed objects within 3 object streams
+ 302 PDF objects out of 1000 (max. 8388607)
+ 244 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
